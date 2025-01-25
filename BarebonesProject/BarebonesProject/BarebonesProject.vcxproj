@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="DB.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GL.cpp" />
     <ClCompile Include="glad.c" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="Component.h" />
     <ClInclude Include="DB.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GL.h" />
     <ClInclude Include="Mesh.h" />
