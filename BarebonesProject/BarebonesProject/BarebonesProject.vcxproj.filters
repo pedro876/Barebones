@@ -11,6 +11,24 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{0eb825c1-f91c-40a4-a58d-ac1b5edacf99}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GL">
+      <UniqueIdentifier>{65fa300a-121d-402f-8590-b449ed66c7d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\DB">
+      <UniqueIdentifier>{45a88e41-c55d-4bee-b330-d624c65d5c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects">
+      <UniqueIdentifier>{c8595060-e1d7-437f-b874-8b4b200089d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Component">
+      <UniqueIdentifier>{71ffff20-a105-4962-950d-0f48129e7405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GameObjects\Transform">
+      <UniqueIdentifier>{7c32ed6f-c0b4-4fe5-ac0f-50770d5228c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\DB\Mesh">
+      <UniqueIdentifier>{bb89592a-8248-4ba6-acce-f1da1d389d57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stb_image.cpp">
@@ -22,10 +40,46 @@
     <ClCompile Include="main.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="GL.cpp">
+      <Filter>Engine\GL</Filter>
+    </ClCompile>
+    <ClCompile Include="DB.cpp">
+      <Filter>Engine\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Engine\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Engine\GameObjects\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Engine\GameObjects\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Engine\DB\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
       <Filter>External</Filter>
+    </ClInclude>
+    <ClInclude Include="GL.h">
+      <Filter>Engine\GL</Filter>
+    </ClInclude>
+    <ClInclude Include="DB.h">
+      <Filter>Engine\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Engine\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Engine\GameObjects\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Engine\GameObjects\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Engine\DB\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
