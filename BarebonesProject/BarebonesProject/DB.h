@@ -16,7 +16,8 @@ public:
 
 		Asset asset = Asset();
 		asset.Deserialize(text);
-		instances.push_back(asset);
+		instances.push_back(std::move(asset));
+
 
 	}
 

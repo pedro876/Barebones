@@ -38,6 +38,9 @@
     <Filter Include="Engine\File">
       <UniqueIdentifier>{91b03c0d-57f2-4aff-a93c-e3b09afe3e00}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameObjects\Scene">
+      <UniqueIdentifier>{78333521-d3b0-4fc2-ad12-4a418cf18391}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stb_image.cpp">
@@ -73,6 +76,9 @@
     <ClCompile Include="File.cpp">
       <Filter>Engine\File</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Engine\GameObjects\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -104,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="File.h">
       <Filter>Engine\File</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Engine\GameObjects\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
