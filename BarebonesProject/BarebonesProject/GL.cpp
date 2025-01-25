@@ -52,3 +52,9 @@ void GL::EndFrame()
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 }
+
+void GL::DrawMesh(const Mesh& mesh)
+{
+	glBindVertexArray(mesh.VAO);
+	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+}

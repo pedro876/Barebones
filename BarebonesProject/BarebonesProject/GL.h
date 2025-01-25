@@ -13,6 +13,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Mesh.h"
+#include "Shader.h"
 
 class GL
 {
@@ -23,6 +25,8 @@ public:
 	bool WindowShouldClose();
 	void BeginFrame();
 	void EndFrame();
+
+	void DrawMesh(const Mesh& mesh);
 
 private:
 	GLFWwindow* window;
