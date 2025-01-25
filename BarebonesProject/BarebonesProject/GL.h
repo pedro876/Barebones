@@ -13,8 +13,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Mesh.h"
+
+// BAREBONES
 #include "Shader.h"
+#include "Mesh.h"
+#include "MeshRenderer.h"
 
 class GL
 {
@@ -27,6 +30,7 @@ public:
 	void EndFrame();
 
 	void DrawMesh(const Mesh& mesh);
+	void DrawMeshRenderer(MeshRenderer& renderer);
 
 private:
 	GLFWwindow* window;

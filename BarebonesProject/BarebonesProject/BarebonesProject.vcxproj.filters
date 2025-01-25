@@ -35,6 +35,9 @@
     <Filter Include="Engine\Shaders">
       <UniqueIdentifier>{cd818b5b-1a4c-4b25-a5c6-213e9417f28e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\GameObjects\MeshRenderer">
+      <UniqueIdentifier>{89272851-f17d-4779-b8b9-c4ae1b81ddb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stb_image.cpp">
@@ -64,6 +67,9 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Engine\DB\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>Engine\GameObjects\MeshRenderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -89,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="Shader.h">
       <Filter>Engine\GL\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>Engine\GameObjects\MeshRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

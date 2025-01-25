@@ -2,17 +2,18 @@
 
 #include "GL.h"
 #include "GameObject.h"
-#include "Mesh.h"
 #include "Shader.h"
 
 int main()
 {
 	GL gl{};
 
-	GameObject wizard{ "wizard" };
-	std::cout << wizard << std::endl;
+	GameObject testObject{ "testObject" };
+	MeshRenderer* meshRenderer = testObject.AddComponent<MeshRenderer>();
 
-	Mesh quad{ Primitive::Quad };
+	Mesh* quad = new Mesh(Primitive::Quad);
+	meshRenderer->mesh = quad;
+
 	Shader shaderProgram = Shader("vertex.vert", "fragment.frag");
 
 	while (!gl.WindowShouldClose())
@@ -20,7 +21,7 @@ int main()
 		gl.BeginFrame();
 
 		shaderProgram.use();
-		gl.DrawMesh(quad);
+		gl.DrawMeshRenderer(*meshRenderer);
 
 		gl.EndFrame();
 	}

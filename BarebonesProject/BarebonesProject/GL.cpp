@@ -1,5 +1,7 @@
 #include "GL.h"
 
+#include "GameObject.h"
+
 GL::GL()
 {
 	glfwInit();
@@ -57,4 +59,12 @@ void GL::DrawMesh(const Mesh& mesh)
 {
 	glBindVertexArray(mesh.VAO);
 	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+}
+
+void GL::DrawMeshRenderer(MeshRenderer& renderer)
+{
+	Transform* transform = &renderer.gameObject->transform;
+	//TODO: set model matrix
+	//TODO: set material
+	DrawMesh(*renderer.mesh);
 }
