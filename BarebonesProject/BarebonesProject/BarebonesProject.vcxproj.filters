@@ -17,29 +17,41 @@
     <Filter Include="Engine\DB">
       <UniqueIdentifier>{45a88e41-c55d-4bee-b330-d624c65d5c4d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameObjects">
-      <UniqueIdentifier>{c8595060-e1d7-437f-b874-8b4b200089d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GameObjects\Component">
-      <UniqueIdentifier>{71ffff20-a105-4962-950d-0f48129e7405}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\GameObjects\Transform">
-      <UniqueIdentifier>{7c32ed6f-c0b4-4fe5-ac0f-50770d5228c1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\DB\Mesh">
       <UniqueIdentifier>{bb89592a-8248-4ba6-acce-f1da1d389d57}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Shaders">
       <UniqueIdentifier>{cd818b5b-1a4c-4b25-a5c6-213e9417f28e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameObjects\MeshRenderer">
-      <UniqueIdentifier>{89272851-f17d-4779-b8b9-c4ae1b81ddb6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\File">
       <UniqueIdentifier>{91b03c0d-57f2-4aff-a93c-e3b09afe3e00}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\GameObjects\Scene">
+    <Filter Include="Engine\ECS">
+      <UniqueIdentifier>{c8595060-e1d7-437f-b874-8b4b200089d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ECS\Component">
+      <UniqueIdentifier>{71ffff20-a105-4962-950d-0f48129e7405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ECS\Transform">
+      <UniqueIdentifier>{7c32ed6f-c0b4-4fe5-ac0f-50770d5228c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ECS\MeshRenderer">
+      <UniqueIdentifier>{89272851-f17d-4779-b8b9-c4ae1b81ddb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ECS\Scene">
       <UniqueIdentifier>{78333521-d3b0-4fc2-ad12-4a418cf18391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ECS\GameObject">
+      <UniqueIdentifier>{d5d35f76-6cc8-417d-b4f8-6e736efe5fbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ECS\Object">
+      <UniqueIdentifier>{4517daf1-d73a-45bb-9dc2-4a751b8e8b5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Serialization">
+      <UniqueIdentifier>{efe2221b-3397-40d3-af81-38ae073b05b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\DB\Material">
+      <UniqueIdentifier>{bdb996fd-1fa3-44f5-8b7e-5622cfed24a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,26 +70,32 @@
     <ClCompile Include="DB.cpp">
       <Filter>Engine\DB</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Engine\GameObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Component.cpp">
-      <Filter>Engine\GameObjects\Component</Filter>
+      <Filter>Engine\ECS\Component</Filter>
     </ClCompile>
     <ClCompile Include="Transform.cpp">
-      <Filter>Engine\GameObjects\Transform</Filter>
+      <Filter>Engine\ECS\Transform</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Engine\DB\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderer.cpp">
-      <Filter>Engine\GameObjects\MeshRenderer</Filter>
+      <Filter>Engine\ECS\MeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="File.cpp">
       <Filter>Engine\File</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>Engine\GameObjects\Scene</Filter>
+      <Filter>Engine\ECS\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Engine\ECS\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Engine\ECS\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Engine\DB\Material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,29 +108,38 @@
     <ClInclude Include="DB.h">
       <Filter>Engine\DB</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Engine\GameObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>Engine\GameObjects\Component</Filter>
+      <Filter>Engine\ECS\Component</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
-      <Filter>Engine\GameObjects\Transform</Filter>
+      <Filter>Engine\ECS\Transform</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Engine\DB\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="MeshRenderer.h">
-      <Filter>Engine\GameObjects\MeshRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Engine\GL</Filter>
+      <Filter>Engine\ECS\MeshRenderer</Filter>
     </ClInclude>
     <ClInclude Include="File.h">
       <Filter>Engine\File</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Engine\GameObjects\Scene</Filter>
+      <Filter>Engine\ECS\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Engine\ECS\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Engine\ECS\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization.h">
+      <Filter>Engine\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Engine\DB\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Engine\DB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,19 +19,23 @@
 #include "Mesh.h"
 #include "MeshRenderer.h"
 
-class GL
+namespace Barebones
 {
-public:
-	GL();
-	~GL();
+	class GL
+	{
+	public:
+		GL();
+		~GL();
 
-	bool WindowShouldClose();
-	void BeginFrame();
-	void EndFrame();
+		bool WindowShouldClose();
+		void BeginFrame();
+		void EndFrame();
 
-	void DrawMesh(const Mesh& mesh);
-	void DrawMeshRenderer(MeshRenderer& renderer);
+		void DrawMesh(const Mesh& mesh);
+		void DrawMeshRenderer(MeshRenderer& renderer);
 
-private:
-	GLFWwindow* window;
-};
+	private:
+		GLFWwindow* window;
+	};
+}
+

@@ -2,9 +2,15 @@
 
 #include "Component.h"
 #include "Mesh.h"
+#include "Material.h"
 
-class MeshRenderer : public Component
+namespace Barebones
 {
-public:
-	Mesh* mesh = nullptr;
-};
+	class MeshRenderer : public Component
+	{
+	public:
+		Mesh* mesh = nullptr;
+		Material* material = nullptr;
+	};
+}
+

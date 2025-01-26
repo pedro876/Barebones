@@ -21,7 +21,7 @@ namespace Barebones
 
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
-		throw std::runtime_error("not implemented");
+		gameObjects.push_back(std::move(*gameObject));
 	}
 
 	void Scene::RemoveGameObject(GameObject* gameObject)

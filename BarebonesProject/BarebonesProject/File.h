@@ -4,9 +4,13 @@
 #include <fstream>
 #include <sstream>
 
-class File
+namespace Barebones
 {
-public:
-	static std::string Read(const std::string& path);
-	static void Write(const std::string& path, const std::string& text);
-};
+	class File
+	{
+	public:
+		static std::string Read(const std::string& path);
+		static void Write(const std::string& path, const std::string& text);
+	};
+}
+

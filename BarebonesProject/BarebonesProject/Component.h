@@ -3,20 +3,25 @@
 #include <iostream>
 #include <string>
 
-class GameObject;
-
-class Component
+namespace Barebones
 {
+	class GameObject;
 
-public:
-	GameObject* gameObject = nullptr;
+	class Component
+	{
 
-	friend std::ostream& operator<<(std::ostream& os, const Component& component);
-	friend std::ostream& operator<<(std::ostream& os, const Component* component);
+	public:
+		GameObject* gameObject = nullptr;
 
-protected:
-	virtual std::string ToString() const;
+		friend std::ostream& operator<<(std::ostream& os, const Component& component);
+		friend std::ostream& operator<<(std::ostream& os, const Component* component);
 
-private:
-};
+	protected:
+		virtual std::string ToString() const;
+
+	private:
+	};
+
+
+}
 
