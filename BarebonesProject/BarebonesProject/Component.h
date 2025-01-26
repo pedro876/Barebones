@@ -12,6 +12,7 @@ namespace Barebones
 
 	public:
 		GameObject* gameObject = nullptr;
+		unsigned int poolIndex;
 
 		friend std::ostream& operator<<(std::ostream& os, const Component& component);
 		friend std::ostream& operator<<(std::ostream& os, const Component* component);

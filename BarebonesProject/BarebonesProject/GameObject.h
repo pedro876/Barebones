@@ -59,8 +59,8 @@ namespace Barebones
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>True if the component was found and removed.</returns>
-        /*template<OptionalComponent T>
-        bool RemoveComponent();*/
+        template<OptionalComponent T>
+        bool RemoveComponent();
 
         /// <summary>
         /// Removes a component given its instance with O(N) complexity. The internal order of the components
@@ -103,29 +103,17 @@ namespace Barebones
         return instance;
     }
 
-    //template<OptionalComponent T>
-    //bool GameObject::RemoveComponent()
-    //{
-    //    int size = components.size();
-    //    for (int i = 0; i < size; i++)
-    //    {
-    //        T* typedComponent = dynamic_cast<T*>(components[i]);
-    //        if (typedComponent)
-    //        {
-    //            delete components[i];
-
-    //            if (size > 1)
-    //            {
-    //                components[i] = components[size - 1];
-    //            }
-
-    //            components.pop_back();
-
-    //            return true;
-    //        }
-    //    }
-    //    return false; // If no matching component is found
-    //}
+    template<OptionalComponent T>
+    bool GameObject::RemoveComponent()
+    {
+        T* component = GetComponent<T>();
+        if (component != nullptr)
+        {
+            ComponentPool<T>::DestroyComponent(component);
+            return true;
+        }
+        return false;
+    }
 
 }
 

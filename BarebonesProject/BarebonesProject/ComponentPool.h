@@ -42,9 +42,23 @@ namespace Barebones
         {
             components.emplace_back();
             T* component = &components[activeCount];
-            activeCount++;
+            component->poolIndex = activeCount;
             component->gameObject = gameObject;
+            activeCount++;
             return component;
+        }
+
+        static void DestroyComponent(T* component)
+        {
+            component->gameObject = nullptr;
+            int indexToRemove = component->poolIndex;
+            activeCount--;
+            if (activeCount > 0)
+            {
+                std::swap(components[indexToRemove], components[activeCount]);
+                components[indexToRemove].poolIndex = indexToRemove;
+                //TODO: This will invalidate the stored pointer in the swapped gameObject to its component
+            }
         }
 
         static unsigned int activeCount;

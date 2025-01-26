@@ -22,6 +22,8 @@ int main()
 	meshRenderer->mesh = &quad;
 	meshRenderer->material = &material;
 
+	//testObject.RemoveComponent<MeshRenderer>();
+
 	while (!gl.WindowShouldClose())
 	{
 		gl.BeginFrame();
@@ -33,8 +35,6 @@ int main()
 		{
 			gl.DrawMeshRenderer(renderers[i]);
 		}
-
-		gl.DrawMeshRenderer(*meshRenderer);
 
 		gl.EndFrame();
 	}
