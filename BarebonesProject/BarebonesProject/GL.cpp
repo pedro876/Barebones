@@ -63,9 +63,9 @@ namespace Barebones
 		glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 	}
 
-	void GL::DrawMeshRenderer(MeshRenderer& renderer)
+	void GL::DrawMeshRenderer(const MeshRenderer& renderer)
 	{
-		Transform* transform = &renderer.gameObject->transform;
+		Transform* transform = renderer.gameObject->transform;
 		//TODO: set model matrix
 		renderer.material->shader->use();
 		DrawMesh(*renderer.mesh);

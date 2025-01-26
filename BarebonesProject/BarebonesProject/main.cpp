@@ -3,6 +3,7 @@
 #include "GL.h"
 #include "GameObject.h"
 #include "Material.h"
+#include "ComponentPool.h"
 
 using namespace Barebones;
 
@@ -24,6 +25,14 @@ int main()
 	while (!gl.WindowShouldClose())
 	{
 		gl.BeginFrame();
+
+
+		const std::vector<MeshRenderer>& renderers = ComponentPool<MeshRenderer>::GetComponents();
+		int activeCount = ComponentPool<MeshRenderer>::GetActiveCount();
+		for (int i = 0; i < activeCount; i++)
+		{
+			gl.DrawMeshRenderer(renderers[i]);
+		}
 
 		gl.DrawMeshRenderer(*meshRenderer);
 

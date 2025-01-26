@@ -32,7 +32,7 @@ namespace Barebones
 		void EndFrame();
 
 		void DrawMesh(const Mesh& mesh);
-		void DrawMeshRenderer(MeshRenderer& renderer);
+		void DrawMeshRenderer(const MeshRenderer& renderer);
 
 	private:
 		GLFWwindow* window;

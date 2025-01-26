@@ -10,9 +10,8 @@ namespace Barebones
 	{
 		this->id = GameObject::s_id++;
 		this->components = std::vector<Component*>();
-		this->transform = Transform();
-		this->transform.gameObject = this;
-		this->components.push_back(&this->transform);
+		this->transform = ComponentPool<Transform>::CreateComponent(this);
+		this->components.push_back(this->transform);
 	}
 
 	int GameObject::GetID()
@@ -20,40 +19,40 @@ namespace Barebones
 		return this->id;
 	}
 
-	Component* GameObject::AddComponent(Component* component)
-	{
-		if (component->gameObject != nullptr)
-		{
-			component->gameObject->RemoveComponent(component);
-		}
+	//Component* GameObject::AddComponent(Component* component)
+	//{
+	//	if (component->gameObject != nullptr)
+	//	{
+	//		component->gameObject->RemoveComponent(component);
+	//	}
 
-		component->gameObject = this;
-		this->components.push_back(component);
+	//	component->gameObject = this;
+	//	this->components.push_back(component);
 
-		return component;
-	}
+	//	return component;
+	//}
 
-	bool GameObject::RemoveComponent(Component* component)
-	{
-		int size = components.size();
-		for (int i = 0; i < size; i++)
-		{
-			if (components[i] == component)
-			{
-				delete component;
+	//bool GameObject::RemoveComponent(Component* component)
+	//{
+	//	int size = components.size();
+	//	for (int i = 0; i < size; i++)
+	//	{
+	//		if (components[i] == component)
+	//		{
+	//			delete component;
 
-				if (size > 1)
-				{
-					components[i] = components[size - 1];
-				}
+	//			if (size > 1)
+	//			{
+	//				components[i] = components[size - 1];
+	//			}
 
-				components.pop_back();
+	//			components.pop_back();
 
-				return true;
-			}
-		}
-		return false;
-	}
+	//			return true;
+	//		}
+	//	}
+	//	return false;
+	//}
 
 
 	std::ostream& operator<<(std::ostream& os, const GameObject& b)

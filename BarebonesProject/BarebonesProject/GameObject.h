@@ -3,25 +3,12 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <concepts>
-#include "Component.h"
-#include "Transform.h"
 #include "Object.h"
+#include "ComponentPool.h"
 
 namespace Barebones
 {
-    /// <summary>
-    /// The provided type must be derived from Component.
-    /// </summary>
-    template<typename T>
-    concept SpecificComponent = std::is_base_of_v<Component, T> && !std::same_as<T, Component>;
 
-    /// <summary>
-    /// Transform is a mandatory component for a gameObject, so the provided 
-    /// type must be a specific component and different from Transform.
-    /// </summary>
-    template<typename T>
-    concept OptionalComponent = SpecificComponent<T> && !std::same_as<T, Transform>;
 
     /// <summary>
     /// A GameObject is a collection of components that define an entity and its behaviour.
@@ -30,7 +17,7 @@ namespace Barebones
     class GameObject : public Object
     {
     public:
-        Transform transform;
+        Transform* transform;
 
         GameObject(const std::string& name);
 
@@ -64,7 +51,7 @@ namespace Barebones
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>The added component.</returns>
-        Component* AddComponent(Component* component);
+        //Component* AddComponent(Component* component);
 
         /// <summary>
         /// Removes a component given its type with O(N) complexity. The internal order of the components
@@ -72,8 +59,8 @@ namespace Barebones
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns>True if the component was found and removed.</returns>
-        template<OptionalComponent T>
-        bool RemoveComponent();
+        /*template<OptionalComponent T>
+        bool RemoveComponent();*/
 
         /// <summary>
         /// Removes a component given its instance with O(N) complexity. The internal order of the components
@@ -81,7 +68,7 @@ namespace Barebones
         /// </summary>
         /// <param name="component"></param>
         /// <returns>True if the component was found and removed.</returns>
-        bool RemoveComponent(Component* component);
+        //bool RemoveComponent(Component* component);
 
         friend std::ostream& operator<<(std::ostream& os, const GameObject& b);
         friend std::ostream& operator<<(std::ostream& os, const GameObject* b);
@@ -111,35 +98,34 @@ namespace Barebones
     template<OptionalComponent T>
     T* GameObject::AddComponent()
     {
-        T* instance = new T();
-        instance->gameObject = this;
+        T* instance = ComponentPool<T>::CreateComponent(this);
         this->components.push_back(instance);
         return instance;
     }
 
-    template<OptionalComponent T>
-    bool GameObject::RemoveComponent()
-    {
-        int size = components.size();
-        for (int i = 0; i < size; i++)
-        {
-            T* typedComponent = dynamic_cast<T*>(components[i]);
-            if (typedComponent)
-            {
-                delete components[i];
+    //template<OptionalComponent T>
+    //bool GameObject::RemoveComponent()
+    //{
+    //    int size = components.size();
+    //    for (int i = 0; i < size; i++)
+    //    {
+    //        T* typedComponent = dynamic_cast<T*>(components[i]);
+    //        if (typedComponent)
+    //        {
+    //            delete components[i];
 
-                if (size > 1)
-                {
-                    components[i] = components[size - 1];
-                }
+    //            if (size > 1)
+    //            {
+    //                components[i] = components[size - 1];
+    //            }
 
-                components.pop_back();
+    //            components.pop_back();
 
-                return true;
-            }
-        }
-        return false; // If no matching component is found
-    }
+    //            return true;
+    //        }
+    //    }
+    //    return false; // If no matching component is found
+    //}
 
 }
 
