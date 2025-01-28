@@ -17,7 +17,7 @@ namespace Barebones
     class GameObject : public Object
     {
     public:
-        Transform* transform;
+        int transform;
 
         GameObject(const std::string& name);
 
@@ -34,7 +34,7 @@ namespace Barebones
         /// <typeparam name="T"></typeparam>
         /// <returns>The first component whose type matches the specified one.</returns>
         template <SpecificComponent T>
-        T* GetComponent();
+        T& GetComponent();
 
         /// <summary>
         /// Instantiates and adds a new component of the specified type to the gameObject with O(1) complexity.
@@ -42,7 +42,7 @@ namespace Barebones
         /// <typeparam name="T"></typeparam>
         /// <returns>The newly instantiated component.</returns>
         template <OptionalComponent T>
-        T* AddComponent();
+        T& AddComponent();
 
         /// <summary>
         /// Adds a component to the gameObject with O(1) complexity.
@@ -76,15 +76,22 @@ namespace Barebones
     private:
         static int s_id;
         int id;
-        std::vector<Component*> components;
+        std::vector<int> components;
     };
 
 
     template<SpecificComponent T>
-    T* GameObject::GetComponent()
+    T& GameObject::GetComponent()
     {
-        for (auto& component : components)
+        int componentCount = components.size();
+        for (int i = 0; i < componentCount; i++)
         {
+            int handle = components[i];
+            ComponentPool<T>::GetComponent(handle);
+        }
+        for (int handle : components)
+        {
+            ComponentPool<T>::
             // Attempt to cast the component to the requested type
             T* typedComponent = dynamic_cast<T*>(component);
             if (typedComponent)
@@ -96,11 +103,11 @@ namespace Barebones
     }
 
     template<OptionalComponent T>
-    T* GameObject::AddComponent()
+    T& GameObject::AddComponent()
     {
-        T* instance = ComponentPool<T>::CreateComponent(this);
-        this->components.push_back(instance);
-        return instance;
+        int handle = ComponentPool<T>::CreateComponent(this);
+        this->components.push_back(handle);
+        return ComponentPool<T>::GetComponent(handle);
     }
 
     template<OptionalComponent T>

@@ -9,7 +9,6 @@ namespace Barebones
 		Object(name)
 	{
 		this->id = GameObject::s_id++;
-		this->components = std::vector<Component*>();
 		this->transform = ComponentPool<Transform>::CreateComponent(this);
 		this->components.push_back(this->transform);
 	}

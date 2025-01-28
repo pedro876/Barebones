@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Transform.h"
 #include <vector>
+#include <unordered_map>
 
 namespace Barebones
 {
@@ -38,31 +39,47 @@ namespace Barebones
             return activeCount;
         }
     private:
-        static T* CreateComponent(GameObject* gameObject)
+
+        static T& GetComponent(int handle)
+        {
+            size_t index = handleToIndex[handle];
+            return components[index];
+        }
+
+        static int CreateComponent(GameObject* gameObject)
         {
             components.emplace_back();
             T* component = &components[activeCount];
-            component->poolIndex = activeCount;
+            component->handle = activeCount;
+            handleToIndex[activeCount] = activeCount;
             component->gameObject = gameObject;
             activeCount++;
-            return component;
+            return activeCount;
         }
 
-        static void DestroyComponent(T* component)
+        static void DestroyComponent(int handle)
         {
-            component->gameObject = nullptr;
-            int indexToRemove = component->poolIndex;
+            size_t index = handleToIndex[handle];
             activeCount--;
-            if (activeCount > 0)
-            {
-                std::swap(components[indexToRemove], components[activeCount]);
-                components[indexToRemove].poolIndex = indexToRemove;
-                //TODO: This will invalidate the stored pointer in the swapped gameObject to its component
-            }
+            std::swap(components[index], components[activeCount]);
+            components.pop_back();
+            handleToIndex[components[index].handle] = index;
+
+            //component->gameObject = nullptr;
+            //int indexToRemove = component->poolIndex;
+            //activeCount--;
+            //if (activeCount > 0)
+            //{
+            //    std::swap(components[indexToRemove], components[activeCount]);
+            //    components[indexToRemove].poolIndex = indexToRemove;
+            //    //TODO: This will invalidate the stored pointer in the swapped gameObject to its component
+            //}
         }
 
         static unsigned int activeCount;
         static std::vector<T> components;
+
+        static std::unordered_map<int, size_t> handleToIndex;
 	};
 
 
@@ -72,4 +89,7 @@ namespace Barebones
 
     template<SpecificComponent T>
     unsigned int ComponentPool<T>::activeCount = 0;
+
+    template<SpecificComponent T>
+    std::unordered_map<int, size_t> ComponentPool<T>::handleToIndex;
 }

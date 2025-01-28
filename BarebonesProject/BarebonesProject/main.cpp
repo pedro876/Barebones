@@ -16,11 +16,11 @@ int main()
 	Shader shaderProgram = Shader("vertex.vert", "fragment.frag");
 	Material material = Material("M_Test", &shaderProgram);
 
-	MeshRenderer* meshRenderer = testObject.AddComponent<MeshRenderer>();
+	MeshRenderer& meshRenderer = testObject.AddComponent<MeshRenderer>();
 
 	Mesh quad = Mesh(Primitive::Quad);
-	meshRenderer->mesh = &quad;
-	meshRenderer->material = &material;
+	meshRenderer.mesh = &quad;
+	meshRenderer.material = &material;
 
 	//testObject.RemoveComponent<MeshRenderer>();
 
