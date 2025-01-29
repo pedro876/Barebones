@@ -1,10 +1,6 @@
 //STD INCLUDES:
 
-#include "Coordinator.h"
-#include "RenderSystem.h"
-#include "Material.h"
-#include "MeshRenderer.h"
-#include "Transform.h"
+#include "Core/BarebonesEngine.h"
 
 using namespace Barebones;
 
@@ -17,7 +13,7 @@ int main()
 	coordinator.RegisterComponent<Transform>();
 	coordinator.RegisterComponent<MeshRenderer>();
 
-	Shader shaderProgram = Shader("vertex.vert", "fragment.frag");
+	Shader shaderProgram = Shader("Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
 	Material material = Material("M_Test", &shaderProgram);
 
 	Mesh quad = Mesh(Primitive::Quad);

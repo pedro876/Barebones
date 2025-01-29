@@ -43,83 +43,93 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stb_image.cpp">
+    <ClCompile Include="Core\_External\stb_image.cpp">
       <Filter>External</Filter>
     </ClCompile>
-    <ClCompile Include="glad.c">
+    <ClCompile Include="Core\_External\glad.c">
       <Filter>External</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="GL.cpp">
+    <ClCompile Include="Core\GL\GL.cpp">
       <Filter>Engine\GL</Filter>
     </ClCompile>
-    <ClCompile Include="DB.cpp">
+    <ClCompile Include="Core\DB\DB.cpp">
       <Filter>Engine\DB</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
+    <ClCompile Include="Core\AssetTypes\Mesh.cpp">
       <Filter>Engine\DB\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="File.cpp">
+    <ClCompile Include="Core\File\File.cpp">
       <Filter>Engine\File</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
+    <ClCompile Include="Core\AssetTypes\Material.cpp">
       <Filter>Engine\DB\Material</Filter>
     </ClCompile>
-    <ClCompile Include="RenderSystem.cpp">
+    <ClCompile Include="Core\Systems\RenderSystem.cpp">
       <Filter>Engine\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
+    <ClCompile Include="Core\AssetTypes\Object.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stb_image.h">
+    <ClInclude Include="Core\_External\stb_image.h">
       <Filter>External</Filter>
     </ClInclude>
-    <ClInclude Include="GL.h">
+    <ClInclude Include="Core\GL\GL.h">
       <Filter>Engine\GL</Filter>
     </ClInclude>
-    <ClInclude Include="DB.h">
+    <ClInclude Include="Core\DB\DB.h">
       <Filter>Engine\DB</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
+    <ClInclude Include="Core\AssetTypes\Mesh.h">
       <Filter>Engine\DB\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="File.h">
+    <ClInclude Include="Core\File\File.h">
       <Filter>Engine\File</Filter>
     </ClInclude>
     <ClInclude Include="Serialization.h">
       <Filter>Engine\Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="Core\AssetTypes\Material.h">
       <Filter>Engine\DB\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="Core\AssetTypes\Shader.h">
       <Filter>Engine\DB</Filter>
     </ClInclude>
-    <ClInclude Include="Coordinator.h">
+    <ClInclude Include="Core\ECS\Coordinator.h">
       <Filter>Engine\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
+    <ClInclude Include="Core\Components\Transform.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
-    <ClInclude Include="MeshRenderer.h">
+    <ClInclude Include="Core\Components\MeshRenderer.h">
       <Filter>Engine\Components</Filter>
     </ClInclude>
-    <ClInclude Include="RenderSystem.h">
+    <ClInclude Include="Core\Systems\RenderSystem.h">
       <Filter>Engine\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
+    <ClInclude Include="Core\AssetTypes\Object.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Core\ECS\EntityManager.h">
+      <Filter>Engine\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ECS\ECS_Types.h">
+      <Filter>Engine\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ECS\ComponentArray.h" />
+    <ClInclude Include="Core\ECS\ComponentManager.h" />
+    <ClInclude Include="Core\ECS\SystemManager.h" />
+    <ClInclude Include="Core\BarebonesEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertex.vert">
+    <None Include="Core\Shaders\vertex.vert">
       <Filter>Engine\Shaders</Filter>
     </None>
-    <None Include="fragment.frag">
+    <None Include="Core\Shaders\fragment.frag">
       <Filter>Engine\Shaders</Filter>
     </None>
   </ItemGroup>

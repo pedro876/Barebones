@@ -9,16 +9,16 @@
 // OPEN GLAND THIRD PARTY INCLUDES:
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "stb_image.h"
+#include "../_External/stb_image.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 // BAREBONES
-#include "Shader.h"
-#include "Mesh.h"
-#include "Transform.h"
-#include "MeshRenderer.h"
+#include "../AssetTypes/Shader.h"
+#include "../AssetTypes/Mesh.h"
+#include "../Components/Transform.h"
+#include "../Components/MeshRenderer.h"
 
 namespace Barebones
 {

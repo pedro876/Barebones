@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Coordinator.h"
-#include "Transform.h"
-#include "MeshRenderer.h"
-#include "GL.h"
+#include "../ECS/Coordinator.h"
+#include "../Components/Transform.h"
+#include "../Components/MeshRenderer.h"
+#include "../GL/GL.h"
 
 namespace Barebones
 {
