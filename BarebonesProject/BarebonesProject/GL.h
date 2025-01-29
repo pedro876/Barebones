@@ -17,6 +17,7 @@
 // BAREBONES
 #include "Shader.h"
 #include "Mesh.h"
+#include "Transform.h"
 #include "MeshRenderer.h"
 
 namespace Barebones
@@ -32,7 +33,7 @@ namespace Barebones
 		void EndFrame();
 
 		void DrawMesh(const Mesh& mesh);
-		void DrawMeshRenderer(const MeshRenderer& renderer);
+		void DrawMeshRenderer(const Transform& transform, const MeshRenderer& renderer);
 
 	private:
 		GLFWwindow* window;

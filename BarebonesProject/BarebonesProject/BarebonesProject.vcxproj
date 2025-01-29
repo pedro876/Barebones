@@ -133,35 +133,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Component.cpp" />
     <ClCompile Include="DB.cpp" />
     <ClCompile Include="File.cpp" />
-    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GL.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="RenderSystem.cpp" />
     <ClCompile Include="stb_image.cpp" />
-    <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="ComponentPool.h" />
     <ClInclude Include="Coordinator.h" />
     <ClInclude Include="DB.h" />
     <ClInclude Include="File.h" />
-    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GL.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="Serialization.h" />
-    <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Transform.h" />

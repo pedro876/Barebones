@@ -1,7 +1,5 @@
 #include "GL.h"
 
-#include "GameObject.h"
-
 namespace Barebones
 {
 	GL::GL()
@@ -63,9 +61,8 @@ namespace Barebones
 		glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 	}
 
-	void GL::DrawMeshRenderer(const MeshRenderer& renderer)
+	void GL::DrawMeshRenderer(const Transform& transform, const MeshRenderer& renderer)
 	{
-		Transform* transform = renderer.gameObject->transform;
 		//TODO: set model matrix
 		renderer.material->shader->use();
 		DrawMesh(*renderer.mesh);

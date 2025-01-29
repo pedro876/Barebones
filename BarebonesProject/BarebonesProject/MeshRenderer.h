@@ -1,17 +1,13 @@
 #pragma once
 
-#include "Component.h"
-#include "Mesh.h"
 #include "Material.h"
+#include "Mesh.h"
 
 namespace Barebones
 {
-	class MeshRenderer : public Component
+	struct MeshRenderer
 	{
-	public:
-		friend class GL;
-		Mesh* mesh = nullptr;
-		Material* material = nullptr;
+		Mesh* mesh;
+		Material* material;
 	};
 }
-

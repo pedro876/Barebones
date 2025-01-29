@@ -9,7 +9,7 @@
 #include <memory>
 #include <set>
 
-namespace Barebones::ECS
+namespace Barebones
 {
 	using Entity = std::uint32_t;
 	const Entity MAX_ENTITIES = 5000;
@@ -78,7 +78,7 @@ namespace Barebones::ECS
 	class ComponentArray : public IComponentArray
 	{
 	public:
-		void InsertData(Entity entity, T Component)
+		void InsertData(Entity entity, T component)
 		{
 			assert(mEntityToIndexMap.find(entity) == mEntityToIndexMap.end() && "Component added to same entity more than once.");
 
@@ -139,8 +139,8 @@ namespace Barebones::ECS
 
 			assert(mComponentTypes.find(typeName) == mComponentTypes.end() && "Registering component type more than once.");
 
-			mComponentTypes.insert({ typename, mNextComponentType });
-			mComponentArrays.insert({ typename, std::make_shared<ComponentArray<T>>() });
+			mComponentTypes.insert({ typeName, mNextComponentType });
+			mComponentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
 			++mNextComponentType;
 		}
 
@@ -206,7 +206,7 @@ namespace Barebones::ECS
 		std::shared_ptr<T> RegisterSystem()
 		{
 			const char* typeName = typeid(T).name();
-			assert(mSystem.find(typeName) == mSystems.end() && "Registering system more than once.");
+			assert(mSystems.find(typeName) == mSystems.end() && "Registering system more than once.");
 
 			auto system = std::make_shared<T>();
 			mSystems.insert({ typeName, system });
@@ -218,7 +218,7 @@ namespace Barebones::ECS
 		{
 			const char* typeName = typeid(T).name();
 			assert(mSystems.find(typeName) != mSystems.end() && "System used before registered.");
-			mSignatures.insert({ typename, signature });
+			mSignatures.insert({ typeName, signature });
 		}
 
 		void EntityDestroyed(Entity entity)
@@ -285,7 +285,7 @@ namespace Barebones::ECS
 		{
 			mComponentManager->AddComponent<T>(entity, component);
 
-			auto signature = mEntityManger->GetSignature(entity);
+			auto signature = mEntityManager->GetSignature(entity);
 			signature.set(mComponentManager->GetComponentType<T>(), true);
 			mEntityManager->SetSignature(entity, signature);
 

@@ -1,40 +1,46 @@
 //STD INCLUDES:
 
-#include "GL.h"
-#include "GameObject.h"
+#include "Coordinator.h"
+#include "RenderSystem.h"
 #include "Material.h"
-#include "ComponentPool.h"
+#include "MeshRenderer.h"
+#include "Transform.h"
 
 using namespace Barebones;
 
 int main()
 {
+	Coordinator coordinator{};
 	GL gl{};
+	coordinator.Init();
 
-	GameObject testObject{ "testObject" };
+	coordinator.RegisterComponent<Transform>();
+	coordinator.RegisterComponent<MeshRenderer>();
 
 	Shader shaderProgram = Shader("vertex.vert", "fragment.frag");
 	Material material = Material("M_Test", &shaderProgram);
 
-	MeshRenderer& meshRenderer = testObject.AddComponent<MeshRenderer>();
-
 	Mesh quad = Mesh(Primitive::Quad);
+
+	std::shared_ptr<RenderSystem> renderSystem = coordinator.RegisterSystem<RenderSystem>();
+	Signature signature;
+	signature.set(coordinator.GetComponentType<Transform>());
+	signature.set(coordinator.GetComponentType<MeshRenderer>());
+
+	Entity entity = coordinator.CreateEntity();
+
+	coordinator.AddComponent(entity, Transform{});
+	coordinator.AddComponent(entity, MeshRenderer{});
+
+	MeshRenderer& meshRenderer = coordinator.GetComponent<MeshRenderer>(entity);
 	meshRenderer.mesh = &quad;
 	meshRenderer.material = &material;
-
-	//testObject.RemoveComponent<MeshRenderer>();
 
 	while (!gl.WindowShouldClose())
 	{
 		gl.BeginFrame();
 
-
-		const std::vector<MeshRenderer>& renderers = ComponentPool<MeshRenderer>::GetComponents();
-		int activeCount = ComponentPool<MeshRenderer>::GetActiveCount();
-		for (int i = 0; i < activeCount; i++)
-		{
-			gl.DrawMeshRenderer(renderers[i]);
-		}
+		renderSystem->Update(coordinator, gl, 1.0f);
 
 		gl.EndFrame();
 	}
