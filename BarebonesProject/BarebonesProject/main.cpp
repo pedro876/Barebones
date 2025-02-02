@@ -37,22 +37,44 @@ int main()
 	coordinator.AddComponent(entity, Transform{});
 	coordinator.AddComponent(entity, MeshRenderer{});
 
-	Entity camera = coordinator.CreateEntity();
-	coordinator.AddComponent(camera, Camera{});
-	coordinator.AddComponent(camera, Transform{});
+	Entity cameraEntity = coordinator.CreateEntity();
+	coordinator.AddComponent(cameraEntity, Camera{});
+	coordinator.AddComponent(cameraEntity, Transform{});
+
+	Transform& cameraTransform = coordinator.GetComponent<Transform>(cameraEntity);
+	cameraTransform.SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+	cameraTransform.SetLocalRotation(glm::vec3(0.0f, 180.0f, 0.0f));
 
 	MeshRenderer& meshRenderer = coordinator.GetComponent<MeshRenderer>(entity);
 	meshRenderer.mesh = &quad;
 	meshRenderer.material = &material;
 
+	double time = glfwGetTime();
+	float deltaTime = 0.0f;
+	glm::vec3 localPos = cameraTransform.GetLocalPosition();
+
 	while (!gl.WindowShouldClose())
 	{
 		gl.BeginFrame();
+		localPos = glm::rotate(glm::quat(glm::radians(glm::vec3(0.0f, 30.0f * deltaTime, 0.0f))), localPos);
+		glm::quat localRot = glm::quatLookAt(-glm::normalize(localPos), glm::vec3(0.0f, 1.0f, 0.0f));
+		
+		cameraTransform.SetLocalPosition(localPos);
+		cameraTransform.SetLocalRotation(localRot);
+		glm::vec3 eulerAngles = glm::eulerAngles(localRot);
+		eulerAngles = glm::degrees(eulerAngles);
 
-		cameraSystem->Update(coordinator, 1.0f);
-		renderSystem->Update(coordinator, gl, 1.0f);
+		//std::cout << eulerAngles.x << " " << eulerAngles.y << " " << eulerAngles.z << "\n";
+		//std::cout << localPos.x << " " << localPos.z << "\n\n";
+
+		cameraSystem->Update(coordinator, deltaTime);
+		renderSystem->Update(coordinator, gl, deltaTime);
 
 		gl.EndFrame();
+
+		double newTime = glfwGetTime();
+		deltaTime = newTime - time;
+		time = newTime;
 	}
 
 	return 0;

@@ -15,9 +15,10 @@ namespace Barebones
 		{
 			if (dirty)
 			{
-				localToWorld = glm::scale(glm::mat4{ 1.0f }, localScale);
-				localToWorld = glm::toMat4(localRotation) * localToWorld;
+				localToWorld = glm::mat4(1.0f); // Start with identity matrix
 				localToWorld = glm::translate(localToWorld, localPosition);
+				localToWorld = localToWorld * glm::toMat4(localRotation);
+				localToWorld = glm::scale(localToWorld, localScale);
 				dirty = false;
 			}
 			return localToWorld;
@@ -30,7 +31,8 @@ namespace Barebones
 
 		// SETTERS
 		void SetLocalPosition(glm::vec3 localPosition) { this->localPosition = localPosition; dirty = true; }
-		void SetLocalRotation(glm::vec3 localRotation) { this->localRotation = localRotation; dirty = true; }
+		void SetLocalRotation(glm::vec3 localRotation) { this->localRotation = glm::quat{ glm::radians(localRotation) }; dirty = true; }
+		void SetLocalRotation(glm::quat localRotation) { this->localRotation = localRotation; dirty = true; }
 		void SetLocalScale(glm::vec3 localScale) { this->localScale = localScale; dirty = true; }
 
 	private:

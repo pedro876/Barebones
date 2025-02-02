@@ -19,7 +19,7 @@ namespace Barebones
 #endif
 
 		// CREATE WINDOW:
-		window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+		window = glfwCreateWindow(1280, 720, "LearnOpenGL", NULL, NULL);
 		if (window == NULL)
 		{
 			throw std::runtime_error("Failed to create GLFW window");
