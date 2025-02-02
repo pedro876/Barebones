@@ -5,6 +5,8 @@
 #include "../Components/MeshRenderer.h"
 #include "../GL/GL.h"
 
+#include "CameraSystem.h"
+
 namespace Barebones
 {
 	class RenderSystem : public System

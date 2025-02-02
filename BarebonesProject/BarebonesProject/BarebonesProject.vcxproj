@@ -136,6 +136,7 @@
     <ClCompile Include="Core\DB\DB.cpp" />
     <ClCompile Include="Core\File\File.cpp" />
     <ClCompile Include="Core\GL\GL.cpp" />
+    <ClCompile Include="Core\Systems\CameraSystem.cpp" />
     <ClCompile Include="Core\_External\glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\AssetTypes\Material.cpp" />
@@ -146,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\BarebonesEngine.h" />
+    <ClInclude Include="Core\Components\Camera.h" />
     <ClInclude Include="Core\ECS\ComponentArray.h" />
     <ClInclude Include="Core\ECS\ComponentManager.h" />
     <ClInclude Include="Core\ECS\Coordinator.h" />
@@ -158,6 +160,7 @@
     <ClInclude Include="Core\AssetTypes\Mesh.h" />
     <ClInclude Include="Core\Components\MeshRenderer.h" />
     <ClInclude Include="Core\AssetTypes\Object.h" />
+    <ClInclude Include="Core\Systems\CameraSystem.h" />
     <ClInclude Include="Core\Systems\RenderSystem.h" />
     <ClInclude Include="Serialization.h" />
     <ClInclude Include="Core\AssetTypes\Shader.h" />

@@ -73,6 +73,7 @@
     <ClCompile Include="Core\AssetTypes\Object.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Systems\CameraSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\_External\stb_image.h">
@@ -124,6 +125,8 @@
     <ClInclude Include="Core\ECS\ComponentManager.h" />
     <ClInclude Include="Core\ECS\SystemManager.h" />
     <ClInclude Include="Core\BarebonesEngine.h" />
+    <ClInclude Include="Core\Components\Camera.h" />
+    <ClInclude Include="Core\Systems\CameraSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Shaders\vertex.vert">

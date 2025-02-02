@@ -61,10 +61,12 @@ namespace Barebones
 		glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
 	}
 
-	void GL::DrawMeshRenderer(const Transform& transform, const MeshRenderer& renderer)
+	void GL::DrawMeshRenderer(const glm::mat4& viewProjMat, Transform& transform, const MeshRenderer& renderer)
 	{
 		//TODO: set model matrix
 		renderer.material->shader->use();
+		glm::mat4 modelMat = transform.GetLocalToWorldMatrix();
+		renderer.material->shader->setMat4("_ModelViewProj", viewProjMat * modelMat);
 		DrawMesh(*renderer.mesh);
 	}
 }

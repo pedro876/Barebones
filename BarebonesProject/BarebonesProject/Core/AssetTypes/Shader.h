@@ -7,6 +7,8 @@
 #include <sstream>
 #include <iostream>
 #include "../File/File.h"
+#include "glm/glm.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Barebones
 {
@@ -69,6 +71,11 @@ namespace Barebones
         void setFloat(const std::string& name, float value) const
         {
             glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+        }
+        void setMat4(const std::string& name, glm::mat4 matrix) const
+        {
+            int matrixLoc = glGetUniformLocation(ID, name.c_str());
+            glUniformMatrix4fv(matrixLoc, 1, GL_FALSE, glm::value_ptr(matrix));
         }
 
     private:

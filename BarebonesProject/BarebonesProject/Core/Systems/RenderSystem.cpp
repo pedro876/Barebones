@@ -13,8 +13,7 @@ namespace Barebones
 		{
 			auto& transform = coordinator.GetComponent<Transform>(entity);
 			auto& meshRenderer = coordinator.GetComponent<MeshRenderer>(entity);
-			gl.DrawMeshRenderer(transform, meshRenderer);
-
+			gl.DrawMeshRenderer(CameraSystem::mainViewProj, transform, meshRenderer);
 		}
 	}
 }
