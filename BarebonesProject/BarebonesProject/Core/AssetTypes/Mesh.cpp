@@ -37,7 +37,27 @@ namespace Barebones
 		}
 
 		indexCount = triangleCount * 3;
+		GenerateVAO();
+	}
 
+	Mesh::Mesh(unsigned int vertexCount, unsigned int indexCount, float* vertices, unsigned int* indices,
+		float* normals)
+		: vertexCount(vertexCount), indexCount(indexCount), vertices(vertices), indices(indices),
+		normals(normals)
+	{
+		triangleCount = indexCount / 3;
+		GenerateVAO();
+	}
+
+	Mesh::~Mesh()
+	{
+		delete[] vertices;
+		delete[] indices;
+		delete[] normals;
+	}
+
+	void Mesh::GenerateVAO()
+	{
 		//VAO GENERATION
 		glGenBuffers(1, &EBO);
 		glGenBuffers(1, &VBO);
@@ -52,13 +72,6 @@ namespace Barebones
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
-	}
-
-	Mesh::~Mesh()
-	{
-		delete[] vertices;
-		delete[] indices;
-		delete[] normals;
 	}
 
 }

@@ -11,6 +11,7 @@ namespace Barebones
 		/// <summary>
 		/// A 1x1 quad in the XY axis that points towards positive Z.
 		/// </summary>
+		Model,
 		Quad,
 	};
 
@@ -20,6 +21,8 @@ namespace Barebones
 		friend class GL;
 
 		Mesh(Primitive primitive);
+		Mesh(unsigned int vertexCount, unsigned int indexCount, float* vertices, unsigned int* indices, 
+			float* normals = nullptr);
 		~Mesh();
 
 	private:
@@ -27,12 +30,14 @@ namespace Barebones
 		unsigned int indexCount = 0;
 		unsigned int triangleCount = 0;
 		float* vertices = nullptr;
-		float* normals = nullptr;
 		unsigned int* indices = nullptr;
+		float* normals = nullptr;
 
 		unsigned int EBO; //Element buffer object
 		unsigned int VBO; //Vertex buffer object
 		unsigned int VAO; //Vertex array object
+
+		void GenerateVAO();
 	};
 
 
