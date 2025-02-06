@@ -33,10 +33,37 @@ namespace Barebones
 			processNode(node->mChildren[i], scene);
 		}
 	}
+
 	Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		unsigned int vertexCount = mesh->mNumVertices;
-		Mesh finalMesh{Primitive::Quad};
-		return finalMesh;
+		glm::vec3* vertices = new glm::vec3[vertexCount];
+
+		for (unsigned int i = 0; i < vertexCount; i++)
+		{
+			vertices[i].x = mesh->mVertices[i].x;
+			vertices[i].y = mesh->mVertices[i].y;
+			vertices[i].z = mesh->mVertices[i].z;
+		}
+
+		
+		unsigned int indexCount = 0;
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+		{
+			indexCount += mesh->mFaces[i].mNumIndices;
+		}
+
+		unsigned int* indices = new unsigned int[indexCount];
+		unsigned int currentIndex = 0;
+		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+		{
+			aiFace face = mesh->mFaces[i];
+			for (unsigned int j = 0; j < face.mNumIndices; j++)
+			{
+				indices[currentIndex++] = face.mIndices[j];
+			}
+		}
+
+		return Mesh(vertexCount, indexCount, vertices, indices);
 	}
 }

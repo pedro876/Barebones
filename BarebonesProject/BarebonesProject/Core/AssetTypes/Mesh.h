@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 #include <format>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 
 namespace Barebones
@@ -21,17 +23,17 @@ namespace Barebones
 		friend class GL;
 
 		Mesh(Primitive primitive);
-		Mesh(unsigned int vertexCount, unsigned int indexCount, float* vertices, unsigned int* indices, 
-			float* normals = nullptr);
+		Mesh(unsigned int vertexCount, unsigned int indexCount, glm::vec3* vertices, unsigned int* indices, 
+			glm::vec3* normals = nullptr);
 		~Mesh();
 
 	private:
 		unsigned int vertexCount = 0;
 		unsigned int indexCount = 0;
 		unsigned int triangleCount = 0;
-		float* vertices = nullptr;
+		glm::vec3* vertices = nullptr;
 		unsigned int* indices = nullptr;
-		float* normals = nullptr;
+		glm::vec3* normals = nullptr;
 
 		unsigned int EBO; //Element buffer object
 		unsigned int VBO; //Vertex buffer object

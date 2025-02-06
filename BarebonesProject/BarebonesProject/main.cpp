@@ -17,6 +17,8 @@ int main()
 	Shader shaderProgram = Shader("Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
 	Material material = Material("M_Test", &shaderProgram);
 
+	Model model = Model("Core/Assets/Models/Cube.fbx");
+	Mesh* cube = model.GetMesh(0);
 	Mesh quad = Mesh(Primitive::Quad);
 
 	std::shared_ptr<RenderSystem> renderSystem = coordinator.RegisterSystem<RenderSystem>();
@@ -46,7 +48,7 @@ int main()
 	cameraTransform.SetLocalRotation(glm::vec3(0.0f, 180.0f, 0.0f));
 
 	MeshRenderer& meshRenderer = coordinator.GetComponent<MeshRenderer>(entity);
-	meshRenderer.mesh = &quad;
+	meshRenderer.mesh = cube;
 	meshRenderer.material = &material;
 
 	double time = glfwGetTime();

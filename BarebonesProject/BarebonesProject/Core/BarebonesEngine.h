@@ -7,3 +7,4 @@
 #include "Components/MeshRenderer.h"
 #include "Systems/CameraSystem.h"
 #include "Systems/RenderSystem.h"
+#include "AssetTypes/Model.h"

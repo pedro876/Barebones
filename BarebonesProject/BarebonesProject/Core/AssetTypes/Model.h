@@ -14,9 +14,13 @@ namespace Barebones
 	class Model
 	{
 	public:
-		Model(char* path)
+		Model(const char* path)
 		{
 			loadModel(path);
+		}
+		Mesh* GetMesh(unsigned int meshIndex)
+		{
+			return &meshes[meshIndex];
 		}
 	private:
 		std::vector<Mesh> meshes;
