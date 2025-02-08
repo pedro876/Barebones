@@ -2,7 +2,8 @@
 
 namespace Barebones
 {
-    Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+    Shader::Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) :
+        Asset(name)
     {
         const std::string vShaderCodeStr = File::Read(vertexPath);
         const std::string fShaderCodeStr = File::Read(fragmentPath);
@@ -33,6 +34,30 @@ namespace Barebones
         // delete the shaders as they're linked into our program now and no longer necessary
         glDeleteShader(vertex);
         glDeleteShader(fragment);
+    }
+
+    Shader::Shader(Shader&& other) noexcept :
+        Asset(other.name),
+        ID(other.ID)
+    {
+        other.ID = 0;
+    }
+
+    Shader& Shader::operator=(Shader&& other) noexcept
+    {
+        if (this != &other)
+        {
+            name = other.name;
+            ID = other.ID;
+            other.ID = 0;
+        }
+
+        return *this;
+    }
+
+    Shader::~Shader()
+    {
+        glDeleteProgram(ID);
     }
 
     void Shader::Use()

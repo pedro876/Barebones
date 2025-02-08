@@ -9,16 +9,25 @@
 #include "../File/File.h"
 #include "glm/glm.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include "Asset.h"
 
 namespace Barebones
 {
-    class Shader
+    class Shader : public Asset
     {
     public:
         unsigned int ID;
 
-        Shader(const std::string& vertexPath, const std::string& fragmentPath);
-        
+        Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
+
+        Shader(const Shader&) = delete;
+        Shader& operator=(const Shader&) = delete;
+
+        Shader(Shader&&) noexcept;
+        Shader& operator=(Shader&&) noexcept;
+
+        ~Shader();
+
         void Use();
         void SetBool(const std::string& name, bool value) const;
         void SetInt(const std::string& name, int value) const;

@@ -14,7 +14,7 @@ int main()
 	coordinator.RegisterComponent<MeshRenderer>();
 	coordinator.RegisterComponent<Camera>();
 
-	Shader shaderProgram = Shader("Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
+	Shader shaderProgram = Shader("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
 	Material material = Material("M_Test", &shaderProgram);
 
 	Model model = Model("Core/Assets/Models/Cube.fbx");
