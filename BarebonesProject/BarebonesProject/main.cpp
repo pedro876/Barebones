@@ -65,9 +65,6 @@ int main()
 		glm::vec3 eulerAngles = glm::eulerAngles(localRot);
 		eulerAngles = glm::degrees(eulerAngles);
 
-		//std::cout << eulerAngles.x << " " << eulerAngles.y << " " << eulerAngles.z << "\n";
-		//std::cout << localPos.x << " " << localPos.z << "\n\n";
-
 		cameraSystem->Update(coordinator, deltaTime);
 		renderSystem->Update(coordinator, gl, deltaTime);
 

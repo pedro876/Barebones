@@ -2,13 +2,11 @@
 
 namespace Barebones
 {
-	Mesh::Mesh(Primitive primitive)
+	Mesh::Mesh(Primitive primitive, bool isReadable) : isReadable(isReadable)
 	{
 		switch (primitive)
 		{
 		case Primitive::Quad:
-			vertexCount = 4;
-			triangleCount = 2;
 			indices = 
 				{
 					0, 3, 1,
@@ -16,72 +14,57 @@ namespace Barebones
 				};
 			vertices = 
 				{
-					glm::vec3(-0.5f, -0.5f, 0.0f),
-					glm::vec3(-0.5f, 0.5f, 0.0f),
-					glm::vec3(0.5f, -0.5f, 0.0f),
-					glm::vec3(0.5f, 0.5f, 0.0f)
-				};
-			normals = 
-				{
-					glm::vec3(0.0f, 0.0f, 1.0f),
-					glm::vec3(0.0f, 0.0f, 1.0f),
-					glm::vec3(0.0f, 0.0f, 1.0f),
-					glm::vec3(0.0f, 0.0f, 1.0f)
+					Vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+					Vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+					Vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)),
+					Vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f))
 				};
 			break;
 		default:
-			vertexCount = 0;
-			triangleCount = 0;
 			throw std::logic_error("Primitive type {} not implemented");
 			break;
 		}
 
-		indexCount = triangleCount * 3;
 		GenerateVAO();
 	}
 
-	Mesh::Mesh(unsigned int indexCount, unsigned int vertexCount, std::vector<unsigned int> indices, 
-		std::vector<glm::vec3> vertices,
-		std::vector<glm::vec3> normals)
-		: indexCount(indexCount), vertexCount(vertexCount), indices(indices), 
-		vertices(vertices),
-		normals(normals)
+	Mesh::Mesh(std::vector<unsigned int> indices, std::vector<Vertex> vertices, bool isReadable)
+		: indices(indices), vertices(vertices), isReadable(isReadable)
 	{
-		triangleCount = indexCount / 3;
 		GenerateVAO();
 	}
 
-	Mesh::Mesh(Mesh&& other) :
-		vertexCount(other.vertexCount),
-		indexCount(other.indexCount),
-		triangleCount(other.triangleCount),
+	Mesh::Mesh(Mesh&& other) noexcept :
 		indices(std::move(other.indices)),
 		vertices(std::move(other.vertices)),
-		normals(std::move(other.normals)),
+		indexCount(other.indexCount),
+		vertexCount(other.vertexCount),
+		isReadable(other.isReadable),
 		EBO(other.EBO),
 		VBO(other.VBO),
 		VAO(other.VAO)
 	{
 		other.VAO = other.VBO = other.EBO = 0;
-		other.vertexCount = other.indexCount = other.triangleCount = 0;
+		other.indexCount = other.vertexCount = 0;
+		other.isReadable = true;
 	}
 
-	Mesh& Mesh::operator=(Mesh&& other)
+	Mesh& Mesh::operator=(Mesh&& other) noexcept
 	{
 		if (this != &other)
 		{
-			indexCount = other.indexCount;
-			vertexCount = other.vertexCount;
-			triangleCount = other.triangleCount;
 			indices = std::move(other.indices);
 			vertices = std::move(other.vertices);
-			normals = std::move(other.normals);
+			indexCount = other.indexCount;
+			vertexCount = other.vertexCount;
+			isReadable = other.isReadable;
 			VAO = other.VAO;
 			VBO = other.VBO;
 			EBO = other.EBO;
 
 			other.VAO = other.VBO = other.EBO = 0;
-			other.vertexCount = other.indexCount = other.triangleCount = 0;
+			other.indexCount = other.vertexCount = 0;
+			other.isReadable = false;
 		}
 
 		return *this;
@@ -94,8 +77,17 @@ namespace Barebones
 		glDeleteBuffers(1, &VBO);
 	}
 
+	void Mesh::Draw() const
+	{
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	}
+
 	void Mesh::GenerateVAO()
 	{
+		indexCount = indices.size();
+		vertexCount = vertices.size();
+
 		//GENERATE BUFFERS
 		glGenBuffers(1, &EBO);
 		glGenBuffers(1, &VBO);
@@ -106,13 +98,27 @@ namespace Barebones
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-		//FILL BUFFERS
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3 * triangleCount, indices.data(), GL_STATIC_DRAW);
+		//FILL INDICES
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indexCount, indices.data(), GL_STATIC_DRAW);
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 3 * vertexCount, vertices.data(), GL_STATIC_DRAW);
+		//FILL ATTRIBUTES
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexCount, vertices.data(), GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
 		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+		
+		glBindVertexArray(0);
+
+		//If mesh data won't be accessed in CPU anymore, release it.
+		if (!isReadable)
+		{
+			indices.clear();
+			indices.shrink_to_fit();
+			vertices.clear();
+			vertices.shrink_to_fit();
+		}
 	}
 
 }

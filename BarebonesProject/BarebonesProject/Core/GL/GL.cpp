@@ -46,6 +46,7 @@ namespace Barebones
 	void GL::BeginFrame()
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
@@ -55,19 +56,13 @@ namespace Barebones
 		glfwPollEvents();
 	}
 
-	void GL::DrawMesh(const Mesh& mesh)
-	{
-		glBindVertexArray(mesh.VAO);
-		glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-	}
-
 	void GL::DrawMeshRenderer(const glm::mat4& viewProjMat, Transform& transform, const MeshRenderer& renderer)
 	{
 		//TODO: set model matrix
 		renderer.material->shader->use();
 		glm::mat4 modelMat = transform.GetLocalToWorldMatrix();
 		renderer.material->shader->setMat4("_ModelViewProj", viewProjMat * modelMat);
-		DrawMesh(*renderer.mesh);
+		renderer.mesh->Draw();
 	}
 }
 

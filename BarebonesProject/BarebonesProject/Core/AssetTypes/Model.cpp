@@ -50,24 +50,28 @@ namespace Barebones
 		// Attributes
 		unsigned int vertexCount = mesh->mNumVertices;
 
-		std::vector<glm::vec3> vertices;
+		std::vector<Vertex> vertices;
 		vertices.reserve(vertexCount);
 		for (unsigned int i = 0; i < vertexCount; i++)
 		{
 			aiVector3D vertex = mesh->mVertices[i];
-			vertices.push_back(glm::vec3(vertex.x, vertex.y, vertex.z));
+			vertices.push_back(
+				Vertex(
+					glm::vec3(vertex.x, vertex.y, vertex.z),
+					glm::vec3(0.0f, 0.0f, 1.0f)
+				)
+			);
 		}
 
-		std::vector<glm::vec3> normals;
 		if (mesh->HasNormals())
 		{
 			for (unsigned int i = 0; i < vertexCount; i++)
 			{
 				aiVector3D normal = mesh->mNormals[i];
-				normals.push_back(glm::vec3(normal.x, normal.y, normal.z));
+				vertices[i].normal = glm::vec3(normal.x, normal.y, normal.z);
 			}
 		}
 
-		return Mesh(indices.size(), vertexCount, indices, vertices, normals);
+		return Mesh(indices, vertices);
 	}
 }

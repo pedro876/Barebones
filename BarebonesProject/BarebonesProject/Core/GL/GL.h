@@ -32,7 +32,6 @@ namespace Barebones
 		void BeginFrame();
 		void EndFrame();
 
-		void DrawMesh(const Mesh& mesh);
 		void DrawMeshRenderer(const glm::mat4& viewProjMat, Transform& transform, const MeshRenderer& renderer);
 
 	private:

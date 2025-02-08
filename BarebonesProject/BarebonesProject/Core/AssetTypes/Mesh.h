@@ -17,33 +17,37 @@ namespace Barebones
 		Quad,
 	};
 
+	struct Vertex
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+	};
+
 	class Mesh
 	{
 	public:
-		friend class GL;
 
 		Mesh() = delete;
-		Mesh(Primitive primitive);
-		Mesh(unsigned int indexCount, unsigned int vertexCount, std::vector<unsigned int> indices,
-			std::vector<glm::vec3> vertices,
-			std::vector<glm::vec3> normals);
+		Mesh(Primitive primitive, bool isReadable = false);
+		Mesh(std::vector<unsigned int> indices, std::vector<Vertex> vertices, bool isReadable = false);
 
 		Mesh(const Mesh&) = delete;
 		Mesh& operator=(const Mesh&) = delete;
 
-		Mesh(Mesh&&);
-		Mesh& operator=(Mesh&&);
+		Mesh(Mesh&&) noexcept;
+		Mesh& operator=(Mesh&&) noexcept;
+
+		void Draw() const;
 
 		~Mesh();
 
 	private:
-		unsigned int vertexCount = 0;
-		unsigned int indexCount = 0;
-		unsigned int triangleCount = 0;
-		std::vector<glm::vec3> vertices;
+		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
-		std::vector<glm::vec3> normals;
+		unsigned int indexCount;
+		unsigned int vertexCount;
 
+		bool isReadable;
 		unsigned int EBO; //Element buffer object
 		unsigned int VBO; //Vertex buffer object
 		unsigned int VAO; //Vertex array object
