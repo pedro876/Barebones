@@ -51,6 +51,49 @@ namespace Barebones
 		GenerateVAO();
 	}
 
+	Mesh::Mesh(Mesh&& other) :
+		vertexCount(other.vertexCount),
+		indexCount(other.indexCount),
+		triangleCount(other.triangleCount),
+		indices(std::move(other.indices)),
+		vertices(std::move(other.vertices)),
+		normals(std::move(other.normals)),
+		EBO(other.EBO),
+		VBO(other.VBO),
+		VAO(other.VAO)
+	{
+		other.VAO = other.VBO = other.EBO = 0;
+		other.vertexCount = other.indexCount = other.triangleCount = 0;
+	}
+
+	Mesh& Mesh::operator=(Mesh&& other)
+	{
+		if (this != &other)
+		{
+			indexCount = other.indexCount;
+			vertexCount = other.vertexCount;
+			triangleCount = other.triangleCount;
+			indices = std::move(other.indices);
+			vertices = std::move(other.vertices);
+			normals = std::move(other.normals);
+			VAO = other.VAO;
+			VBO = other.VBO;
+			EBO = other.EBO;
+
+			other.VAO = other.VBO = other.EBO = 0;
+			other.vertexCount = other.indexCount = other.triangleCount = 0;
+		}
+
+		return *this;
+	}
+
+	Mesh::~Mesh()
+	{
+		glDeleteBuffers(1, &VAO);
+		glDeleteBuffers(1, &EBO);
+		glDeleteBuffers(1, &VBO);
+	}
+
 	void Mesh::GenerateVAO()
 	{
 		//GENERATE BUFFERS

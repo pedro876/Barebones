@@ -22,10 +22,19 @@ namespace Barebones
 	public:
 		friend class GL;
 
+		Mesh() = delete;
 		Mesh(Primitive primitive);
 		Mesh(unsigned int indexCount, unsigned int vertexCount, std::vector<unsigned int> indices,
 			std::vector<glm::vec3> vertices,
 			std::vector<glm::vec3> normals);
+
+		Mesh(const Mesh&) = delete;
+		Mesh& operator=(const Mesh&) = delete;
+
+		Mesh(Mesh&&);
+		Mesh& operator=(Mesh&&);
+
+		~Mesh();
 
 	private:
 		unsigned int vertexCount = 0;
