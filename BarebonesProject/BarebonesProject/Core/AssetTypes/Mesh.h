@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <vector>
+#include "Asset.h"
 
 namespace Barebones
 {
@@ -23,13 +24,13 @@ namespace Barebones
 		glm::vec3 normal;
 	};
 
-	class Mesh
+	class Mesh : public Asset
 	{
 	public:
 
 		Mesh() = delete;
 		Mesh(Primitive primitive, bool isReadable = false);
-		Mesh(std::vector<unsigned int> indices, std::vector<Vertex> vertices, bool isReadable = false);
+		Mesh(const std::string& name, std::vector<unsigned int> indices, std::vector<Vertex> vertices, bool isReadable = false);
 
 		Mesh(const Mesh&) = delete;
 		Mesh& operator=(const Mesh&) = delete;

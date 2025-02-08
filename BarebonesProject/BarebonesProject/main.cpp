@@ -20,6 +20,8 @@ int main()
 	Model model = Model("Core/Assets/Models/Cube.fbx");
 	Mesh* cube = model.GetMesh(0);
 
+	Model testRoom = Model("Game/Assets/Models/TestRoom.fbx");
+
 	std::shared_ptr<RenderSystem> renderSystem = coordinator.RegisterSystem<RenderSystem>();
 	Signature signature;
 	signature.set(coordinator.GetComponentType<Transform>());

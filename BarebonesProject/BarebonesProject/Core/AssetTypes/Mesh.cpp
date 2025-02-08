@@ -7,6 +7,7 @@ namespace Barebones
 		switch (primitive)
 		{
 		case Primitive::Quad:
+			this->name = "M_Quad";
 			indices = 
 				{
 					0, 3, 1,
@@ -21,20 +22,21 @@ namespace Barebones
 				};
 			break;
 		default:
-			throw std::logic_error("Primitive type {} not implemented");
+			throw std::logic_error("Primitive type not implemented");
 			break;
 		}
 
 		GenerateVAO();
 	}
 
-	Mesh::Mesh(std::vector<unsigned int> indices, std::vector<Vertex> vertices, bool isReadable)
-		: indices(indices), vertices(vertices), isReadable(isReadable)
+	Mesh::Mesh(const std::string& name, std::vector<unsigned int> indices, std::vector<Vertex> vertices, bool isReadable)
+		: Asset(name), indices(indices), vertices(vertices), isReadable(isReadable)
 	{
 		GenerateVAO();
 	}
 
 	Mesh::Mesh(Mesh&& other) noexcept :
+		Asset(other.name),
 		indices(std::move(other.indices)),
 		vertices(std::move(other.vertices)),
 		indexCount(other.indexCount),
@@ -53,6 +55,7 @@ namespace Barebones
 	{
 		if (this != &other)
 		{
+			name = other.name;
 			indices = std::move(other.indices);
 			vertices = std::move(other.vertices);
 			indexCount = other.indexCount;
@@ -72,6 +75,7 @@ namespace Barebones
 
 	Mesh::~Mesh()
 	{
+		//Won't do anything if the buffers == 0
 		glDeleteBuffers(1, &VAO);
 		glDeleteBuffers(1, &EBO);
 		glDeleteBuffers(1, &VBO);

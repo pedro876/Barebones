@@ -142,7 +142,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\AssetTypes\Material.cpp" />
     <ClCompile Include="Core\AssetTypes\Mesh.cpp" />
-    <ClCompile Include="Core\AssetTypes\Object.cpp" />
+    <ClCompile Include="Core\AssetTypes\Asset.cpp" />
     <ClCompile Include="Core\Systems\RenderSystem.cpp" />
     <ClCompile Include="Core\_External\stb_image.cpp" />
   </ItemGroup>
@@ -161,7 +161,7 @@
     <ClInclude Include="Core\AssetTypes\Material.h" />
     <ClInclude Include="Core\AssetTypes\Mesh.h" />
     <ClInclude Include="Core\Components\MeshRenderer.h" />
-    <ClInclude Include="Core\AssetTypes\Object.h" />
+    <ClInclude Include="Core\AssetTypes\Asset.h" />
     <ClInclude Include="Core\Systems\CameraSystem.h" />
     <ClInclude Include="Core\Systems\RenderSystem.h" />
     <ClInclude Include="Serialization.h" />

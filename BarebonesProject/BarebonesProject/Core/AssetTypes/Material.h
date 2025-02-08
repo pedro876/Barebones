@@ -1,18 +1,18 @@
 #pragma once
 
 #include <string>
-#include "Object.h"
+#include "Asset.h"
 #include "Shader.h"
 
 namespace Barebones
 {
-	class Material : public Object
+	class Material : public Asset
 	{
 	public:
 		Shader* shader;
 
 		Material(const std::string& name, Shader* shader) : 
-			Object(name) , shader(shader)
+			Asset(name) , shader(shader)
 		{
 			
 		}
