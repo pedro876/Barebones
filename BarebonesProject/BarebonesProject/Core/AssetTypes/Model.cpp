@@ -34,6 +34,21 @@ namespace Barebones
 			}
 		}
 
+		for (unsigned int i = 0, count = scene->mNumCameras; i < count; i++)
+		{
+			aiCamera* camera = scene->mCameras[i];
+			aiNode* cameraNode = scene->mRootNode->FindNode(camera->mName);
+
+			if (cameraNode)
+			{
+				aiVector3D scaling, rotation, position;
+				cameraNode->mTransformation.Decompose(scaling, rotation, position);
+
+				glm::vec3 cameraPos = glm::vec3(position.x, position.y, position.z);
+				std::cout << "Camera position: " << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << std::endl;
+			}
+		}
+
 		processNode(scene->mRootNode, scene);
 	}
 
