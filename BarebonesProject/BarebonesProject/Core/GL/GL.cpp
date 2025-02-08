@@ -59,9 +59,9 @@ namespace Barebones
 	void GL::DrawMeshRenderer(const glm::mat4& viewProjMat, Transform& transform, const MeshRenderer& renderer)
 	{
 		//TODO: set model matrix
-		renderer.material->shader->use();
+		renderer.material->shader->Use();
 		glm::mat4 modelMat = transform.GetLocalToWorldMatrix();
-		renderer.material->shader->setMat4("_ModelViewProj", viewProjMat * modelMat);
+		renderer.material->shader->SetMat4("_ModelViewProj", viewProjMat * modelMat);
 		renderer.mesh->Draw();
 	}
 }

@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\AssetTypes\Model.cpp" />
+    <ClCompile Include="Core\AssetTypes\Shader.cpp" />
     <ClCompile Include="Core\DB\DB.cpp" />
     <ClCompile Include="Core\File\File.cpp" />
     <ClCompile Include="Core\GL\GL.cpp" />

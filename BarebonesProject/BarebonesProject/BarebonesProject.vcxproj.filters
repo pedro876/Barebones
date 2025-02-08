@@ -75,6 +75,7 @@
     </ClCompile>
     <ClCompile Include="Core\Systems\CameraSystem.cpp" />
     <ClCompile Include="Core\AssetTypes\Model.cpp" />
+    <ClCompile Include="Core\AssetTypes\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\_External\stb_image.h">
