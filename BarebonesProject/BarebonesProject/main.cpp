@@ -19,7 +19,6 @@ int main()
 
 	Model model = Model("Core/Assets/Models/Cube.fbx");
 	Mesh* cube = model.GetMesh(0);
-	Mesh quad = Mesh(Primitive::Quad);
 
 	std::shared_ptr<RenderSystem> renderSystem = coordinator.RegisterSystem<RenderSystem>();
 	Signature signature;

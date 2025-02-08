@@ -36,34 +36,38 @@ namespace Barebones
 
 	Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	{
-		unsigned int vertexCount = mesh->mNumVertices;
-		glm::vec3* vertices = new glm::vec3[vertexCount];
-
-		for (unsigned int i = 0; i < vertexCount; i++)
-		{
-			vertices[i].x = mesh->mVertices[i].x;
-			vertices[i].y = mesh->mVertices[i].y;
-			vertices[i].z = mesh->mVertices[i].z;
-		}
-
-		
-		unsigned int indexCount = 0;
-		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-		{
-			indexCount += mesh->mFaces[i].mNumIndices;
-		}
-
-		unsigned int* indices = new unsigned int[indexCount];
-		unsigned int currentIndex = 0;
+		// Indices
+		std::vector<unsigned int> indices;
 		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 		{
 			aiFace face = mesh->mFaces[i];
 			for (unsigned int j = 0; j < face.mNumIndices; j++)
 			{
-				indices[currentIndex++] = face.mIndices[j];
+				indices.push_back(face.mIndices[j]);
 			}
 		}
 
-		return Mesh(vertexCount, indexCount, vertices, indices);
+		// Attributes
+		unsigned int vertexCount = mesh->mNumVertices;
+
+		std::vector<glm::vec3> vertices;
+		vertices.reserve(vertexCount);
+		for (unsigned int i = 0; i < vertexCount; i++)
+		{
+			aiVector3D vertex = mesh->mVertices[i];
+			vertices.push_back(glm::vec3(vertex.x, vertex.y, vertex.z));
+		}
+
+		std::vector<glm::vec3> normals;
+		if (mesh->HasNormals())
+		{
+			for (unsigned int i = 0; i < vertexCount; i++)
+			{
+				aiVector3D normal = mesh->mNormals[i];
+				normals.push_back(glm::vec3(normal.x, normal.y, normal.z));
+			}
+		}
+
+		return Mesh(indices.size(), vertexCount, indices, vertices, normals);
 	}
 }

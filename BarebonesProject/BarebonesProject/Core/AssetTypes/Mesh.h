@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
+#include <vector>
 
 namespace Barebones
 {
@@ -13,7 +14,6 @@ namespace Barebones
 		/// <summary>
 		/// A 1x1 quad in the XY axis that points towards positive Z.
 		/// </summary>
-		Model,
 		Quad,
 	};
 
@@ -23,17 +23,17 @@ namespace Barebones
 		friend class GL;
 
 		Mesh(Primitive primitive);
-		Mesh(unsigned int vertexCount, unsigned int indexCount, glm::vec3* vertices, unsigned int* indices, 
-			glm::vec3* normals = nullptr);
-		~Mesh();
+		Mesh(unsigned int indexCount, unsigned int vertexCount, std::vector<unsigned int> indices,
+			std::vector<glm::vec3> vertices,
+			std::vector<glm::vec3> normals);
 
 	private:
 		unsigned int vertexCount = 0;
 		unsigned int indexCount = 0;
 		unsigned int triangleCount = 0;
-		glm::vec3* vertices = nullptr;
-		unsigned int* indices = nullptr;
-		glm::vec3* normals = nullptr;
+		std::vector<glm::vec3> vertices;
+		std::vector<unsigned int> indices;
+		std::vector<glm::vec3> normals;
 
 		unsigned int EBO; //Element buffer object
 		unsigned int VBO; //Vertex buffer object
