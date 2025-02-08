@@ -18,17 +18,33 @@ namespace Barebones
 		}
 
 		directory = path.substr(0, path.find_last_of('/'));
+
+		for (unsigned int i = 0, count = scene->mNumMaterials; i < count; i++)
+		{
+			aiMaterial* material = scene->mMaterials[i];
+			std::cout << material->GetName().C_Str() << std::endl;
+
+			for (unsigned int t = 0, textureCount = material->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
+			{
+				aiString path;
+				if (material->GetTexture(aiTextureType_DIFFUSE, t, &path) == AI_SUCCESS)
+				{
+					std::cout << path.C_Str() << std::endl;
+				}
+			}
+		}
+
 		processNode(scene->mRootNode, scene);
 	}
 
 	void Model::processNode(aiNode* node, const aiScene* scene)
 	{
-		for (unsigned int i = 0; i < node->mNumMeshes; i++)
+		for (unsigned int i = 0, count = node->mNumMeshes; i < count; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			meshes.push_back(processMesh(mesh, scene));
 		}
-		for (unsigned int i = 0; i < node->mNumChildren; i++)
+		for (unsigned int i = 0, count = node->mNumChildren; i < count; i++)
 		{
 			processNode(node->mChildren[i], scene);
 		}
@@ -38,10 +54,10 @@ namespace Barebones
 	{
 		// Indices
 		std::vector<unsigned int> indices;
-		for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+		for (unsigned int i = 0, count = mesh->mNumFaces; i < count; i++)
 		{
 			aiFace face = mesh->mFaces[i];
-			for (unsigned int j = 0; j < face.mNumIndices; j++)
+			for (unsigned int j = 0, count = face.mNumIndices; j < count; j++)
 			{
 				indices.push_back(face.mIndices[j]);
 			}

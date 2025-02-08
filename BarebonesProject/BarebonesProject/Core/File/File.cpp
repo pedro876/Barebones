@@ -21,7 +21,7 @@ namespace Barebones
 			//TODO: control what happens when a file cannot be succesfully read
 		}
 
-		std::cout << content << std::endl;
+		//std::cout << content << std::endl;
 
 		return content;
 	}

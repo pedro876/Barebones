@@ -11,8 +11,6 @@ namespace Barebones
         const char* vShaderCode = vShaderCodeStr.c_str();
         const char* fShaderCode = fShaderCodeStr.c_str();
 
-        std::cout << vShaderCode << std::endl;
-
         // 2. compile shaders
         unsigned int vertex, fragment;
         // vertex shader
