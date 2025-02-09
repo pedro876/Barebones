@@ -132,12 +132,14 @@ namespace Barebones
 		}
 
 	private:
-		void UpdateTransformMatricesRecursively(Transform& transform, glm::mat4 parentToWorld = glm::mat4(1.0f))
+		void UpdateTransformMatricesRecursively(Transform& transform, bool parentDirty = false, glm::mat4 parentToWorld = glm::mat4(1.0f))
 		{
-			if (transform.dirty)
+			bool dirty = transform.dirty || parentDirty;
+			if (dirty)
 			{
 				glm::mat4 localToParent = transform.GetLocalToParentMatrix();
 				transform.localToWorld = parentToWorld * localToParent;
+				transform.dirty = false;
 			}
 			
 			Entity child = transform.firstChild;
@@ -145,7 +147,7 @@ namespace Barebones
 			{
 				Transform& childTransform = Coordinator::GetComponent<Transform>(child);
 				child = transform.nextSibling;
-				UpdateTransformMatricesRecursively(childTransform, transform.localToWorld);
+				UpdateTransformMatricesRecursively(childTransform, dirty, transform.localToWorld);
 			}
 		}
 
