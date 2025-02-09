@@ -95,6 +95,7 @@ namespace Barebones
 			//Child info
 			tChild.prevSibling = lastChild;
 			tChild.parent = parent;
+			tChild.dirty = true;
 		}
 
 		static void RemoveChild(Entity parent, Entity child)
@@ -127,20 +128,24 @@ namespace Barebones
 			tChild.parent = 0;
 			tChild.prevSibling = 0;
 			tChild.nextSibling = 0;
+			tChild.dirty = true;
 		}
 
 	private:
 		void UpdateTransformMatricesRecursively(Transform& transform, glm::mat4 parentToWorld = glm::mat4(1.0f))
 		{
-			glm::mat4 localToParent = transform.GetLocalToParentMatrix();
-			glm::mat4 localToWorld = parentToWorld * localToParent;
-			transform.localToWorld = localToWorld;
+			if (transform.dirty)
+			{
+				glm::mat4 localToParent = transform.GetLocalToParentMatrix();
+				transform.localToWorld = parentToWorld * localToParent;
+			}
+			
 			Entity child = transform.firstChild;
 			while (child)
 			{
 				Transform& childTransform = Coordinator::GetComponent<Transform>(child);
 				child = transform.nextSibling;
-				UpdateTransformMatricesRecursively(childTransform, localToWorld);
+				UpdateTransformMatricesRecursively(childTransform, transform.localToWorld);
 			}
 		}
 

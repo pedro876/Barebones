@@ -14,7 +14,6 @@ namespace Barebones
 	{
 	public:
 		friend class TransformSystem;
-		
 
 		// GETTERS
 		glm::vec3 GetLocalPosition() const { return localPosition; }
