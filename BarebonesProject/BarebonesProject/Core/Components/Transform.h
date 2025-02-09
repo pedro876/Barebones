@@ -14,23 +14,13 @@ namespace Barebones
 	{
 	public:
 		friend class TransformSystem;
-		glm::mat4 GetLocalToWorldMatrix()
-		{
-			if (dirty)
-			{
-				localToWorld = glm::mat4(1.0f); // Start with identity matrix
-				localToWorld = glm::translate(localToWorld, localPosition);
-				localToWorld = localToWorld * glm::toMat4(localRotation);
-				localToWorld = glm::scale(localToWorld, localScale);
-				dirty = false;
-			}
-			return localToWorld;
-		}
+		
 
 		// GETTERS
 		glm::vec3 GetLocalPosition() const { return localPosition; }
 		glm::quat GetLocalRotation() const { return localRotation; }
 		glm::vec3 GetLocalScale() const { return localScale; }
+		glm::mat4 GetLocalToWorldMatrix() const { return localToWorld; }
 
 		// SETTERS
 		void SetLocalPosition(glm::vec3 localPosition) { this->localPosition = localPosition; dirty = true; }
@@ -46,10 +36,20 @@ namespace Barebones
 		glm::mat4 localToWorld { 1.0f };
 		
 		bool dirty{ false };
-		EntityCount children { 0 };
-		Entity first{ 0 };
-		Entity next{ 0 };
-		Entity prev{ 0 };
+		unsigned int children { 0 };
+		Entity firstChild{ 0 };
+		Entity nextSibling{ 0 };
+		Entity prevSibling{ 0 };
+		Entity parent{ 0 };
+
+		glm::mat4 GetLocalToParentMatrix()
+		{
+			glm::mat4 matrix{ 1.0f };
+			matrix = glm::translate(matrix, localPosition);
+			matrix = matrix * glm::toMat4(localRotation);
+			matrix = glm::scale(matrix, localScale);
+			return matrix;
+		}
 	};
 }
 
