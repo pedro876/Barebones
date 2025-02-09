@@ -12,7 +12,8 @@ namespace Barebones
 	public:
 		EntityManager()
 		{
-			for (Entity entity = 0; entity < MAX_ENTITIES; ++entity)
+			// Start from 1, zero is considered a null entity
+			for (Entity entity = 1; entity < MAX_ENTITIES; ++entity)
 			{
 				mAvailableEntities.push(entity);
 			}

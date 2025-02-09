@@ -11,17 +11,17 @@ namespace Barebones
 	class Coordinator
 	{
 	public:
-		void Init()
-		{
-			mComponentManager = std::make_unique<ComponentManager>();
-			mEntityManager = std::make_unique<EntityManager>();
-			mSystemManager = std::make_unique<SystemManager>();
-		}
-		Entity CreateEntity()
+		Coordinator() = delete;
+		Coordinator(const Coordinator&) = delete;
+		Coordinator& operator=(const Coordinator&) = delete;
+		Coordinator(Coordinator&&) = delete;
+		Coordinator& operator=(Coordinator&&) = delete;
+
+		static Entity CreateEntity()
 		{
 			return mEntityManager->CreateEntity();
 		}
-		void DestroyEntity(Entity entity)
+		static void DestroyEntity(Entity entity)
 		{
 			mEntityManager->DestroyEntity(entity);
 			mComponentManager->EntityDestroyed(entity);
@@ -29,13 +29,13 @@ namespace Barebones
 		}
 
 		template<typename T>
-		void RegisterComponent()
+		static void RegisterComponent()
 		{
 			mComponentManager->RegisterComponent<T>();
 		}
 
 		template<typename T>
-		void AddComponent(Entity entity, T component)
+		static void AddComponent(Entity entity, T component)
 		{
 			mComponentManager->AddComponent<T>(entity, component);
 
@@ -47,7 +47,7 @@ namespace Barebones
 		}
 
 		template<typename T>
-		void RemoveComponent(Entity entity)
+		static void RemoveComponent(Entity entity)
 		{
 			mComponentManager->RemoveComponent<T>(entity);
 
@@ -59,13 +59,13 @@ namespace Barebones
 		}
 
 		template<typename T>
-		T& GetComponent(Entity entity)
+		static T& GetComponent(Entity entity)
 		{
 			return mComponentManager->GetComponent<T>(entity);
 		}
 
 		template<typename T>
-		ComponentType GetComponentType()
+		static ComponentType GetComponentType()
 		{
 			return mComponentManager->GetComponentType<T>();
 		}
@@ -73,19 +73,19 @@ namespace Barebones
 
 		// System methods
 		template<typename T>
-		std::shared_ptr<T> RegisterSystem()
+		static std::shared_ptr<T> RegisterSystem()
 		{
 			return mSystemManager->RegisterSystem<T>();
 		}
 
 		template<typename T>
-		void SetSystemSignature(Signature signature)
+		static void SetSystemSignature(Signature signature)
 		{
 			mSystemManager->SetSignature<T>(signature);
 		}
 	private:
-		std::unique_ptr<ComponentManager> mComponentManager;
-		std::unique_ptr<EntityManager> mEntityManager;
-		std::unique_ptr<SystemManager> mSystemManager;
+		static inline std::unique_ptr<ComponentManager> mComponentManager = std::make_unique<ComponentManager>();
+		static inline std::unique_ptr<EntityManager> mEntityManager = std::make_unique<EntityManager>();
+		static inline std::unique_ptr<SystemManager> mSystemManager = std::make_unique<SystemManager>();
 	};
 }

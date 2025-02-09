@@ -130,6 +130,7 @@
     <ClInclude Include="Core\Components\Camera.h" />
     <ClInclude Include="Core\Systems\CameraSystem.h" />
     <ClInclude Include="Core\AssetTypes\Model.h" />
+    <ClInclude Include="Core\Systems\TransformSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Shaders\vertex.vert">

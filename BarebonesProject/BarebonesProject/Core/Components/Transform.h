@@ -4,13 +4,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
+#include "../ECS/ECS_Types.h"
 
 namespace Barebones
 {
+	class TransformSystem;
+
 	struct Transform
 	{
 	public:
-
+		friend class TransformSystem;
 		glm::mat4 GetLocalToWorldMatrix()
 		{
 			if (dirty)
@@ -41,7 +44,12 @@ namespace Barebones
 		glm::vec3 localScale { 1.0f, 1.0f, 1.0f };
 
 		glm::mat4 localToWorld { 1.0f };
+		
 		bool dirty{ false };
+		EntityCount children { 0 };
+		Entity first{ 0 };
+		Entity next{ 0 };
+		Entity prev{ 0 };
 	};
 }
 

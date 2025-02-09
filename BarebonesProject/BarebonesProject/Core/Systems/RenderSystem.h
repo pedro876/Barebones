@@ -14,7 +14,7 @@ namespace Barebones
 	public:
 		
 		void Init();
-		void Update(Coordinator& coordinator, GL& gl, float dt);
+		void Update(GL& gl, float dt);
 	};
 }
 

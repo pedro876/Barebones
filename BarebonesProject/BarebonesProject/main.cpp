@@ -6,13 +6,11 @@ using namespace Barebones;
 
 int main()
 {
-	Coordinator coordinator{};
 	GL gl{};
-	coordinator.Init();
 
-	coordinator.RegisterComponent<Transform>();
-	coordinator.RegisterComponent<MeshRenderer>();
-	coordinator.RegisterComponent<Camera>();
+	Coordinator::RegisterComponent<Transform>();
+	Coordinator::RegisterComponent<MeshRenderer>();
+	Coordinator::RegisterComponent<Camera>();
 
 	Shader shaderProgram = Shader("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
 	Material material = Material("M_Test", &shaderProgram);
@@ -22,33 +20,33 @@ int main()
 
 	Model testRoom = Model("Game/Assets/Models/TestRoom.fbx");
 
-	std::shared_ptr<RenderSystem> renderSystem = coordinator.RegisterSystem<RenderSystem>();
+	std::shared_ptr<RenderSystem> renderSystem = Coordinator::RegisterSystem<RenderSystem>();
 	Signature signature;
-	signature.set(coordinator.GetComponentType<Transform>());
-	signature.set(coordinator.GetComponentType<MeshRenderer>());
-	coordinator.SetSystemSignature<RenderSystem>(signature);
+	signature.set(Coordinator::GetComponentType<Transform>());
+	signature.set(Coordinator::GetComponentType<MeshRenderer>());
+	Coordinator::SetSystemSignature<RenderSystem>(signature);
 
-	std::shared_ptr<CameraSystem> cameraSystem = coordinator.RegisterSystem<CameraSystem>();
+	std::shared_ptr<CameraSystem> cameraSystem = Coordinator::RegisterSystem<CameraSystem>();
 	Signature signature2;
-	signature2.set(coordinator.GetComponentType<Transform>());
-	signature2.set(coordinator.GetComponentType<Camera>());
-	coordinator.SetSystemSignature<CameraSystem>(signature2);
+	signature2.set(Coordinator::GetComponentType<Transform>());
+	signature2.set(Coordinator::GetComponentType<Camera>());
+	Coordinator::SetSystemSignature<CameraSystem>(signature2);
 	
 
-	Entity entity = coordinator.CreateEntity();
+	Entity entity = Coordinator::CreateEntity();
 
-	coordinator.AddComponent(entity, Transform{});
-	coordinator.AddComponent(entity, MeshRenderer{});
+	Coordinator::AddComponent(entity, Transform{});
+	Coordinator::AddComponent(entity, MeshRenderer{});
 
-	Entity cameraEntity = coordinator.CreateEntity();
-	coordinator.AddComponent(cameraEntity, Camera{});
-	coordinator.AddComponent(cameraEntity, Transform{});
+	Entity cameraEntity = Coordinator::CreateEntity();
+	Coordinator::AddComponent(cameraEntity, Camera{});
+	Coordinator::AddComponent(cameraEntity, Transform{});
 
-	Transform& cameraTransform = coordinator.GetComponent<Transform>(cameraEntity);
+	Transform& cameraTransform = Coordinator::GetComponent<Transform>(cameraEntity);
 	cameraTransform.SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
 	cameraTransform.SetLocalRotation(glm::vec3(0.0f, 180.0f, 0.0f));
 
-	MeshRenderer& meshRenderer = coordinator.GetComponent<MeshRenderer>(entity);
+	MeshRenderer& meshRenderer = Coordinator::GetComponent<MeshRenderer>(entity);
 	meshRenderer.mesh = cube;
 	meshRenderer.material = &material;
 
@@ -67,8 +65,8 @@ int main()
 		glm::vec3 eulerAngles = glm::eulerAngles(localRot);
 		eulerAngles = glm::degrees(eulerAngles);
 
-		cameraSystem->Update(coordinator, deltaTime);
-		renderSystem->Update(coordinator, gl, deltaTime);
+		cameraSystem->Update(deltaTime);
+		renderSystem->Update(gl, deltaTime);
 
 		gl.EndFrame();
 

@@ -2,18 +2,15 @@
 
 namespace Barebones
 {
-	Entity CameraSystem::mainCamera{};
-	glm::mat4 CameraSystem::mainViewProj{ glm::perspective(glm::radians(60.0f), 16.0f / 9.0f, 0.1f, 1000.0f) };
-
-	void CameraSystem::Update(Coordinator& coordinator, float dt)
+	void CameraSystem::Update(float dt)
 	{
 		unsigned int maxPriority = 0;
 		Camera* mainCameraPtr = nullptr;
 		Transform* mainTransformPtr = nullptr;
 		for (auto& entity : mEntities)
 		{
-			auto& transform = coordinator.GetComponent<Transform>(entity);
-			auto& camera = coordinator.GetComponent<Camera>(entity);
+			auto& transform = Coordinator::GetComponent<Transform>(entity);
+			auto& camera = Coordinator::GetComponent<Camera>(entity);
 			if (camera.priority >= maxPriority)
 			{
 				mainCamera = entity;

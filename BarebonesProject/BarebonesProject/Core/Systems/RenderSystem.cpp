@@ -7,12 +7,12 @@ namespace Barebones
 
 	}
 
-	void RenderSystem::Update(Coordinator& coordinator, GL& gl, float dt)
+	void RenderSystem::Update(GL& gl, float dt)
 	{
 		for (auto& entity : mEntities)
 		{
-			auto& transform = coordinator.GetComponent<Transform>(entity);
-			auto& meshRenderer = coordinator.GetComponent<MeshRenderer>(entity);
+			auto& transform = Coordinator::GetComponent<Transform>(entity);
+			auto& meshRenderer = Coordinator::GetComponent<MeshRenderer>(entity);
 			gl.DrawMeshRenderer(CameraSystem::mainViewProj, transform, meshRenderer);
 		}
 	}

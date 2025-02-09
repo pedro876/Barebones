@@ -10,7 +10,8 @@
 namespace Barebones
 {
 	using Entity = std::uint32_t;
-	const Entity MAX_ENTITIES = 5000;
+	using EntityCount = std::uint32_t;
+	const EntityCount MAX_ENTITIES = 5000;
 
 	using ComponentType = std::uint8_t;
 	const ComponentType MAX_COMPONENTS = 32;
