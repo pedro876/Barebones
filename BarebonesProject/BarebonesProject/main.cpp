@@ -63,7 +63,7 @@ int main()
 
 	Transform& tCube1 = Coordinator::GetComponent<Transform>(eCube1);
 	Transform& tCube2 = Coordinator::GetComponent<Transform>(eCube2);
-	tCube2.SetLocalPosition(glm::vec3(1.5f, 0.0f, 0.0f));
+	tCube2.SetLocalPosition(glm::vec3(1.5f, 1.5f, 0.0f));
 	tCube2.SetLocalScale(glm::vec3(0.5f));
 	TransformSystem::AddChild(eCube1, eCube2);
 
@@ -84,7 +84,7 @@ int main()
 
 		//Update camera
 		glm::vec3 localPos = cameraTransform.GetLocalPosition();
-		localPos = glm::rotate(glm::quat(glm::radians(glm::vec3(0.0f, 10.0f * deltaTime, 0.0f))), localPos);
+		localPos = glm::rotate(glm::quat(glm::radians(glm::vec3(0.0f, 0.0f * deltaTime, 0.0f))), localPos);
 		glm::quat localRot = glm::quatLookAt(-glm::normalize(localPos), glm::vec3(0.0f, 1.0f, 0.0f));
 		cameraTransform.SetLocalPosition(localPos);
 		cameraTransform.SetLocalRotation(localRot);
@@ -101,6 +101,9 @@ int main()
 		double newTime = glfwGetTime();
 		deltaTime = newTime - time;
 		time = newTime;
+
+		glm::vec3 tCube2pos = TransformSystem::GetWorldPosition(tCube2);
+		std::cout << tCube2pos.x << " " << tCube2pos.y << " " << tCube2pos.z << std::endl;
 	}
 
 	return 0;

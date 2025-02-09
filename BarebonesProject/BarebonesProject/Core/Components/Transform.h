@@ -41,7 +41,7 @@ namespace Barebones
 		Entity prevSibling{ 0 };
 		Entity parent{ 0 };
 
-		glm::mat4 GetLocalToParentMatrix()
+		glm::mat4 GetLocalToParentMatrix() const
 		{
 			glm::mat4 matrix{ 1.0f };
 			matrix = glm::translate(matrix, localPosition);

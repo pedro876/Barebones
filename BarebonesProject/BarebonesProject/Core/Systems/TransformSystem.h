@@ -2,6 +2,7 @@
 
 #include "../ECS/Coordinator.h"
 #include "../Components/Transform.h"
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace Barebones
 {
@@ -129,6 +130,53 @@ namespace Barebones
 			tChild.prevSibling = 0;
 			tChild.nextSibling = 0;
 			tChild.dirty = true;
+		}
+
+		static glm::mat4 GetWorldTransform(Entity entity)
+		{
+			const Transform& transform = Coordinator::GetComponent<Transform>(entity);
+			return GetWorldTransform(transform);
+		}
+
+		static glm::mat4 GetWorldTransform(const Transform& transform)
+		{
+			glm::mat4 localToWorld = transform.GetLocalToParentMatrix();
+			Entity parent = transform.parent;
+			while (parent)
+			{
+				Transform tParent = Coordinator::GetComponent<Transform>(parent);
+				localToWorld = tParent.GetLocalToParentMatrix() * localToWorld;
+				parent = tParent.parent;
+			}
+			return localToWorld;
+		}
+
+		static void GetWorldTransform(Entity entity, glm::vec3& position, glm::quat rotation, glm::vec3 scale)
+		{
+			const Transform& transform = Coordinator::GetComponent<Transform>(entity);
+			GetWorldTransform(transform, position, rotation, scale);
+		}
+
+		static void GetWorldTransform(const Transform& transform, glm::vec3& position, glm::quat rotation, glm::vec3 scale)
+		{
+			glm::mat4 localToWorld = GetWorldTransform(transform);
+			//set position
+			//set rotation
+			//set scale
+			glm::vec3 skew;
+			glm::vec4 perspective;
+			glm::decompose(localToWorld, scale, rotation, position, skew, perspective);
+		}
+
+		static glm::vec3 GetWorldPosition(Entity entity)
+		{
+			const Transform& transform = Coordinator::GetComponent<Transform>(entity);
+			GetWorldPosition(transform);
+		}
+
+		static glm::vec3 GetWorldPosition(const Transform& transform)
+		{
+			return glm::vec3(GetWorldTransform(transform)[3]);
 		}
 
 	private:
