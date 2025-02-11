@@ -34,24 +34,24 @@ namespace Barebones
         glDeleteShader(fragment);
     }
 
-    Shader::Shader(Shader&& other) noexcept :
-        Asset(other.name),
-        ID(other.ID)
-    {
-        other.ID = 0;
-    }
+    //Shader::Shader(Shader&& other) noexcept :
+    //    Asset(other.name),
+    //    ID(other.ID)
+    //{
+    //    other.ID = 0;
+    //}
 
-    Shader& Shader::operator=(Shader&& other) noexcept
-    {
-        if (this != &other)
-        {
-            name = other.name;
-            ID = other.ID;
-            other.ID = 0;
-        }
+    //Shader& Shader::operator=(Shader&& other) noexcept
+    //{
+    //    if (this != &other)
+    //    {
+    //        name = other.name;
+    //        ID = other.ID;
+    //        other.ID = 0;
+    //    }
 
-        return *this;
-    }
+    //    return *this;
+    //}
 
     Shader::~Shader()
     {

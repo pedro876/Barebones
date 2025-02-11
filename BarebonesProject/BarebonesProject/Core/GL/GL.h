@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <cassert>
 #include <stdexcept>
+#include <memory>
 
 // OPEN GLAND THIRD PARTY INCLUDES:
 #include <glad/glad.h>

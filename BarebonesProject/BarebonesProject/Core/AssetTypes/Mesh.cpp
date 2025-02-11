@@ -2,7 +2,7 @@
 
 namespace Barebones
 {
-	Mesh::Mesh(Primitive primitive, bool isReadable) : isReadable(isReadable)
+	Mesh::Mesh(Primitive primitive, bool isReadable) : Asset("Unknown"), isReadable(isReadable)
 	{
 		switch (primitive)
 		{

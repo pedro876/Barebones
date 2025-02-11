@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GL/GL.h"
+#include "DB/DB.h"
 #include "ECS/Coordinator.h"
 #include "Components/Transform.h"
 #include "Components/Camera.h"

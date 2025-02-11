@@ -5,10 +5,7 @@
 
 namespace Barebones
 {
-	Model::Model(std::string directory, std::string name) : Asset(name), directory(directory)
-	{
-		path = directory + "/" + name;
-	}
+	Model::Model(std::string path) : Asset(path) {}
 
 	Mesh* Model::GetMesh(unsigned int meshIndex)
 	{
@@ -59,10 +56,10 @@ namespace Barebones
 			}
 		}
 
-		ProcessNode(scene->mRootNode, scene);
+		ProcessNode(scene->mRootNode, scene, 0);
 	}
 
-	void Model::ProcessNode(aiNode* node, const aiScene* scene)
+	void Model::ProcessNode(aiNode* node, const aiScene* scene, unsigned int depth)
 	{
 		for (unsigned int i = 0, count = node->mNumMeshes; i < count; i++)
 		{
@@ -71,7 +68,7 @@ namespace Barebones
 		}
 		for (unsigned int i = 0, count = node->mNumChildren; i < count; i++)
 		{
-			ProcessNode(node->mChildren[i], scene);
+			ProcessNode(node->mChildren[i], scene, depth+1);
 		}
 	}
 

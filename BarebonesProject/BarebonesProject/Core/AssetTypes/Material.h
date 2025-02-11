@@ -9,9 +9,9 @@ namespace Barebones
 	class Material : public Asset
 	{
 	public:
-		Shader* shader;
+		std::weak_ptr<Shader> shader;
 
-		Material(const std::string& name, Shader* shader) : 
+		Material(const std::string& name, std::weak_ptr<Shader> shader) :
 			Asset(name) , shader(shader)
 		{
 			

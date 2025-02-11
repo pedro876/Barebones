@@ -4,7 +4,7 @@
 
 using namespace Barebones;
 
-Entity CreateCube(Mesh* cubeMesh, Material* material)
+Entity CreateCube(Mesh* cubeMesh, std::weak_ptr<Material> material)
 {
 	Entity entity = Coordinator::CreateEntity();
 
@@ -25,15 +25,17 @@ int main()
 	Coordinator::RegisterComponent<MeshRenderer>();
 	Coordinator::RegisterComponent<Camera>();
 
-	Shader shaderProgram = Shader("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
-	Material material = Material("M_Test", &shaderProgram);
 
-	Model model = Model("Core/Assets/Models", "Cube.fbx");
-	model.LoadModel();
-	Mesh* cube = model.GetMesh(0);
 
-	Model testRoom = Model("Game/Assets/Models", "TestRoom.fbx");
-	testRoom.LoadModel();
+	//Shader shaderProgram = Shader("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
+	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag"));
+	auto material = DB<Material>::Register(std::make_shared<Material>("M_Test", shaderProgram));
+	auto model = DB<Model>::Register(std::make_shared<Model>("Core/Assets/Models/Cube.fbx")).lock();
+	model->LoadModel();
+	Mesh* cube = model->GetMesh(0);
+
+	auto testRoom = DB<Model>::Register(std::make_shared<Model>("Game/Assets/Models/TestRoom.fbx")).lock();
+	testRoom->LoadModel();
 
 	std::shared_ptr<RenderSystem> renderSystem = Coordinator::RegisterSystem<RenderSystem>();
 	Signature signature;
@@ -60,8 +62,8 @@ int main()
 	cameraTransform.SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
 	cameraTransform.SetLocalRotation(glm::vec3(0.0f, 180.0f, 0.0f));
 
-	Entity eCube1 = CreateCube(cube, &material);
-	Entity eCube2 = CreateCube(cube, &material);
+	Entity eCube1 = CreateCube(cube, material);
+	Entity eCube2 = CreateCube(cube, material);
 
 	Transform& tCube1 = Coordinator::GetComponent<Transform>(eCube1);
 	Transform& tCube2 = Coordinator::GetComponent<Transform>(eCube2);

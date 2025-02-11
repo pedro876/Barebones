@@ -20,11 +20,11 @@ namespace Barebones
 
         Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
 
-        Shader(const Shader&) = delete;
-        Shader& operator=(const Shader&) = delete;
+        //Shader(const Shader&) = delete;
+        //Shader& operator=(const Shader&) = delete;
 
-        Shader(Shader&&) noexcept;
-        Shader& operator=(Shader&&) noexcept;
+        //Shader(Shader&&) noexcept;
+        //Shader& operator=(Shader&&) noexcept;
 
         ~Shader();
 

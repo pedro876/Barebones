@@ -8,6 +8,6 @@ namespace Barebones
 	struct MeshRenderer
 	{
 		Mesh* mesh;
-		Material* material;
+		std::weak_ptr<Material> material;
 	};
 }

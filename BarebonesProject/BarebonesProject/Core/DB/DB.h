@@ -1,36 +1,44 @@
 #pragma once
 
-#include <vector>
+#include <unordered_map>
 #include <string>
-#include "../File/File.h"
+#include <memory>
+#include <stdexcept>
 
 namespace Barebones
 {
-	template<typename Asset>
+	template<typename T>
 	class DB
 	{
 	public:
 		DB() = delete;
 
-		static Asset* LoadAsset(const std::string& path)
+		static std::weak_ptr<T> Register(std::shared_ptr<T> asset)
 		{
-			std::string text = File::Read(path);
+			auto [it, inserted] = pathToAsset.emplace(asset->GetPath(), std::move(asset));
 
-			Asset asset = Asset();
-			asset.Deserialize(text);
-			instances.push_back(std::move(asset));
+			if (!inserted)
+			{
+				throw std::runtime_error("Asset with path '" + asset->GetPath() + "' already registered.");
+			}
 
-
+			return it->second;
 		}
 
-		static void UnloadAsset(Asset& asset)
+		static bool Release(std::weak_ptr<T> asset)
 		{
-			instances.erase(asset);
+			if (auto sharedPtr = asset.lock())
+			{
+				return pathToAsset.erase(sharedPtr->GetPath());
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 	private:
-		static std::vector<Asset> instances;
+		static inline std::unordered_map<std::string, std::shared_ptr<T>> pathToAsset;
 	};
 }
-
 

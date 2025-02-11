@@ -15,17 +15,14 @@ namespace Barebones
 	class Model : public Asset
 	{
 	public:
-		Model(std::string directory, std::string name);
+		Model(std::string path);
 		Mesh* GetMesh(unsigned int meshIndex);
 		void LoadModel();
 
 	private:
 		std::vector<Mesh> meshes;
-		std::string directory;
-		std::string name;
-		std::string path;
 
-		void ProcessNode(aiNode* node, const aiScene* scene);
+		void ProcessNode(aiNode* node, const aiScene* scene, unsigned int depth);
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	};
 }

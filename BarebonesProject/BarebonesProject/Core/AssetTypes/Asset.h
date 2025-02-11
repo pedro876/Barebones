@@ -8,14 +8,17 @@ namespace Barebones
 	{
 	public:
 		std::string GetName() const;
+		std::string GetDirectory() const;
+		std::string GetPath() const;
 	protected:
-		Asset();
-		Asset(const std::string& name);
+		Asset(const std::string& path);
 
 		Asset(const Asset&) = delete;
 		Asset& operator=(const Asset&) = delete;
 		Asset(Asset&&) = delete;
 		Asset& operator=(Asset&&) = delete;
+		std::string path;
+		std::string directory;
 		std::string name;
 	};
 }
