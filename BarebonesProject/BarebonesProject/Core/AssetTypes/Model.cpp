@@ -5,7 +5,17 @@
 
 namespace Barebones
 {
-	void Model::loadModel(std::string path)
+	Model::Model(std::string directory, std::string name) : Asset(name), directory(directory)
+	{
+		path = directory + "/" + name;
+	}
+
+	Mesh* Model::GetMesh(unsigned int meshIndex)
+	{
+		return &meshes[meshIndex];
+	}
+
+	void Model::LoadModel()
 	{
 		//"../Assets/Models/Cube.fbx"
 		Assimp::Importer importer;
@@ -17,7 +27,7 @@ namespace Barebones
 			return;
 		}
 
-		directory = path.substr(0, path.find_last_of('/'));
+		//directory = path.substr(0, path.find_last_of('/'));
 
 		for (unsigned int i = 0, count = scene->mNumMaterials; i < count; i++)
 		{
@@ -49,23 +59,23 @@ namespace Barebones
 			}
 		}
 
-		processNode(scene->mRootNode, scene);
+		ProcessNode(scene->mRootNode, scene);
 	}
 
-	void Model::processNode(aiNode* node, const aiScene* scene)
+	void Model::ProcessNode(aiNode* node, const aiScene* scene)
 	{
 		for (unsigned int i = 0, count = node->mNumMeshes; i < count; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			meshes.push_back(processMesh(mesh, scene));
+			meshes.push_back(ProcessMesh(mesh, scene));
 		}
 		for (unsigned int i = 0, count = node->mNumChildren; i < count; i++)
 		{
-			processNode(node->mChildren[i], scene);
+			ProcessNode(node->mChildren[i], scene);
 		}
 	}
 
-	Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
+	Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		// Indices
 		std::vector<unsigned int> indices;

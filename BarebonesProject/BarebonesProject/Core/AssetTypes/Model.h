@@ -8,26 +8,24 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "Asset.h"
 
 namespace Barebones
 {
-	class Model
+	class Model : public Asset
 	{
 	public:
-		Model(const char* path)
-		{
-			loadModel(path);
-		}
-		Mesh* GetMesh(unsigned int meshIndex)
-		{
-			return &meshes[meshIndex];
-		}
+		Model(std::string directory, std::string name);
+		Mesh* GetMesh(unsigned int meshIndex);
+		void LoadModel();
+
 	private:
 		std::vector<Mesh> meshes;
 		std::string directory;
+		std::string name;
+		std::string path;
 
-		void loadModel(std::string path);
-		void processNode(aiNode* node, const aiScene* scene);
-		Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+		void ProcessNode(aiNode* node, const aiScene* scene);
+		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	};
 }

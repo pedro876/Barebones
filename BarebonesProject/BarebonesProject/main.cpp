@@ -28,10 +28,12 @@ int main()
 	Shader shaderProgram = Shader("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
 	Material material = Material("M_Test", &shaderProgram);
 
-	Model model = Model("Core/Assets/Models/Cube.fbx");
+	Model model = Model("Core/Assets/Models", "Cube.fbx");
+	model.LoadModel();
 	Mesh* cube = model.GetMesh(0);
 
-	Model testRoom = Model("Game/Assets/Models/TestRoom.fbx");
+	Model testRoom = Model("Game/Assets/Models", "TestRoom.fbx");
+	testRoom.LoadModel();
 
 	std::shared_ptr<RenderSystem> renderSystem = Coordinator::RegisterSystem<RenderSystem>();
 	Signature signature;
@@ -102,8 +104,8 @@ int main()
 		deltaTime = newTime - time;
 		time = newTime;
 
-		glm::vec3 tCube2pos = TransformSystem::GetWorldPosition(tCube2);
-		std::cout << tCube2pos.x << " " << tCube2pos.y << " " << tCube2pos.z << std::endl;
+		//glm::vec3 tCube2pos = TransformSystem::GetWorldPosition(tCube2);
+		//std::cout << tCube2pos.x << " " << tCube2pos.y << " " << tCube2pos.z << std::endl;
 	}
 
 	return 0;
