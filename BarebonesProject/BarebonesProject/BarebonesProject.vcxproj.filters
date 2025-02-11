@@ -58,13 +58,13 @@
     <ClCompile Include="Core\DB\DB.cpp">
       <Filter>Engine\DB</Filter>
     </ClCompile>
-    <ClCompile Include="Core\AssetTypes\Mesh.cpp">
+    <ClCompile Include="Core\AssetTypes\Model\Mesh.cpp">
       <Filter>Engine\DB\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Core\File\File.cpp">
       <Filter>Engine\File</Filter>
     </ClCompile>
-    <ClCompile Include="Core\AssetTypes\Material.cpp">
+    <ClCompile Include="Core\AssetTypes\Material\Material.cpp">
       <Filter>Engine\DB\Material</Filter>
     </ClCompile>
     <ClCompile Include="Core\Systems\RenderSystem.cpp">
@@ -74,8 +74,8 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Core\Systems\CameraSystem.cpp" />
-    <ClCompile Include="Core\AssetTypes\Model.cpp" />
-    <ClCompile Include="Core\AssetTypes\Shader.cpp" />
+    <ClCompile Include="Core\AssetTypes\Model\Model.cpp" />
+    <ClCompile Include="Core\AssetTypes\Shader\Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\_External\stb_image.h">
@@ -87,7 +87,7 @@
     <ClInclude Include="Core\DB\DB.h">
       <Filter>Engine\DB</Filter>
     </ClInclude>
-    <ClInclude Include="Core\AssetTypes\Mesh.h">
+    <ClInclude Include="Core\AssetTypes\Model\Mesh.h">
       <Filter>Engine\DB\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Core\File\File.h">
@@ -96,10 +96,10 @@
     <ClInclude Include="Serialization.h">
       <Filter>Engine\Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="Core\AssetTypes\Material.h">
+    <ClInclude Include="Core\AssetTypes\Material\Material.h">
       <Filter>Engine\DB\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Core\AssetTypes\Shader.h">
+    <ClInclude Include="Core\AssetTypes\Shader\Shader.h">
       <Filter>Engine\DB</Filter>
     </ClInclude>
     <ClInclude Include="Core\ECS\Coordinator.h">
@@ -129,7 +129,7 @@
     <ClInclude Include="Core\BarebonesEngine.h" />
     <ClInclude Include="Core\Components\Camera.h" />
     <ClInclude Include="Core\Systems\CameraSystem.h" />
-    <ClInclude Include="Core\AssetTypes\Model.h" />
+    <ClInclude Include="Core\AssetTypes\Model\Model.h" />
     <ClInclude Include="Core\Systems\TransformSystem.h" />
   </ItemGroup>
   <ItemGroup>

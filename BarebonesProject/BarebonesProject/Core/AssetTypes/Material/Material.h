@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "Asset.h"
-#include "Shader.h"
+#include "../Asset.h"
+#include "../Shader/Shader.h"
 
 namespace Barebones
 {

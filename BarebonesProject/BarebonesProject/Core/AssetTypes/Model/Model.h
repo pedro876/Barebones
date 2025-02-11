@@ -8,7 +8,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#include "Asset.h"
+#include "../Asset.h"
 
 namespace Barebones
 {

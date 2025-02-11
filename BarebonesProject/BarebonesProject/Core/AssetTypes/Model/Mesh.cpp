@@ -2,7 +2,7 @@
 
 namespace Barebones
 {
-	Mesh::Mesh(Primitive primitive, bool isReadable) : Asset("Unknown"), isReadable(isReadable)
+	Mesh::Mesh(Primitive primitive, bool isReadable) : isReadable(isReadable)
 	{
 		switch (primitive)
 		{
@@ -30,13 +30,13 @@ namespace Barebones
 	}
 
 	Mesh::Mesh(const std::string& name, std::vector<unsigned int> indices, std::vector<Vertex> vertices, bool isReadable)
-		: Asset(name), indices(indices), vertices(vertices), isReadable(isReadable)
+		: name(name), indices(indices), vertices(vertices), isReadable(isReadable)
 	{
 		GenerateVAO();
 	}
 
 	Mesh::Mesh(Mesh&& other) noexcept :
-		Asset(other.name),
+		name(other.name),
 		indices(std::move(other.indices)),
 		vertices(std::move(other.vertices)),
 		indexCount(other.indexCount),

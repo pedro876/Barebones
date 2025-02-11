@@ -6,10 +6,10 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "../File/File.h"
+#include "../../File/File.h"
 #include "glm/glm.hpp"
 #include <glm/gtc/type_ptr.hpp>
-#include "Asset.h"
+#include "../Asset.h"
 
 namespace Barebones
 {
