@@ -16,8 +16,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 // BAREBONES
-#include "../AssetTypes/Shader/Shader.h"
-#include "../AssetTypes/Model/Mesh.h"
+#include "../DB/Shader/Shader.h"
+#include "../DB/Model/Mesh.h"
 #include "../Components/Transform.h"
 #include "../Components/MeshRenderer.h"
 

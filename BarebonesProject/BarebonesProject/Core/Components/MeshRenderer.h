@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../AssetTypes/Material/Material.h"
-#include "../AssetTypes/Model/Mesh.h"
+#include "../DB/Material/Material.h"
+#include "../DB/Model/Mesh.h"
 
 namespace Barebones
 {

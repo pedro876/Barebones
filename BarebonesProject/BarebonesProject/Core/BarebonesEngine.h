@@ -9,4 +9,4 @@
 #include "Systems/CameraSystem.h"
 #include "Systems/RenderSystem.h"
 #include "Systems/TransformSystem.h"
-#include "AssetTypes/Model/Model.h"
+#include "DB/Model/Model.h"
