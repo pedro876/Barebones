@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <vector>
+#include <iostream>
 
 namespace Barebones
 {
@@ -26,6 +27,7 @@ namespace Barebones
 	class Mesh
 	{
 	public:
+		Mesh();
 		Mesh(Primitive primitive, bool isReadable = false);
 		Mesh(const std::string& name, std::vector<unsigned int> indices, std::vector<Vertex> vertices, bool isReadable = false);
 
@@ -35,6 +37,7 @@ namespace Barebones
 		Mesh(Mesh&&) noexcept;
 		Mesh& operator=(Mesh&&) noexcept;
 
+		std::string GetName();
 		void Draw() const;
 
 		~Mesh();

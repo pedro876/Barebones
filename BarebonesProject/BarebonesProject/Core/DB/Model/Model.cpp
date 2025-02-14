@@ -56,19 +56,41 @@ namespace Barebones
 			}
 		}
 
-		ProcessNode(scene->mRootNode, scene, 0);
+
+		Entity root = Coordinator::CreateEntity();
+		Coordinator::AddComponent<Transform>(root, Transform());
+		if (meshes != nullptr) delete[] meshes;
+		meshes = new Mesh[scene->mNumMeshes];
+		meshCount = 0;
+		ProcessNode(scene->mRootNode, scene, root);
 	}
 
-	void Model::ProcessNode(aiNode* node, const aiScene* scene, unsigned int depth)
+	void Model::ProcessNode(aiNode* node, const aiScene* scene, Entity parent)
 	{
+		aiVector3D position, rotation, scaling;
+		node->mTransformation.Decompose(scaling, rotation, position);
+
+		Entity entity = parent;
 		for (unsigned int i = 0, count = node->mNumMeshes; i < count; i++)
 		{
+			entity = Coordinator::CreateEntity();
+			Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
+			transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
+			transform.SetLocalRotation(glm::degrees(glm::vec3(rotation.x, rotation.y, rotation.z)));
+			transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
+			//TransformSystem::AddChild(parent, entity);
+
+			MeshRenderer& meshRenderer = Coordinator::AddComponent<MeshRenderer>(entity, MeshRenderer());
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			meshes.push_back(ProcessMesh(mesh, scene));
+			meshes[meshCount] = ProcessMesh(mesh, scene);
+			meshRenderer.mesh = &meshes[meshCount];
+			meshCount++;
+			meshRenderer.material = DB<Material>::Get("M_Test");
 		}
+		
 		for (unsigned int i = 0, count = node->mNumChildren; i < count; i++)
 		{
-			ProcessNode(node->mChildren[i], scene, depth+1);
+			ProcessNode(node->mChildren[i], scene, entity);
 		}
 	}
 

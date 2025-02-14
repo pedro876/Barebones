@@ -10,6 +10,11 @@
 #include <assimp/postprocess.h>
 #include "../Asset.h"
 
+#include "../../Components/Transform.h"
+#include "../../Components/MeshRenderer.h"
+#include "../../Components/Camera.h"
+#include "../../Systems/TransformSystem.h"
+
 namespace Barebones
 {
 	class Model : public Asset
@@ -17,12 +22,14 @@ namespace Barebones
 	public:
 		Model(std::string path);
 		Mesh* GetMesh(unsigned int meshIndex);
+		unsigned int GetMeshCount() { return meshCount; }
 		void LoadModel();
 
 	private:
-		std::vector<Mesh> meshes;
+		Mesh* meshes = nullptr;
+		unsigned int meshCount = 0;
 
-		void ProcessNode(aiNode* node, const aiScene* scene, unsigned int depth);
+		void ProcessNode(aiNode* node, const aiScene* scene, Entity parent);
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	};
 }

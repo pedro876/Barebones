@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include "../ECS/Coordinator.h"
+#include "DB.h"
 
 namespace Barebones
 {

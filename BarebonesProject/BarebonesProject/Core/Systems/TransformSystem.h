@@ -14,6 +14,7 @@ namespace Barebones
 			for (auto& entity : mEntities)
 			{
 				auto& transform = Coordinator::GetComponent<Transform>(entity);
+				//transform.localToWorld = transform.GetLocalToParentMatrix();
 				if (transform.parent) continue;
 				UpdateTransformMatricesRecursively(transform);
 			}
@@ -39,17 +40,16 @@ namespace Barebones
 
 		static Entity GetChildAt(Entity entity, unsigned int index)
 		{
-			auto& transform = Coordinator::GetComponent<Transform>(entity);
-			if (index < 0 || index >= transform.children) return 0;
+			Transform* transform = &Coordinator::GetComponent<Transform>(entity);
+			if (index < 0 || index >= transform->children) return 0;
 
-			Entity child = transform.firstChild;
+			Entity child = transform->firstChild;
 			if (index == 0) return child;
-
-			transform = Coordinator::GetComponent<Transform>(child);
-			for (unsigned int i = 0; i < index && transform.nextSibling; i++)
+			transform = &Coordinator::GetComponent<Transform>(child);
+			for (unsigned int i = 0; i < index && transform->nextSibling; i++)
 			{
-				child = transform.nextSibling;
-				transform = Coordinator::GetComponent<Transform>(child);
+				child = transform->nextSibling;
+				transform = &Coordinator::GetComponent<Transform>(child);
 			}
 
 			return child;
@@ -144,7 +144,7 @@ namespace Barebones
 			Entity parent = transform.parent;
 			while (parent)
 			{
-				Transform tParent = Coordinator::GetComponent<Transform>(parent);
+				Transform& tParent = Coordinator::GetComponent<Transform>(parent);
 				localToWorld = tParent.GetLocalToParentMatrix() * localToWorld;
 				parent = tParent.parent;
 			}
@@ -194,7 +194,7 @@ namespace Barebones
 			while (child)
 			{
 				Transform& childTransform = Coordinator::GetComponent<Transform>(child);
-				child = transform.nextSibling;
+				child = childTransform.nextSibling;
 				UpdateTransformMatricesRecursively(childTransform, dirty, transform.localToWorld);
 			}
 		}

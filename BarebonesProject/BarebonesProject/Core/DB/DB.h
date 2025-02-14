@@ -13,6 +13,11 @@ namespace Barebones
 	public:
 		DB() = delete;
 
+		static std::weak_ptr<T> Get(const std::string& path)
+		{
+			return pathToAsset[path];
+		}
+
 		static std::weak_ptr<T> Register(std::shared_ptr<T> asset)
 		{
 			auto [it, inserted] = pathToAsset.emplace(asset->GetPath(), std::move(asset));

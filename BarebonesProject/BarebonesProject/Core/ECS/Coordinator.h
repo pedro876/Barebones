@@ -35,7 +35,7 @@ namespace Barebones
 		}
 
 		template<typename T>
-		static void AddComponent(Entity entity, T component)
+		static T& AddComponent(Entity entity, T component)
 		{
 			mComponentManager->AddComponent<T>(entity, component);
 
@@ -44,6 +44,7 @@ namespace Barebones
 			mEntityManager->SetSignature(entity, signature);
 
 			mSystemManager->EntitySignatureChanged(entity, signature);
+			return mComponentManager->GetComponent<T>(entity);
 		}
 
 		template<typename T>

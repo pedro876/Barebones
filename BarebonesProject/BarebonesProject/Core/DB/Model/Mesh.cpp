@@ -2,6 +2,8 @@
 
 namespace Barebones
 {
+	Mesh::Mesh() {}
+
 	Mesh::Mesh(Primitive primitive, bool isReadable) : isReadable(isReadable)
 	{
 		switch (primitive)
@@ -48,7 +50,7 @@ namespace Barebones
 	{
 		other.VAO = other.VBO = other.EBO = 0;
 		other.indexCount = other.vertexCount = 0;
-		other.isReadable = true;
+		other.isReadable = false;
 	}
 
 	Mesh& Mesh::operator=(Mesh&& other) noexcept
@@ -83,8 +85,17 @@ namespace Barebones
 
 	void Mesh::Draw() const
 	{
+		if (VAO == 0)
+		{
+			std::cout << "mesh " << name << " has VAO = 0\n";
+		}
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+	}
+
+	std::string Mesh::GetName()
+	{
+		return name;
 	}
 
 	void Mesh::GenerateVAO()
