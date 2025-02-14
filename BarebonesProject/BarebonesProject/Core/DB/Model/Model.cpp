@@ -78,7 +78,7 @@ namespace Barebones
 			transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
 			transform.SetLocalRotation(glm::degrees(glm::vec3(rotation.x, rotation.y, rotation.z)));
 			transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
-			//TransformSystem::AddChild(parent, entity);
+			TransformSystem::AddChild(parent, entity);
 
 			MeshRenderer& meshRenderer = Coordinator::AddComponent<MeshRenderer>(entity, MeshRenderer());
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
