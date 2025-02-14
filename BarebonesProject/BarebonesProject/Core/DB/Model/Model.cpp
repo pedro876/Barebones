@@ -87,6 +87,33 @@ namespace Barebones
 			meshCount++;
 			meshRenderer.material = DB<Material>::Get("M_Test");
 		}
+
+		for (unsigned int i = 0, count = scene->mNumCameras; i < count; i++)
+		{
+			aiCamera* mCamera = scene->mCameras[i];
+			aiNode* cameraNode = scene->mRootNode->FindNode(mCamera->mName);
+
+			if (node->mName == mCamera->mName)
+			{
+				entity = Coordinator::CreateEntity();
+				aiVector3D scaling, rotation, position;
+				cameraNode->mTransformation.Decompose(scaling, rotation, position);
+				//glm::vec3 eulerAngles = glm::degrees(glm::vec3(rotation.x, rotation.y, rotation.z));
+				glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
+				quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
+				Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
+				transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
+				transform.SetLocalRotation(quat);
+				transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
+				TransformSystem::AddChild(parent, entity);
+
+				Camera& camera = Coordinator::AddComponent<Camera>(entity, Camera());
+				//camera.far = mCamera->mClipPlaneFar;
+				//camera.near = mCamera->mClipPlaneNear;
+				//camera.fieldOfView = mCamera->mHorizontalFOV;
+				camera.priority = 1;
+			}
+		}
 		
 		for (unsigned int i = 0, count = node->mNumChildren; i < count; i++)
 		{

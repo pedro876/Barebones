@@ -72,7 +72,7 @@ int main()
 	Transform& tCube1 = Coordinator::GetComponent<Transform>(eCube1);
 	Transform& tCube2 = Coordinator::GetComponent<Transform>(eCube2);
 	tCube2.SetLocalPosition(glm::vec3(1.5f, 1.5f, 0.0f));
-	tCube2.SetLocalScale(glm::vec3(0.5f));
+	tCube2.SetLocalScale(glm::vec3(0.5f));rx
 	TransformSystem::AddChild(eCube1, eCube2);*/
 
 	double time = glfwGetTime();
