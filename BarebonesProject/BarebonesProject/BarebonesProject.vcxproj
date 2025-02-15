@@ -115,6 +115,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;zlibstaticd.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /E /I /H /Y "$(ProjectDir)Core/Assets" "$(OutDir)Core/Assets"
+xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
+      <Message>Copy Core and Game Assets to build directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -174,8 +179,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Assets\Models\Cube.fbx" />
-    <None Include="Core\Shaders\fragment.frag" />
-    <None Include="Core\Shaders\vertex.vert" />
+    <None Include="Core\Assets\Shaders\fragment.frag" />
+    <None Include="Core\Assets\Shaders\vertex.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

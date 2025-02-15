@@ -133,10 +133,10 @@
     <ClInclude Include="Core\Systems\TransformSystem.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\Shaders\vertex.vert">
+    <None Include="Core\Assets\Shaders\vertex.vert">
       <Filter>Engine\Shaders</Filter>
     </None>
-    <None Include="Core\Shaders\fragment.frag">
+    <None Include="Core\Assets\Shaders\fragment.frag">
       <Filter>Engine\Shaders</Filter>
     </None>
     <None Include="Core\Assets\Models\Cube.fbx" />
