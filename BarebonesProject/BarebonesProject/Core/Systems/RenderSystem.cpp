@@ -16,4 +16,9 @@ namespace Barebones
 			gl.DrawMeshRenderer(CameraSystem::mainViewProj, transform, meshRenderer);
 		}
 	}
+
+	void RenderSystem::EntityDestroyed(Entity entity)
+	{
+
+	}
 }

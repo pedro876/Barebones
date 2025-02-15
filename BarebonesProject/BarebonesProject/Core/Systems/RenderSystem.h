@@ -15,6 +15,7 @@ namespace Barebones
 		
 		void Init();
 		void Update(GL& gl, float dt);
+		void EntityDestroyed(Entity entity) override;
 	};
 }
 

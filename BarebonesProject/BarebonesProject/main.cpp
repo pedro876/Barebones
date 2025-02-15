@@ -66,6 +66,8 @@ int main()
 	cameraTransform.SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
 	cameraTransform.SetLocalRotation(glm::vec3(0.0f, 180.0f, 0.0f));
 
+	//Coordinator::DestroyEntity(1);
+
 	/*Entity eCube1 = CreateCube(cube, material);
 	Entity eCube2 = CreateCube(cube, material);
 

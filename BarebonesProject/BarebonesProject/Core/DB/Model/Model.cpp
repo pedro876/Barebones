@@ -67,6 +67,7 @@ namespace Barebones
 
 	void Model::ProcessNode(aiNode* node, const aiScene* scene, Entity parent)
 	{
+		std::cout << "node name: " << node->mName.C_Str() << "\n";
 		aiVector3D position, rotation, scaling;
 		node->mTransformation.Decompose(scaling, rotation, position);
 

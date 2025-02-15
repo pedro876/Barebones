@@ -24,8 +24,8 @@ namespace Barebones
 		static void DestroyEntity(Entity entity)
 		{
 			mEntityManager->DestroyEntity(entity);
-			mComponentManager->EntityDestroyed(entity);
 			mSystemManager->EntityDestroyed(entity);
+			mComponentManager->EntityDestroyed(entity);
 		}
 
 		template<typename T>

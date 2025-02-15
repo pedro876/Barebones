@@ -20,6 +20,23 @@ namespace Barebones
 			}
 		}
 
+		void EntityDestroyed(Entity entity) override
+		{
+			Transform& transform = Coordinator::GetComponent<Transform>(entity);
+			Entity child = transform.firstChild;
+			while (child)
+			{
+				Entity next = Coordinator::GetComponent<Transform>(child).nextSibling;
+				Coordinator::DestroyEntity(child);
+				child = next;
+			}
+
+			if (transform.parent)
+			{
+				RemoveChild(transform.parent, entity);
+			}
+		}
+
 		static bool IsChildOf(Entity parent, Entity child)
 		{
 			auto& tChild = Coordinator::GetComponent<Transform>(child);

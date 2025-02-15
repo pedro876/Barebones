@@ -33,4 +33,9 @@ namespace Barebones
 			mainViewProj = projMat * viewMat;
 		}
 	}
+
+	void CameraSystem::EntityDestroyed(Entity entity)
+	{
+		
+	}
 }

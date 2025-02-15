@@ -9,6 +9,7 @@ namespace Barebones
 	{
 	public:
 		std::set<Entity> mEntities;
+		virtual void EntityDestroyed(Entity entity) = 0;
 	};
 
 	class SystemManager
@@ -39,6 +40,7 @@ namespace Barebones
 			{
 				auto const& system = pair.second;
 				system->mEntities.erase(entity);
+				system->EntityDestroyed(entity);
 			}
 		}
 
