@@ -400,3 +400,6 @@ FodyWeavers.xsd
 *.sln.iml
 assimp-5.4.3.zip
 assimp-5.4.3
+
+# Blender
+*.blend1
