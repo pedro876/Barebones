@@ -111,7 +111,7 @@ namespace Barebones
 		materials[index].shader = DB<Shader>::Get("Default Shader");
 		materials[index].name = material->GetName().C_Str();
 
-		/*std::cout << material->GetName().C_Str() << std::endl;
+		std::cout << material->GetName().C_Str() << std::endl;
 
 		for (unsigned int t = 0, textureCount = material->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
 		{
@@ -120,7 +120,7 @@ namespace Barebones
 			{
 				std::cout << path.C_Str() << std::endl;
 			}
-		}*/
+		}
 	}
 
 	void Model::ProcessMesh(unsigned int index, aiMesh* mesh)
