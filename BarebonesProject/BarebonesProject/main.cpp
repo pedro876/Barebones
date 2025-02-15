@@ -4,7 +4,7 @@
 
 using namespace Barebones;
 
-Entity CreateCube(Mesh* cubeMesh, std::weak_ptr<Material> material)
+Entity CreateCube(Mesh* cubeMesh, Material* material)
 {
 	Entity entity = Coordinator::CreateEntity();
 
@@ -45,7 +45,7 @@ int main()
 
 	//Shader shaderProgram = Shader("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
 	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag"));
-	auto material = DB<Material>::Register(std::make_shared<Material>("M_Test", shaderProgram));
+	//auto material = DB<Material>::Register(std::make_shared<Material>("M_Test", shaderProgram));
 /*	auto model = DB<Model>::Register(std::make_shared<Model>("Core/Assets/Models/Cube.fbx")).lock();
 	model->LoadModel();
 	Mesh* cube = model->GetMesh(0)*/;

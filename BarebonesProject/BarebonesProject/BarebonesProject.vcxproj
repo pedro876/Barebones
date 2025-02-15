@@ -141,7 +141,7 @@
     <ClCompile Include="Core\Systems\CameraSystem.cpp" />
     <ClCompile Include="Core\_External\glad.c" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Core\DB\Material\Material.cpp" />
+    <ClCompile Include="Core\DB\Model\Material.cpp" />
     <ClCompile Include="Core\DB\Model\Mesh.cpp" />
     <ClCompile Include="Core\DB\Asset.cpp" />
     <ClCompile Include="Core\Systems\RenderSystem.cpp" />
@@ -159,7 +159,7 @@
     <ClInclude Include="Core\ECS\EntityManager.h" />
     <ClInclude Include="Core\File\File.h" />
     <ClInclude Include="Core\GL\GL.h" />
-    <ClInclude Include="Core\DB\Material\Material.h" />
+    <ClInclude Include="Core\DB\Model\Material.h" />
     <ClInclude Include="Core\DB\Model\Mesh.h" />
     <ClInclude Include="Core\Components\MeshRenderer.h" />
     <ClInclude Include="Core\DB\Asset.h" />

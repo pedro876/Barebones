@@ -24,44 +24,22 @@ namespace Barebones
 			return;
 		}
 
+		Entity root = Coordinator::CreateEntity();
+		Coordinator::AddComponent<Transform>(root, Transform());
+		if (meshes != nullptr) delete[] meshes;
+		if (materials != nullptr) delete[] materials;
+		materials = new Material[materialCount = scene->mNumMaterials];
+		meshes = new Mesh[scene->mNumMeshes];
+		meshCount = 0;
+
 		//directory = path.substr(0, path.find_last_of('/'));
 
 		for (unsigned int i = 0, count = scene->mNumMaterials; i < count; i++)
 		{
 			aiMaterial* material = scene->mMaterials[i];
-			std::cout << material->GetName().C_Str() << std::endl;
-
-			for (unsigned int t = 0, textureCount = material->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
-			{
-				aiString path;
-				if (material->GetTexture(aiTextureType_DIFFUSE, t, &path) == AI_SUCCESS)
-				{
-					std::cout << path.C_Str() << std::endl;
-				}
-			}
+			ProcessMaterial(i, material);
 		}
-
-		for (unsigned int i = 0, count = scene->mNumCameras; i < count; i++)
-		{
-			aiCamera* camera = scene->mCameras[i];
-			aiNode* cameraNode = scene->mRootNode->FindNode(camera->mName);
-
-			if (cameraNode)
-			{
-				aiVector3D scaling, rotation, position;
-				cameraNode->mTransformation.Decompose(scaling, rotation, position);
-
-				glm::vec3 cameraPos = glm::vec3(position.x, position.y, position.z);
-				std::cout << "Camera position: " << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << std::endl;
-			}
-		}
-
-
-		Entity root = Coordinator::CreateEntity();
-		Coordinator::AddComponent<Transform>(root, Transform());
-		if (meshes != nullptr) delete[] meshes;
-		meshes = new Mesh[scene->mNumMeshes];
-		meshCount = 0;
+		
 		ProcessNode(scene->mRootNode, scene, root);
 	}
 
@@ -86,20 +64,16 @@ namespace Barebones
 			meshes[meshCount] = ProcessMesh(mesh, scene);
 			meshRenderer.mesh = &meshes[meshCount];
 			meshCount++;
-			meshRenderer.material = DB<Material>::Get("M_Test");
+			meshRenderer.material = &materials[mesh->mMaterialIndex];
 		}
 
 		for (unsigned int i = 0, count = scene->mNumCameras; i < count; i++)
 		{
 			aiCamera* mCamera = scene->mCameras[i];
-			aiNode* cameraNode = scene->mRootNode->FindNode(mCamera->mName);
 
 			if (node->mName == mCamera->mName)
 			{
 				entity = Coordinator::CreateEntity();
-				aiVector3D scaling, rotation, position;
-				cameraNode->mTransformation.Decompose(scaling, rotation, position);
-				//glm::vec3 eulerAngles = glm::degrees(glm::vec3(rotation.x, rotation.y, rotation.z));
 				glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
 				quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
 				Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
@@ -120,6 +94,23 @@ namespace Barebones
 		{
 			ProcessNode(node->mChildren[i], scene, entity);
 		}
+	}
+
+	void Model::ProcessMaterial(unsigned int index, aiMaterial* material)
+	{
+		materials[index].shader = DB<Shader>::Get("Default Shader");
+		materials[index].name = material->GetName().C_Str();
+
+		/*std::cout << material->GetName().C_Str() << std::endl;
+
+		for (unsigned int t = 0, textureCount = material->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
+		{
+			aiString path;
+			if (material->GetTexture(aiTextureType_DIFFUSE, t, &path) == AI_SUCCESS)
+			{
+				std::cout << path.C_Str() << std::endl;
+			}
+		}*/
 	}
 
 	Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)

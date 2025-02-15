@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mesh.h"
+
 #include <vector>
 #include <string>
 #include <iostream>
@@ -14,6 +14,8 @@
 #include "../../Components/MeshRenderer.h"
 #include "../../Components/Camera.h"
 #include "../../Systems/TransformSystem.h"
+#include "Mesh.h"
+#include "Material.h"
 
 namespace Barebones
 {
@@ -23,13 +25,17 @@ namespace Barebones
 		Model(std::string path);
 		Mesh* GetMesh(unsigned int meshIndex);
 		unsigned int GetMeshCount() { return meshCount; }
+		unsigned int GetMaterialCount() { return materialCount; }
 		void LoadModel();
 
 	private:
 		Mesh* meshes = nullptr;
+		Material* materials = nullptr;
 		unsigned int meshCount = 0;
+		unsigned int materialCount = 0;
 
 		void ProcessNode(aiNode* node, const aiScene* scene, Entity parent);
+		void ProcessMaterial(unsigned int index, aiMaterial* material);
 		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	};
 }

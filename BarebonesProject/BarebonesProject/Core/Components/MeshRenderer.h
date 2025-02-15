@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../DB/Material/Material.h"
+#include "../DB/Model/Material.h"
 #include "../DB/Model/Mesh.h"
 
 namespace Barebones
@@ -8,6 +8,6 @@ namespace Barebones
 	struct MeshRenderer
 	{
 		Mesh* mesh;
-		std::weak_ptr<Material> material;
+		Material* material;
 	};
 }

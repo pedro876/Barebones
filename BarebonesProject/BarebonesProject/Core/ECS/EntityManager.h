@@ -1,8 +1,6 @@
 #pragma once
 
 #include "ECS_Types.h"
-#include <queue>
-
 
 namespace Barebones
 {
@@ -13,9 +11,10 @@ namespace Barebones
 		EntityManager()
 		{
 			// Start from 1, zero is considered a null entity
-			for (Entity entity = 1; entity < MAX_ENTITIES; ++entity)
+			mAvailableEntitiesTail = MAX_ENTITIES-1;
+			for (unsigned int i = 0; i < MAX_ENTITIES; i++)
 			{
-				mAvailableEntities.push(entity);
+				mAvailableEntities[i] = MAX_ENTITIES - i;
 			}
 		}
 
@@ -23,8 +22,7 @@ namespace Barebones
 		{
 			assert(mLivingEntityCount < MAX_ENTITIES && "Too many entities in existence");
 
-			Entity id = mAvailableEntities.front();
-			mAvailableEntities.pop();
+			Entity id = mAvailableEntities[mAvailableEntitiesTail--];
 			++mLivingEntityCount;
 			return id;
 		}
@@ -34,7 +32,7 @@ namespace Barebones
 			assert(entity < MAX_ENTITIES && "Entity out of range.");
 
 			mSignatures[entity].reset();
-			mAvailableEntities.push(entity);
+			mAvailableEntities[++mAvailableEntitiesTail] = entity;
 			--mLivingEntityCount;
 		}
 
@@ -51,8 +49,9 @@ namespace Barebones
 		}
 
 	private:
-		std::queue<Entity> mAvailableEntities{};
-		std::array<Signature, MAX_ENTITIES> mSignatures{};
+		Entity mAvailableEntities[MAX_ENTITIES];
+		unsigned int mAvailableEntitiesTail;
+		Signature mSignatures[MAX_ENTITIES];
 		std::uint32_t mLivingEntityCount{};
 	};
 }
