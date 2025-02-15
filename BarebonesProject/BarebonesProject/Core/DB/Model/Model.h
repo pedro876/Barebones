@@ -35,7 +35,8 @@ namespace Barebones
 		unsigned int materialCount = 0;
 
 		void ProcessNode(aiNode* node, const aiScene* scene, Entity parent);
+		void ProcessCamera(Entity parent, aiNode* node);
 		void ProcessMaterial(unsigned int index, aiMaterial* material);
-		Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		void ProcessMesh(unsigned int index, aiMesh* mesh);
 	};
 }

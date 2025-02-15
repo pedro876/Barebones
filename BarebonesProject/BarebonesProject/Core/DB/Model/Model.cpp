@@ -29,8 +29,7 @@ namespace Barebones
 		if (meshes != nullptr) delete[] meshes;
 		if (materials != nullptr) delete[] materials;
 		materials = new Material[materialCount = scene->mNumMaterials];
-		meshes = new Mesh[scene->mNumMeshes];
-		meshCount = 0;
+		meshes = new Mesh[meshCount = scene->mNumMeshes];
 
 		//directory = path.substr(0, path.find_last_of('/'));
 
@@ -39,13 +38,19 @@ namespace Barebones
 			aiMaterial* material = scene->mMaterials[i];
 			ProcessMaterial(i, material);
 		}
+
+		for (unsigned int i = 0, count = scene->mNumMeshes; i < count; i++)
+		{
+			aiMesh* mesh = scene->mMeshes[i];
+			ProcessMesh(i, mesh);
+		}
 		
 		ProcessNode(scene->mRootNode, scene, root);
 	}
 
 	void Model::ProcessNode(aiNode* node, const aiScene* scene, Entity parent)
 	{
-		std::cout << "node name: " << node->mName.C_Str() << "\n";
+		//std::cout << "node name: " << node->mName.C_Str() << "\n";
 		aiVector3D position, rotation, scaling;
 		node->mTransformation.Decompose(scaling, rotation, position);
 
@@ -60,33 +65,18 @@ namespace Barebones
 			TransformSystem::AddChild(parent, entity);
 
 			MeshRenderer& meshRenderer = Coordinator::AddComponent<MeshRenderer>(entity, MeshRenderer());
-			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			meshes[meshCount] = ProcessMesh(mesh, scene);
-			meshRenderer.mesh = &meshes[meshCount];
-			meshCount++;
+			unsigned int meshIndex = node->mMeshes[i];
+			aiMesh* mesh = scene->mMeshes[meshIndex];
+			meshRenderer.mesh = &meshes[meshIndex];
 			meshRenderer.material = &materials[mesh->mMaterialIndex];
 		}
 
 		for (unsigned int i = 0, count = scene->mNumCameras; i < count; i++)
 		{
 			aiCamera* mCamera = scene->mCameras[i];
-
 			if (node->mName == mCamera->mName)
 			{
-				entity = Coordinator::CreateEntity();
-				glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
-				quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
-				Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
-				transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
-				transform.SetLocalRotation(quat);
-				transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
-				TransformSystem::AddChild(parent, entity);
-
-				Camera& camera = Coordinator::AddComponent<Camera>(entity, Camera());
-				//camera.far = mCamera->mClipPlaneFar;
-				//camera.near = mCamera->mClipPlaneNear;
-				//camera.fieldOfView = mCamera->mHorizontalFOV;
-				camera.priority = 1;
+				ProcessCamera(parent, node);
 			}
 		}
 		
@@ -94,6 +84,26 @@ namespace Barebones
 		{
 			ProcessNode(node->mChildren[i], scene, entity);
 		}
+	}
+
+	void Model::ProcessCamera(Entity parent, aiNode* node)
+	{
+		aiVector3D position, rotation, scaling;
+		node->mTransformation.Decompose(scaling, rotation, position);
+		Entity entity = Coordinator::CreateEntity();
+		glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
+		quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
+		Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
+		transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
+		transform.SetLocalRotation(quat);
+		transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
+		TransformSystem::AddChild(parent, entity);
+
+		Camera& camera = Coordinator::AddComponent<Camera>(entity, Camera());
+		//camera.far = mCamera->mClipPlaneFar;
+		//camera.near = mCamera->mClipPlaneNear;
+		//camera.fieldOfView = mCamera->mHorizontalFOV;
+		camera.priority = 1;
 	}
 
 	void Model::ProcessMaterial(unsigned int index, aiMaterial* material)
@@ -113,7 +123,7 @@ namespace Barebones
 		}*/
 	}
 
-	Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+	void Model::ProcessMesh(unsigned int index, aiMesh* mesh)
 	{
 		// Indices
 		std::vector<unsigned int> indices;
@@ -151,6 +161,6 @@ namespace Barebones
 			}
 		}
 
-		return Mesh(mesh->mName.C_Str(), indices, vertices);
+		meshes[index] = Mesh(mesh->mName.C_Str(), indices, vertices);
 	}
 }
