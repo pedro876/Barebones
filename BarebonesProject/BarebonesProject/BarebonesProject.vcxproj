@@ -140,7 +140,6 @@ xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
   <ItemGroup>
     <ClCompile Include="Core\DB\Model\Model.cpp" />
     <ClCompile Include="Core\DB\Shader\Shader.cpp" />
-    <ClCompile Include="Core\DB\DB.cpp" />
     <ClCompile Include="Core\File\File.cpp" />
     <ClCompile Include="Core\GL\GL.cpp" />
     <ClCompile Include="Core\Systems\CameraSystem.cpp" />
@@ -156,6 +155,7 @@ xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
     <ClInclude Include="Core\DB\Model\Model.h" />
     <ClInclude Include="Core\BarebonesEngine.h" />
     <ClInclude Include="Core\Components\Camera.h" />
+    <ClInclude Include="Core\DB\Texture\Texture.h" />
     <ClInclude Include="Core\ECS\ComponentArray.h" />
     <ClInclude Include="Core\ECS\ComponentManager.h" />
     <ClInclude Include="Core\ECS\Coordinator.h" />

@@ -29,6 +29,7 @@ class BarebonesFBXExporter(bpy.types.Operator):
             
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         bpy.ops.export_scene.fbx(
+            path_mode = 'RELATIVE',
             filepath=filepath,
             check_existing=False,
             use_selection=export_settings.export_selected,

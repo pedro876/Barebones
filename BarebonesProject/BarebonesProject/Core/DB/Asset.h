@@ -3,6 +3,7 @@
 #include <string>
 #include "../ECS/Coordinator.h"
 #include "DB.h"
+#include "../File/File.h"
 
 namespace Barebones
 {

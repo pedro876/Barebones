@@ -115,10 +115,22 @@ namespace Barebones
 
 		for (unsigned int t = 0, textureCount = material->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
 		{
-			aiString path;
-			if (material->GetTexture(aiTextureType_DIFFUSE, t, &path) == AI_SUCCESS)
+			aiString ogPath;
+			if (material->GetTexture(aiTextureType_DIFFUSE, t, &ogPath) == AI_SUCCESS)
 			{
-				std::cout << path.C_Str() << std::endl;
+				std::string relativePath = File::MakeRelativeToFileBeRelativeToCWD(path, ogPath.C_Str()).string();
+				std::cout << "Texture path (" << ogPath.C_Str() << ") was modified to (" << relativePath << ")\n";
+				bool wasLoaded = false;
+				if (!DB<Texture>::Has(relativePath))
+				{
+					DB<Texture>::Register(std::make_shared<Texture>(relativePath));
+					wasLoaded = true;
+				}
+				if (auto texture = DB<Texture>::Get(relativePath).lock())
+				{
+					if (wasLoaded) texture->Load();
+					//SET TEXTURE TO MATERIAL
+				}
 			}
 		}
 	}

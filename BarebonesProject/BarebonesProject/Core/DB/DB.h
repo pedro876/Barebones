@@ -13,6 +13,11 @@ namespace Barebones
 	public:
 		DB() = delete;
 
+		static bool Has(const std::string& path)
+		{
+			return pathToAsset.contains(path);
+		}
+
 		static std::weak_ptr<T> Get(const std::string& path)
 		{
 			return pathToAsset[path];

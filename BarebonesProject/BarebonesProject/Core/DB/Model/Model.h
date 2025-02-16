@@ -16,6 +16,7 @@
 #include "../../Systems/TransformSystem.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "../Texture/Texture.h"
 
 namespace Barebones
 {

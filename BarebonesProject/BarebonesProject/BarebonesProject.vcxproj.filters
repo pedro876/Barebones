@@ -55,9 +55,6 @@
     <ClCompile Include="Core\GL\GL.cpp">
       <Filter>Engine\GL</Filter>
     </ClCompile>
-    <ClCompile Include="Core\DB\DB.cpp">
-      <Filter>Engine\DB</Filter>
-    </ClCompile>
     <ClCompile Include="Core\DB\Model\Mesh.cpp">
       <Filter>Engine\DB\Mesh</Filter>
     </ClCompile>
@@ -131,6 +128,7 @@
     <ClInclude Include="Core\Systems\CameraSystem.h" />
     <ClInclude Include="Core\DB\Model\Model.h" />
     <ClInclude Include="Core\Systems\TransformSystem.h" />
+    <ClInclude Include="Core\DB\Texture\Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Assets\Shaders\vertex.vert">
