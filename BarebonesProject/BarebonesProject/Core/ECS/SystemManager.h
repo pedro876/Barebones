@@ -39,8 +39,10 @@ namespace Barebones
 			for (auto const& pair : mSystems)
 			{
 				auto const& system = pair.second;
-				system->mEntities.erase(entity);
-				system->EntityDestroyed(entity);
+				if (system->mEntities.erase(entity))
+				{
+					system->EntityDestroyed(entity);
+				}
 			}
 		}
 
