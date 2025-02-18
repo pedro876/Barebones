@@ -130,8 +130,16 @@ namespace Barebones
 				if (auto texture = texturePtr.lock())
 				{
 					if (wasLoaded) texture->Load();
-					materials[index].baseMap = texturePtr;
+					//materials[index].baseMap = texturePtr;
+
+					Material::Property<std::weak_ptr<Texture>> textureProperty;
+					textureProperty.name = "_BaseMap";
+					textureProperty.value = texturePtr;
+					materials[index].properties_textures.push_back(std::move(textureProperty));
 				}
+
+				
+
 			}
 		}
 	}
