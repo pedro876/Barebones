@@ -142,6 +142,36 @@ namespace Barebones
 
 			}
 		}
+
+		std::cout << "***************\n";
+		std::cout << "Material: " << material->GetName().C_Str() << "\n";
+		for (unsigned int i = 0, propertyCount = material->mNumProperties; i < propertyCount; i++)
+		{
+			aiMaterialProperty& property = *material->mProperties[i];
+
+			std::cout << "prop " << property.mKey.C_Str() << 
+				" with idx " << property.mIndex << " and type " << property.mType << "\n";
+
+			/*switch (property.mType)
+			{
+			case aiPTI_Buffer:
+				material->Get()
+				break;
+			case aiPTI_Double:
+
+				break;
+			case aiPTI_Float:
+
+				break;
+			case aiPTI_Integer:
+
+				break;
+			case aiPTI_String:
+
+				break;
+			}*/
+		}
+		std::cout << "***************\n";
 	}
 
 	void Model::ProcessMesh(unsigned int index, aiMesh* mesh)
