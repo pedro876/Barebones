@@ -41,6 +41,12 @@ namespace Barebones
 			
 			stbi_image_free(data);
 		}
+
+		void Use(int textureUnit)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, ID);
+		}
 	private:
 		int width = 0;
 		int height = 0;

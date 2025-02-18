@@ -68,6 +68,15 @@ namespace Barebones
 
 		shader->Use();
 		glm::mat4 modelMat = transform.GetLocalToWorldMatrix();
+
+		if (auto baseMap = renderer.material->baseMap.lock())
+		{
+			shader->SetInt("_BaseMap", 0);
+			baseMap->Use(0);
+		}
+
+		
+
 		shader->SetMat4("_ModelViewProj", viewProjMat * modelMat);
 		renderer.mesh->Draw();
 	}

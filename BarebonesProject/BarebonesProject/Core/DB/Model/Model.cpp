@@ -126,10 +126,11 @@ namespace Barebones
 					DB<Texture>::Register(std::make_shared<Texture>(relativePath));
 					wasLoaded = true;
 				}
-				if (auto texture = DB<Texture>::Get(relativePath).lock())
+				auto texturePtr = DB<Texture>::Get(relativePath);
+				if (auto texture = texturePtr.lock())
 				{
 					if (wasLoaded) texture->Load();
-					//SET TEXTURE TO MATERIAL
+					materials[index].baseMap = texturePtr;
 				}
 			}
 		}
@@ -170,6 +171,15 @@ namespace Barebones
 			{
 				aiVector3D normal = mesh->mNormals[i];
 				vertices[i].normal = glm::vec3(normal.x, normal.y, normal.z);
+			}
+		}
+
+		if (mesh->HasTextureCoords(0))
+		{
+			for (unsigned int i = 0; i < vertexCount; i++)
+			{
+				aiVector3D texcoord0 = mesh->mTextureCoords[0][i];
+				vertices[i].texcoord0 = glm::vec2(texcoord0.x, texcoord0.y);
 			}
 		}
 
