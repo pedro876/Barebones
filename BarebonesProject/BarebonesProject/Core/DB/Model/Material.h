@@ -48,6 +48,15 @@ namespace Barebones
 				for (auto& p : properties_float) shader->SetFloat(p.name, p.value);
 				for (auto& p : properties_int) shader->SetInt(p.name, p.value);
 				for (auto& p : properties_bools) shader->SetBool(p.name, p.value);
+				for (auto& p : properties_vec2) shader->SetVec2(p.name, p.value);
+				for (auto& p : properties_vec3) shader->SetVec3(p.name, p.value);
+				for (auto& p : properties_vec4) shader->SetVec4(p.name, p.value);
+				for (auto& p : properties_ivec2) shader->SetIVec2(p.name, p.value);
+				for (auto& p : properties_ivec3) shader->SetIVec3(p.name, p.value);
+				for (auto& p : properties_ivec4) shader->SetIVec4(p.name, p.value);
+				for (auto& p : properties_bvec2) shader->SetBVec2(p.name, p.value);
+				for (auto& p : properties_bvec3) shader->SetBVec3(p.name, p.value);
+				for (auto& p : properties_bvec4) shader->SetBVec4(p.name, p.value);
 				for (auto& p : properties_texture)
 				{
 					shader->SetInt(p.name, 0);

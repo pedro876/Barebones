@@ -63,20 +63,19 @@ namespace Barebones
         glUseProgram(ID);
     }
 
-    void Shader::SetBool(const std::string& name, bool value) const
-    {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
-    }
+    void Shader::SetBool(const std::string& name, bool value) const { glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); }
+    void Shader::SetInt(const std::string& name, int value) const { glUniform1i(glGetUniformLocation(ID, name.c_str()), value); }
+    void Shader::SetFloat(const std::string& name, float value) const { glUniform1f(glGetUniformLocation(ID, name.c_str()), value); }
 
-    void Shader::SetInt(const std::string& name, int value) const
-    {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
-    }
-
-    void Shader::SetFloat(const std::string& name, float value) const
-    {
-        glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
-    }
+    void Shader::SetVec2(const std::string& name, const glm::vec2& value)   const { glUniform2f(glGetUniformLocation(ID, name.c_str()), value.x, value.y); }
+    void Shader::SetVec3(const std::string& name, const glm::vec3& value)   const { glUniform3f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z); }
+    void Shader::SetVec4(const std::string& name, const glm::vec4& value)   const { glUniform4f(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z, value.w); }
+    void Shader::SetIVec2(const std::string& name, const glm::ivec2& value) const { glUniform2i(glGetUniformLocation(ID, name.c_str()), value.x, value.y); } 
+    void Shader::SetIVec3(const std::string& name, const glm::ivec3& value) const { glUniform3i(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z); } 
+    void Shader::SetIVec4(const std::string& name, const glm::ivec4& value) const { glUniform4i(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z, value.w); } 
+    void Shader::SetBVec2(const std::string& name, const glm::bvec2& value) const { glUniform2i(glGetUniformLocation(ID, name.c_str()), value.x, value.y); } 
+    void Shader::SetBVec3(const std::string& name, const glm::bvec3& value) const { glUniform3i(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z); } 
+    void Shader::SetBVec4(const std::string& name, const glm::bvec4& value) const { glUniform4i(glGetUniformLocation(ID, name.c_str()), value.x, value.y, value.z, value.w); } 
 
     void Shader::SetMat4(const std::string& name, glm::mat4 matrix) const
     {

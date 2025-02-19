@@ -29,9 +29,19 @@ namespace Barebones
         ~Shader();
 
         void Use();
-        void SetBool(const std::string& name, bool value) const;
-        void SetInt(const std::string& name, int value) const;
         void SetFloat(const std::string& name, float value) const;
+        void SetInt(const std::string& name, int value) const;
+        void SetBool(const std::string& name, bool value) const;
+        void SetVec2(const std::string& name, const glm::vec2& value) const;
+        void SetVec3(const std::string& name, const glm::vec3& value) const;
+        void SetVec4(const std::string& name, const glm::vec4& value) const;
+        void SetIVec2(const std::string& name, const glm::ivec2& value) const;
+        void SetIVec3(const std::string& name, const glm::ivec3& value) const;
+        void SetIVec4(const std::string& name, const glm::ivec4& value) const;
+        void SetBVec2(const std::string& name, const glm::bvec2& value) const;
+        void SetBVec3(const std::string& name, const glm::bvec3& value) const;
+        void SetBVec4(const std::string& name, const glm::bvec4& value) const;
+
         void SetMat4(const std::string& name, glm::mat4 matrix) const;
 
     private:
