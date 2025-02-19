@@ -12,38 +12,13 @@ namespace Barebones
 	class Material
 	{
 	public:
-		//struct Property
-		//{
-		//	enum class Type
-		//	{
-		//		Bool,
-		//		Integer,
-		//		Float,
-		//		Matrix4x4,
-		//		Texture,
-		//	};
-		//	union Value
-		//	{
-		//		bool boolValue;
-		//		int intValue;
-		//		float floatValue;
-		//		glm::mat4 matrix4x4Value;
-		//		std::weak_ptr<Texture> textureValue;
-
-		//		Value(){}
-		//		~Value() {}
-		//	};
-
-		//	std::string name;
-		//	Type type;
-		//	Value value;
-		//};
-
 		template<typename T>
 		struct Property
 		{
 			std::string name;
 			T value;
+
+			Property(std::string name, T value) : name(name), value(value) {}
 		};
 
 		
@@ -51,21 +26,29 @@ namespace Barebones
 		std::string name;
 		std::weak_ptr<Shader> shader;
 
+		std::vector<Property<std::string>> properties_string;
+		std::vector<Property<float>> properties_float;
+		std::vector<Property<int>> properties_int;
 		std::vector<Property<bool>> properties_bools;
-		std::vector<Property<int>> properties_ints;
-		std::vector<Property<float>> properties_floats;
-		std::vector<Property<glm::mat4>> properties_matrices;
-		std::vector<Property<std::weak_ptr<Texture>>> properties_textures;
+		std::vector<Property<glm::vec2>> properties_vec2;
+		std::vector<Property<glm::vec3>> properties_vec3;
+		std::vector<Property<glm::vec4>> properties_vec4;
+		std::vector<Property<glm::ivec2>> properties_ivec2;
+		std::vector<Property<glm::ivec3>> properties_ivec3;
+		std::vector<Property<glm::ivec4>> properties_ivec4;
+		std::vector<Property<glm::bvec2>> properties_bvec2;
+		std::vector<Property<glm::bvec3>> properties_bvec3; 
+		std::vector<Property<glm::bvec4>> properties_bvec4;
+		std::vector<Property<std::weak_ptr<Texture>>> properties_texture;
 
 		void SetPassCall()
 		{
 			if (auto shader = this->shader.lock())
 			{
+				for (auto& p : properties_float) shader->SetFloat(p.name, p.value);
+				for (auto& p : properties_int) shader->SetInt(p.name, p.value);
 				for (auto& p : properties_bools) shader->SetBool(p.name, p.value);
-				for (auto& p : properties_ints) shader->SetInt(p.name, p.value);
-				for (auto& p : properties_floats) shader->SetFloat(p.name, p.value);
-				for (auto& p : properties_matrices) shader->SetMat4(p.name, p.value);
-				for (auto& p : properties_textures)
+				for (auto& p : properties_texture)
 				{
 					shader->SetInt(p.name, 0);
 					if (auto texture = p.value.lock())
@@ -75,12 +58,6 @@ namespace Barebones
 				}
 			}
 		}
-
-		/*
-		What is a material property?
-			- A string name
-			- A value (maybe a union??)
-		*/
 	};
 }
 

@@ -26,8 +26,10 @@ namespace Barebones
 			fs::path relativeToCWD = fs::relative(absoluteTargetPath, cwd);
 			return relativeToCWD;
 		}
-		static std::string Read(const std::string& path);
-		static void Write(const std::string& path, const std::string& text);
+		static std::string Read(fs::path path);
+		static std::vector<std::string> ReadLines(fs::path path);
+		static void Write(fs::path path, const std::string& text);
+		static std::vector<std::string> SplitLine(std::string line, char delimiter);
 
 	private:
 		static inline fs::path cwd = std::filesystem::current_path();

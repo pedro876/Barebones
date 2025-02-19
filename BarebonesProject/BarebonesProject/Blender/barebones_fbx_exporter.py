@@ -10,6 +10,7 @@ bl_info = {
 
 import bpy
 import os
+import csv
 
 class BarebonesFBXExporter(bpy.types.Operator):
     """Barebones FBX Exporter"""
@@ -26,9 +27,12 @@ class BarebonesFBXExporter(bpy.types.Operator):
         filepath = export_settings.filepath;
         if filepath.startswith("//"):
             filepath = bpy.path.abspath(filepath)
-            
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
-        bpy.ops.export_scene.fbx(
+        
+        directory = os.path.dirname(filepath)
+        self.export_materials(directory)
+        
+        """bpy.ops.export_scene.fbx(
             path_mode = 'RELATIVE',
             filepath=filepath,
             check_existing=False,
@@ -39,9 +43,55 @@ class BarebonesFBXExporter(bpy.types.Operator):
             axis_forward='-Z',
             axis_up='Y',
             bake_space_transform=True
-        )
+        )"""
+        
         self.report({'INFO'}, f"Exported FBX to: {filepath}")
         print(f"Exported FBX to: {filepath}")
+        
+    def export_materials(self, directory):
+        def format_float(value):
+                return f"{value:.5f}"
+        
+        print(f"Will export materials to {directory}")
+        for mat in bpy.data.materials:
+            custom_props = {k: v for k, v in mat.items() if k not in "_RNA_UI"}
+            
+            filepath = os.path.join(directory, f"{mat.name}.mat")
+            
+            if custom_props:
+                print(f"Writing custom properties for {mat.name}")
+                with open(filepath, mode='w', newline='') as file:
+                    writer = csv.writer(file, delimiter=';')
+                    for key, value in custom_props.items():
+                        if type(value) == str:
+                            writer.writerow(["String", key, value])
+                        elif type(value) == float:
+                            writer.writerow(["Float", key, format_float(value)])
+                        elif type(value) == int:
+                            writer.writerow(["Integer", key, value])
+                        elif type(value) == bool:
+                            writer.writerow(["Boolean", key, value])
+                        elif hasattr(value, "to_list"):
+                            value_list = value.to_list()
+                            if value.typecode == 'f' or value.typecode == 'd':
+                                formatted_values = [format_float(v) for v in value_list]
+                                writer.writerow(["FloatArray", key] + formatted_values)
+                            elif value.typecode == 'i':
+                                writer.writerow(["IntegerArray", key] + value_list)
+                            elif value.typecode == 'b':
+                                writer.writerow(["BooleanArray", key] + value_list)
+                            else:
+                                writer.writerow(["UnsupportedArray", key, str(value_list)])
+                        else:
+                            writer.writerow(["Unsupported", key, str(value)])
+                    # Check if there are textures in the material's nodes
+                    if mat.use_nodes and mat.node_tree:
+                        for node in mat.node_tree.nodes:
+                            if node.type == 'TEX_IMAGE':  # Check if the node is a texture
+                                image = node.image
+                                if image:
+                                    texture_path = image.filepath
+                                    writer.writerow(["Texture2D", node.name, texture_path])
 
 class BarebonesFBXSettings(bpy.types.PropertyGroup):
     filepath: bpy.props.StringProperty(name="FBX File Path", subtype='FILE_PATH')

@@ -111,7 +111,7 @@ namespace Barebones
 		materials[index].shader = DB<Shader>::Get("Default Shader");
 		materials[index].name = material->GetName().C_Str();
 
-		std::cout << material->GetName().C_Str() << std::endl;
+		std::cout << "Processing material " << material->GetName().C_Str() << std::endl;
 
 		for (unsigned int t = 0, textureCount = material->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
 		{
@@ -132,18 +132,59 @@ namespace Barebones
 					if (wasLoaded) texture->Load();
 					//materials[index].baseMap = texturePtr;
 
-					Material::Property<std::weak_ptr<Texture>> textureProperty;
+					/*Material::Property<std::weak_ptr<Texture>> textureProperty("_BaseMap", texturePtr);
 					textureProperty.name = "_BaseMap";
-					textureProperty.value = texturePtr;
-					materials[index].properties_textures.push_back(std::move(textureProperty));
+					textureProperty.value = texturePtr;*/
+					materials[index].properties_texture.emplace_back(
+						Material::Property<std::weak_ptr<Texture>>("_BaseMap", texturePtr)
+					);
 				}
-
-				
-
 			}
 		}
 
-		std::cout << "***************\n";
+		std::filesystem::path materialPath = directory;
+		materialPath = materialPath / material->GetName().C_Str() += ".mat";
+		materialPath = materialPath.lexically_normal();
+
+		if (File::Exists(materialPath))
+		{
+			std::vector<std::string> lines = File::ReadLines(materialPath);
+			Material& m = materials[index];
+			for (std::string& line : lines)
+			{
+				std::vector<std::string> tokens = File::SplitLine(line, ';');
+				std::string& type = tokens[0];
+				std::string& name = tokens[1];
+				int vectorSize = tokens.size() - 2;
+
+				if (type == "String") m.properties_string.emplace_back(Material::Property<std::string>(name, tokens[2]));
+				else if (type == "Float") m.properties_float.emplace_back(Material::Property<float>(name, std::stof(tokens[2])));
+				else if (type == "Integer") m.properties_int.emplace_back(Material::Property<int>(name, std::stoi(tokens[2])));
+				else if (type == "Boolean") m.properties_bools.emplace_back(Material::Property<bool>(name, tokens[2] == "True"));
+				else if (type == "FloatArray")
+				{
+					if (vectorSize == 2) m.properties_vec2.emplace_back(name, glm::vec2(std::stof(tokens[2]), std::stof(tokens[3])));
+					if (vectorSize == 3) m.properties_vec3.emplace_back(name, glm::vec3(std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4])));
+					if (vectorSize == 4) m.properties_vec4.emplace_back(name, glm::vec4(std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4]), std::stof(tokens[5])));
+				}
+				else if (type == "IntegerArray")
+				{
+					if (vectorSize == 2) m.properties_ivec2.emplace_back(name, glm::ivec2(std::stoi(tokens[2]), std::stoi(tokens[3])));
+					if (vectorSize == 3) m.properties_ivec3.emplace_back(name, glm::ivec3(std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4])));
+					if (vectorSize == 4) m.properties_ivec4.emplace_back(name, glm::ivec4(std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4]), std::stoi(tokens[5])));
+				}
+				else if (type == "BooleanArray")
+				{
+					if (vectorSize == 2) m.properties_bvec2.emplace_back(name, glm::bvec2(tokens[2] == "True", tokens[3] == "True"));
+					if (vectorSize == 3) m.properties_bvec3.emplace_back(name, glm::bvec3(tokens[2] == "True", tokens[3] == "True", tokens[4] == "True"));
+					if (vectorSize == 4) m.properties_bvec4.emplace_back(name, glm::bvec4(tokens[2] == "True", tokens[3] == "True", tokens[4] == "True", tokens[5] == "True"));
+				}
+
+				std::cout << line << "\n";
+			}
+		}
+
+		/*std::cout << "***************\n";
 		std::cout << "Material: " << material->GetName().C_Str() << "\n";
 		for (unsigned int i = 0, propertyCount = material->mNumProperties; i < propertyCount; i++)
 		{
@@ -151,27 +192,8 @@ namespace Barebones
 
 			std::cout << "prop " << property.mKey.C_Str() << 
 				" with idx " << property.mIndex << " and type " << property.mType << "\n";
-
-			/*switch (property.mType)
-			{
-			case aiPTI_Buffer:
-				material->Get()
-				break;
-			case aiPTI_Double:
-
-				break;
-			case aiPTI_Float:
-
-				break;
-			case aiPTI_Integer:
-
-				break;
-			case aiPTI_String:
-
-				break;
-			}*/
 		}
-		std::cout << "***************\n";
+		std::cout << "***************\n";*/
 	}
 
 	void Model::ProcessMesh(unsigned int index, aiMesh* mesh)

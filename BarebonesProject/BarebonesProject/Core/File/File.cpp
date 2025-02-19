@@ -3,7 +3,7 @@
 
 namespace Barebones
 {
-	std::string File::Read(const std::string& path)
+	std::string File::Read(fs::path path)
 	{
 		std::string content;
 
@@ -26,7 +26,29 @@ namespace Barebones
 		return content;
 	}
 
-	void File::Write(const std::string& path, const std::string& text)
+	std::vector<std::string> File::ReadLines(fs::path path)
+	{
+		std::vector<std::string> lines;
+
+		try
+		{
+			std::ifstream file;
+			file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+			file.open(path);
+			std::string line;
+			while (std::getline(file, line))
+			{
+				lines.push_back(line);
+			}
+		}
+		catch (const std::exception& e)
+		{
+			//TODO: control what happens when a file cannot be succesfully read
+		}
+		return lines;
+	}
+
+	void File::Write(fs::path path, const std::string& text)
 	{
 		try
 		{
@@ -39,6 +61,21 @@ namespace Barebones
 		{
 			//TODO: control what happens when a file cannot be succesfully read
 		}
+	}
+
+	std::vector<std::string> File::SplitLine(std::string line, char delimiter)
+	{
+		std::vector<std::string> tokens;
+		size_t pos = 0;
+		std::string token;
+		while ((pos = line.find(';')) != std::string::npos)
+		{
+			token = line.substr(0, pos);
+			tokens.push_back(token);
+			line.erase(0, pos + 1); // + 1 to erase the delimiter
+		}
+		tokens.push_back(line);
+		return tokens;
 	}
 
 }

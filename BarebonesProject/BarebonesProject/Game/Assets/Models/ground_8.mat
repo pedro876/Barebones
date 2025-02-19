@@ -1,0 +1,8 @@
+Float;_TestFloat;1.00000
+FloatArray;_TestFloatArray;1.00000;1.00000;1.00000
+Integer;_TestInteger;1
+IntegerArray;_TestIntegerArray;1;1;1
+Boolean;_TestBool;False
+BooleanArray;_TestBooleanArray;True;True;True
+String;_TestString;Diffuse
+Texture2D;Image Texture;//..\Game\Assets\Materials\ground_texture_8-1K\ground_8-diffuse.jpg
