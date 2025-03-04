@@ -179,8 +179,7 @@ xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Assets\Models\Cube.fbx" />
-    <None Include="Core\Assets\Shaders\fragment.frag" />
-    <None Include="Core\Assets\Shaders\vertex.vert" />
+    <None Include="Core\Assets\Shaders\DefaultShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -19,6 +19,7 @@ namespace Barebones
         unsigned int ID;
 
         Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
+        Shader(const std::string& name, const std::string& path);
 
         //Shader(const Shader&) = delete;
         //Shader& operator=(const Shader&) = delete;
@@ -45,6 +46,7 @@ namespace Barebones
         void SetMat4(const std::string& name, glm::mat4 matrix) const;
 
     private:
+        void CompileShader(const char* vShaderCode, const char* fShaderCode);
         void CheckCompileErrors(unsigned int shader, std::string type);
     };
 }

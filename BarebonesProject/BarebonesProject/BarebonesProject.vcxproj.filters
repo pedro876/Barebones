@@ -131,12 +131,7 @@
     <ClInclude Include="Core\DB\Texture\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Core\Assets\Shaders\vertex.vert">
-      <Filter>Engine\Shaders</Filter>
-    </None>
-    <None Include="Core\Assets\Shaders\fragment.frag">
-      <Filter>Engine\Shaders</Filter>
-    </None>
     <None Include="Core\Assets\Models\Cube.fbx" />
+    <None Include="Core\Assets\Shaders\DefaultShader.glsl" />
   </ItemGroup>
 </Project>

@@ -44,7 +44,8 @@ int main()
 
 
 	//Shader shaderProgram = Shader("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
-	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Default Shader", "Core/Assets/Shaders/vertex.vert", "Core/Assets/Shaders/fragment.frag"));
+	//auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Default Shader", "Core/Assets/Shaders/vertex.vert", "Core/Assets/Shaders/fragment.frag"));
+	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Default Shader", "Core/Assets/Shaders/DefaultShader.glsl"));
 	//auto material = DB<Material>::Register(std::make_shared<Material>("M_Test", shaderProgram));
 /*	auto model = DB<Model>::Register(std::make_shared<Model>("Core/Assets/Models/Cube.fbx")).lock();
 	model->LoadModel();

@@ -11,27 +11,89 @@ namespace Barebones
         const char* vShaderCode = vShaderCodeStr.c_str();
         const char* fShaderCode = fShaderCodeStr.c_str();
 
-        // 2. compile shaders
-        unsigned int vertex, fragment;
-        // vertex shader
-        vertex = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex, 1, &vShaderCode, NULL);
-        glCompileShader(vertex);
-        CheckCompileErrors(vertex, "VERTEX");
-        // fragment Shader
-        fragment = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment, 1, &fShaderCode, NULL);
-        glCompileShader(fragment);
-        CheckCompileErrors(fragment, "FRAGMENT");
-        // shader Program
-        ID = glCreateProgram();
-        glAttachShader(ID, vertex);
-        glAttachShader(ID, fragment);
-        glLinkProgram(ID);
-        CheckCompileErrors(ID, "PROGRAM");
-        // delete the shaders as they're linked into our program now and no longer necessary
-        glDeleteShader(vertex);
-        glDeleteShader(fragment);
+        CompileShader(vShaderCode, fShaderCode);
+    }
+
+    
+
+    Shader::Shader(const std::string& name, const std::string& path) :
+        Asset(name)
+    {
+        enum State
+        {
+            NONE,
+            GLOBAL_PROPERTIES,
+            MATERIAL_PROPERTIES,
+            VARYINGS,
+            VERTEX,
+            FRAGMENT,
+        };
+
+        std::vector<std::string> lines = File::ReadLines(path);
+
+        std::string vShaderCodeStr;
+        std::string fShaderCodeStr;
+        State state = NONE;
+
+        for (int i = 0, count = lines.size(); i < count; i++)
+        {
+            std::string& line = lines[i];
+            if (line.starts_with('#'))
+            {
+                if (line == "#GlobalProperties") state = GLOBAL_PROPERTIES;
+                else if (line == "#MaterialProperties") state = MATERIAL_PROPERTIES;
+                else if (line == "#Varyings") state = VARYINGS;
+                else if (line == "#Vertex") state = VERTEX;
+                else if (line == "#Fragment") state = FRAGMENT;
+                else
+                {
+                    vShaderCodeStr += line;
+                    vShaderCodeStr += "\n";
+                    fShaderCodeStr += line;
+                    fShaderCodeStr += "\n";
+                }
+            }
+            else
+            {
+                switch (state)
+                {
+                case NONE:
+                case GLOBAL_PROPERTIES:
+                case MATERIAL_PROPERTIES:
+                    vShaderCodeStr += line;
+                    fShaderCodeStr += line;
+                    vShaderCodeStr += "\n";
+                    fShaderCodeStr += "\n";
+                    break;
+                case VERTEX:
+                    vShaderCodeStr += line;
+                    vShaderCodeStr += "\n";
+                    break;
+                case FRAGMENT:
+                    fShaderCodeStr += line;
+                    fShaderCodeStr += "\n";
+                    break;
+                case VARYINGS:
+                    if (line.size())
+                    {
+                        vShaderCodeStr += "out ";
+                        vShaderCodeStr += line;
+                        vShaderCodeStr += "\n";
+                        fShaderCodeStr += "in ";
+                        fShaderCodeStr += line;
+                        fShaderCodeStr += "\n";
+                    }
+                    break;
+                }
+            }
+        }
+
+        std::cout << vShaderCodeStr << "\n\n\n";
+        std::cout << fShaderCodeStr << "\n\n\n";
+
+        const char* vShaderCode = vShaderCodeStr.c_str();
+        const char* fShaderCode = fShaderCodeStr.c_str();
+        CompileShader(vShaderCode, fShaderCode);
     }
 
     //Shader::Shader(Shader&& other) noexcept :
@@ -81,6 +143,30 @@ namespace Barebones
     {
         int matrixLoc = glGetUniformLocation(ID, name.c_str());
         glUniformMatrix4fv(matrixLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+
+    void Shader::CompileShader(const char* vShaderCode, const char* fShaderCode)
+    {
+        unsigned int vertex, fragment;
+        // vertex shader
+        vertex = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertex, 1, &vShaderCode, NULL);
+        glCompileShader(vertex);
+        CheckCompileErrors(vertex, "VERTEX");
+        // fragment Shader
+        fragment = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment, 1, &fShaderCode, NULL);
+        glCompileShader(fragment);
+        CheckCompileErrors(fragment, "FRAGMENT");
+        // shader Program
+        ID = glCreateProgram();
+        glAttachShader(ID, vertex);
+        glAttachShader(ID, fragment);
+        glLinkProgram(ID);
+        CheckCompileErrors(ID, "PROGRAM");
+        // delete the shaders as they're linked into our program now and no longer necessary
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
     }
 
     void Shader::CheckCompileErrors(unsigned int shader, std::string type)
