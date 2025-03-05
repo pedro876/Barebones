@@ -55,15 +55,29 @@ namespace Barebones
             }
             else
             {
+                ;
                 switch (state)
                 {
                 case NONE:
-                case GLOBAL_PROPERTIES:
-                case MATERIAL_PROPERTIES:
                     vShaderCodeStr += line;
                     fShaderCodeStr += line;
                     vShaderCodeStr += "\n";
                     fShaderCodeStr += "\n";
+                    break;
+                case GLOBAL_PROPERTIES:
+                    vShaderCodeStr += line;
+                    fShaderCodeStr += line;
+                    vShaderCodeStr += "\n";
+                    fShaderCodeStr += "\n";
+                    break;
+                case MATERIAL_PROPERTIES:
+                {
+                    defaultProperties.AddSerializedPropertyGLSL(line);
+                    vShaderCodeStr += line;
+                    fShaderCodeStr += line;
+                    vShaderCodeStr += "\n";
+                    fShaderCodeStr += "\n";
+                }
                     break;
                 case VERTEX:
                     vShaderCodeStr += line;
@@ -143,6 +157,30 @@ namespace Barebones
     {
         int matrixLoc = glGetUniformLocation(ID, name.c_str());
         glUniformMatrix4fv(matrixLoc, 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+
+    void Shader::SetPropertyBlock(const PropertyBlock& block) const
+    {
+        for (auto& p : block.floats) SetFloat(p.name, p.value);
+        for (auto& p : block.ints) SetInt(p.name, p.value);
+        for (auto& p : block.bools) SetBool(p.name, p.value);
+        for (auto& p : block.vec2s) SetVec2(p.name, p.value);
+        for (auto& p : block.vec3s) SetVec3(p.name, p.value);
+        for (auto& p : block.vec4s) SetVec4(p.name, p.value);
+        for (auto& p : block.ivec2s) SetIVec2(p.name, p.value);
+        for (auto& p : block.ivec3s) SetIVec3(p.name, p.value);
+        for (auto& p : block.ivec4s) SetIVec4(p.name, p.value);
+        for (auto& p : block.bvec2s) SetBVec2(p.name, p.value);
+        for (auto& p : block.bvec3s) SetBVec3(p.name, p.value);
+        for (auto& p : block.bvec4s) SetBVec4(p.name, p.value);
+        for (auto& p : block.textures)
+        {
+            SetInt(p.name, 0);
+            if (auto texture = p.value.lock())
+            {
+                texture->Use(0);
+            }
+        }
     }
 
     void Shader::CompileShader(const char* vShaderCode, const char* fShaderCode)

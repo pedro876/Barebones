@@ -10,6 +10,7 @@
 #include "glm/glm.hpp"
 #include <glm/gtc/type_ptr.hpp>
 #include "../Asset.h"
+#include "PropertyBlock.h"
 
 namespace Barebones
 {
@@ -17,6 +18,7 @@ namespace Barebones
     {
     public:
         unsigned int ID;
+        PropertyBlock defaultProperties;
 
         Shader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
         Shader(const std::string& name, const std::string& path);
@@ -45,6 +47,8 @@ namespace Barebones
 
         void SetMat4(const std::string& name, glm::mat4 matrix) const;
 
+
+        void SetPropertyBlock(const PropertyBlock& block) const;
     private:
         void CompileShader(const char* vShaderCode, const char* fShaderCode);
         void CheckCompileErrors(unsigned int shader, std::string type);

@@ -30,6 +30,7 @@ namespace Barebones
 		static std::vector<std::string> ReadLines(fs::path path);
 		static void Write(fs::path path, const std::string& text);
 		static std::vector<std::string> SplitLine(std::string line, char delimiter);
+		static std::string TrimLine(std::string line, char character = ' ');
 
 	private:
 		static inline fs::path cwd = std::filesystem::current_path();

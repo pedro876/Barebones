@@ -129,6 +129,7 @@
     <ClInclude Include="Core\DB\Model\Model.h" />
     <ClInclude Include="Core\Systems\TransformSystem.h" />
     <ClInclude Include="Core\DB\Texture\Texture.h" />
+    <ClInclude Include="Core\DB\Shader\PropertyBlock.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Assets\Models\Cube.fbx" />

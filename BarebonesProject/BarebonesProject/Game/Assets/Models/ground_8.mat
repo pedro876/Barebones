@@ -5,5 +5,4 @@ IntegerArray;_TestIntegerArray;1;1;1
 Boolean;_TestBool;False
 BooleanArray;_TestBooleanArray;True;True;True
 String;_TestString;Diffuse
-FloatArray;_BaseColor;1.00000;0.00000;0.00000
 Texture2D;Image Texture;//..\Game\Assets\Materials\ground_texture_8-1K\ground_8-diffuse.jpg

@@ -68,7 +68,7 @@ namespace Barebones
 		std::vector<std::string> tokens;
 		size_t pos = 0;
 		std::string token;
-		while ((pos = line.find(';')) != std::string::npos)
+		while ((pos = line.find(delimiter)) != std::string::npos)
 		{
 			token = line.substr(0, pos);
 			tokens.push_back(token);
@@ -76,6 +76,17 @@ namespace Barebones
 		}
 		tokens.push_back(line);
 		return tokens;
+	}
+
+	std::string File::TrimLine(std::string line, char character)
+	{
+		size_t size = line.size();
+		if (!size) return line;
+
+		while (line[0] == character) line = line.substr(1, --size);
+		while (line[size-1] == character) line = line.substr(0, --size);
+
+		return line;
 	}
 
 }

@@ -155,6 +155,7 @@ xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
     <ClInclude Include="Core\DB\Model\Model.h" />
     <ClInclude Include="Core\BarebonesEngine.h" />
     <ClInclude Include="Core\Components\Camera.h" />
+    <ClInclude Include="Core\DB\Shader\PropertyBlock.h" />
     <ClInclude Include="Core\DB\Texture\Texture.h" />
     <ClInclude Include="Core\ECS\ComponentArray.h" />
     <ClInclude Include="Core\ECS\ComponentManager.h" />

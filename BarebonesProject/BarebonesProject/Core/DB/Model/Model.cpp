@@ -135,8 +135,8 @@ namespace Barebones
 					/*Material::Property<std::weak_ptr<Texture>> textureProperty("_BaseMap", texturePtr);
 					textureProperty.name = "_BaseMap";
 					textureProperty.value = texturePtr;*/
-					materials[index].properties_texture.emplace_back(
-						Material::Property<std::weak_ptr<Texture>>("_BaseMap", texturePtr)
+					materials[index].properties.textures.emplace_back(
+						Property<std::weak_ptr<Texture>>("_BaseMap", texturePtr)
 					);
 				}
 			}
@@ -152,33 +152,34 @@ namespace Barebones
 			Material& m = materials[index];
 			for (std::string& line : lines)
 			{
-				std::vector<std::string> tokens = File::SplitLine(line, ';');
+				m.properties.AddSerializedPropertyCSV(line);
+				/*std::vector<std::string> tokens = File::SplitLine(line, ';');
 				std::string& type = tokens[0];
 				std::string& name = tokens[1];
 				int vectorSize = tokens.size() - 2;
 
-				if (type == "String") m.properties_string.emplace_back(Material::Property<std::string>(name, tokens[2]));
-				else if (type == "Float") m.properties_float.emplace_back(Material::Property<float>(name, std::stof(tokens[2])));
-				else if (type == "Integer") m.properties_int.emplace_back(Material::Property<int>(name, std::stoi(tokens[2])));
-				else if (type == "Boolean") m.properties_bools.emplace_back(Material::Property<bool>(name, tokens[2] == "True"));
+				if (type == "String") m.properties.strings.emplace_back(Property<std::string>(name, tokens[2]));
+				else if (type == "Float") m.properties.floats.emplace_back(Property<float>(name, std::stof(tokens[2])));
+				else if (type == "Integer") m.properties.ints.emplace_back(Property<int>(name, std::stoi(tokens[2])));
+				else if (type == "Boolean") m.properties.bools.emplace_back(Property<bool>(name, tokens[2] == "True"));
 				else if (type == "FloatArray")
 				{
-					if (vectorSize == 2) m.properties_vec2.emplace_back(name, glm::vec2(std::stof(tokens[2]), std::stof(tokens[3])));
-					if (vectorSize == 3) m.properties_vec3.emplace_back(name, glm::vec3(std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4])));
-					if (vectorSize == 4) m.properties_vec4.emplace_back(name, glm::vec4(std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4]), std::stof(tokens[5])));
+					if (vectorSize == 2) m.properties.vec2s.emplace_back(name, glm::vec2(std::stof(tokens[2]), std::stof(tokens[3])));
+					if (vectorSize == 3) m.properties.vec3s.emplace_back(name, glm::vec3(std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4])));
+					if (vectorSize == 4) m.properties.vec4s.emplace_back(name, glm::vec4(std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4]), std::stof(tokens[5])));
 				}
 				else if (type == "IntegerArray")
 				{
-					if (vectorSize == 2) m.properties_ivec2.emplace_back(name, glm::ivec2(std::stoi(tokens[2]), std::stoi(tokens[3])));
-					if (vectorSize == 3) m.properties_ivec3.emplace_back(name, glm::ivec3(std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4])));
-					if (vectorSize == 4) m.properties_ivec4.emplace_back(name, glm::ivec4(std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4]), std::stoi(tokens[5])));
+					if (vectorSize == 2) m.properties.ivec2s.emplace_back(name, glm::ivec2(std::stoi(tokens[2]), std::stoi(tokens[3])));
+					if (vectorSize == 3) m.properties.ivec3s.emplace_back(name, glm::ivec3(std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4])));
+					if (vectorSize == 4) m.properties.ivec4s.emplace_back(name, glm::ivec4(std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4]), std::stoi(tokens[5])));
 				}
 				else if (type == "BooleanArray")
 				{
-					if (vectorSize == 2) m.properties_bvec2.emplace_back(name, glm::bvec2(tokens[2] == "True", tokens[3] == "True"));
-					if (vectorSize == 3) m.properties_bvec3.emplace_back(name, glm::bvec3(tokens[2] == "True", tokens[3] == "True", tokens[4] == "True"));
-					if (vectorSize == 4) m.properties_bvec4.emplace_back(name, glm::bvec4(tokens[2] == "True", tokens[3] == "True", tokens[4] == "True", tokens[5] == "True"));
-				}
+					if (vectorSize == 2) m.properties.bvec2s.emplace_back(name, glm::bvec2(tokens[2] == "True", tokens[3] == "True"));
+					if (vectorSize == 3) m.properties.bvec3s.emplace_back(name, glm::bvec3(tokens[2] == "True", tokens[3] == "True", tokens[4] == "True"));
+					if (vectorSize == 4) m.properties.bvec4s.emplace_back(name, glm::bvec4(tokens[2] == "True", tokens[3] == "True", tokens[4] == "True", tokens[5] == "True"));
+				}*/
 
 				std::cout << line << "\n";
 			}
