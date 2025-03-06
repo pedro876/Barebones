@@ -20,6 +20,7 @@
 #include "../DB/Model/Mesh.h"
 #include "../Components/Transform.h"
 #include "../Components/MeshRenderer.h"
+#include "../Components/Camera.h"
 
 namespace Barebones
 {
@@ -33,10 +34,12 @@ namespace Barebones
 		void BeginFrame();
 		void EndFrame();
 
-		void DrawMeshRenderer(const glm::mat4& viewProjMat, Transform& transform, const MeshRenderer& renderer);
+		void SetupCameraProperties(const glm::mat4& viewProjMat);
+		void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
 
 	private:
 		GLFWwindow* window;
+		unsigned int UBO;
 	};
 }
 

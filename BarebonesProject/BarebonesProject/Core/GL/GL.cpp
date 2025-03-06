@@ -31,6 +31,14 @@ namespace Barebones
 		{
 			throw std::runtime_error("Failed to initialize GLAD");
 		}
+
+		//UNIFORM BUFFER OBJECT
+		glGenBuffers(1, &UBO);
+		glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+		glBufferData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		glBindBufferRange(GL_UNIFORM_BUFFER, 0, UBO, 0, 1 * sizeof(glm::mat4));
 	}
 
 	GL::~GL()
@@ -56,7 +64,14 @@ namespace Barebones
 		glfwPollEvents();
 	}
 
-	void GL::DrawMeshRenderer(const glm::mat4& viewProjMat, Transform& transform, const MeshRenderer& renderer)
+	void GL::SetupCameraProperties(const glm::mat4& viewProjMat)
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(viewProjMat));
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+	void GL::DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer)
 	{
 		//TODO: set model matrix
 		auto shader = renderer.material->shader.lock();
@@ -65,6 +80,14 @@ namespace Barebones
 			std::cout << "Null Shader\n";
 			return;
 		}
+
+		if (!shader->setUBOs)
+		{
+			shader->setUBOs = true;
+			unsigned int ubo_matrices = glGetUniformBlockIndex(shader->ID, "Matrices");
+			glUniformBlockBinding(shader->ID, ubo_matrices, 0);
+		}
+		
 
 		shader->Use();
 		glm::mat4 modelMat = transform.GetLocalToWorldMatrix();
@@ -80,7 +103,8 @@ namespace Barebones
 
 		
 
-		shader->SetMat4("_ModelViewProj", viewProjMat * modelMat);
+		//shader->SetMat4("_ViewProj", viewProjMat);
+		shader->SetMat4("_Model", modelMat);
 		renderer.mesh->Draw();
 	}
 }

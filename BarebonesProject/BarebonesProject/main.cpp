@@ -60,7 +60,7 @@ int main()
 	}
 
 	Entity cameraEntity = Coordinator::CreateEntity();
-	Coordinator::AddComponent(cameraEntity, Camera{});
+	Camera& camera = Coordinator::AddComponent(cameraEntity, Camera{});
 	Coordinator::AddComponent(cameraEntity, Transform{});
 
 	Transform& cameraTransform = Coordinator::GetComponent<Transform>(cameraEntity);

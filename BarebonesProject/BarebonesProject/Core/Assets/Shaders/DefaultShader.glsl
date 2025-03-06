@@ -1,7 +1,12 @@
 #version 330 core
 
 #GlobalProperties
-uniform mat4 _ModelViewProj;
+uniform mat4 _Model;
+
+layout (std140) uniform Matrices
+{
+    mat4 _ViewProj;
+};
 
 #MaterialProperties
 uniform sampler2D _BaseMap;
@@ -21,7 +26,7 @@ void main()
 {
 	vertexColor = aNormal * 0.5 + 0.5;
     texCoord = aTexCoord;
-    gl_Position = _ModelViewProj * vec4(aPos, 1.0);
+    gl_Position = _ViewProj * _Model * vec4(aPos, 1.0);
 }
 
 #Fragment

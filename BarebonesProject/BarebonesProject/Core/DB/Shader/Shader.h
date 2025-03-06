@@ -14,9 +14,11 @@
 
 namespace Barebones
 {
+    class GL;
     class Shader : public Asset
     {
     public:
+        friend class GL;
         unsigned int ID;
         PropertyBlock defaultProperties;
 
@@ -50,6 +52,7 @@ namespace Barebones
 
         void SetPropertyBlock(const PropertyBlock& block) const;
     private:
+        bool setUBOs = false;
         void CompileShader(const char* vShaderCode, const char* fShaderCode);
         void CheckCompileErrors(unsigned int shader, std::string type);
     };
