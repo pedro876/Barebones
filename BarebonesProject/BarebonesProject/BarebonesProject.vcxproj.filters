@@ -130,10 +130,12 @@
     <ClInclude Include="Core\Systems\TransformSystem.h" />
     <ClInclude Include="Core\DB\Texture\Texture.h" />
     <ClInclude Include="Core\DB\Shader\PropertyBlock.h" />
+    <ClInclude Include="Core\Systems\LightingSystem.h" />
+    <ClInclude Include="Core\Components\Light.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Assets\Models\Cube.fbx" />
-    <None Include="Core\Assets\Shaders\DefaultShader.glsl" />
+    <None Include="Core\Assets\Shaders\Lit.glsl" />
     <None Include="Core\Assets\ShaderLibrary\Lighting.glsl" />
     <None Include="Core\Assets\ShaderLibrary\Common.glsl" />
   </ItemGroup>

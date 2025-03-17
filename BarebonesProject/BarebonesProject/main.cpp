@@ -24,6 +24,7 @@ int main()
 	Coordinator::RegisterComponent<Transform>();
 	Coordinator::RegisterComponent<MeshRenderer>();
 	Coordinator::RegisterComponent<Camera>();
+	Coordinator::RegisterComponent<Light>();
 
 	std::shared_ptr<RenderSystem> renderSystem = Coordinator::RegisterSystem<RenderSystem>();
 	Signature signature;
@@ -42,10 +43,16 @@ int main()
 	signature3.set(Coordinator::GetComponentType<Transform>());
 	Coordinator::SetSystemSignature<TransformSystem>(signature3);
 
+	std::shared_ptr<LightingSystem> lightingSystem = Coordinator::RegisterSystem<LightingSystem>();
+	Signature signature4;
+	signature4.set(Coordinator::GetComponentType<Transform>());
+	signature4.set(Coordinator::GetComponentType<Light>());
+	Coordinator::SetSystemSignature<LightingSystem>(signature4);
+
 
 	//Shader shaderProgram = Shader("Default Shader", "Core/Shaders/vertex.vert", "Core/Shaders/fragment.frag");
 	//auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Default Shader", "Core/Assets/Shaders/vertex.vert", "Core/Assets/Shaders/fragment.frag"));
-	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Default Shader", "Core/Assets/Shaders/DefaultShader.glsl"));
+	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Shader Lit", "Core/Assets/Shaders/Lit.glsl"));
 	//auto material = DB<Material>::Register(std::make_shared<Material>("M_Test", shaderProgram));
 /*	auto model = DB<Model>::Register(std::make_shared<Model>("Core/Assets/Models/Cube.fbx")).lock();
 	model->LoadModel();

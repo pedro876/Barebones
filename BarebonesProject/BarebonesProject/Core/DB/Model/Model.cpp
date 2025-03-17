@@ -108,7 +108,7 @@ namespace Barebones
 
 	void Model::ProcessMaterial(unsigned int index, aiMaterial* material)
 	{
-		materials[index].shader = DB<Shader>::Get("Default Shader");
+		materials[index].shader = DB<Shader>::Get("Shader Lit");
 		materials[index].name = material->GetName().C_Str();
 
 		std::cout << "Processing material " << material->GetName().C_Str() << std::endl;
