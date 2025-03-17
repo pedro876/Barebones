@@ -54,6 +54,7 @@ namespace Barebones
     private:
         bool setUBOs = false;
         void CompileShader(const char* vShaderCode, const char* fShaderCode);
+        std::string ProcessIncludeHierarchy(const std::string& currentPath, const std::string& ogLine);
         void CheckCompileErrors(unsigned int shader, std::string type);
     };
 }

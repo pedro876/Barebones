@@ -45,6 +45,12 @@ namespace Barebones
                 else if (line == "#Varyings") state = VARYINGS;
                 else if (line == "#Vertex") state = VERTEX;
                 else if (line == "#Fragment") state = FRAGMENT;
+                else if (line.starts_with("#include"))
+                {
+                    std::string includeText = ProcessIncludeHierarchy(path, line);
+                    vShaderCodeStr += includeText;
+                    fShaderCodeStr += includeText;
+                }
                 else
                 {
                     vShaderCodeStr += line;
@@ -108,6 +114,42 @@ namespace Barebones
         const char* vShaderCode = vShaderCodeStr.c_str();
         const char* fShaderCode = fShaderCodeStr.c_str();
         CompileShader(vShaderCode, fShaderCode);
+    }
+
+    std::string Shader::ProcessIncludeHierarchy(const std::string& currentPath, const std::string& ogLine)
+    {
+        const int includeHeaderLength = 8;
+        const int totalHeaderLength = includeHeaderLength + 2;
+        // Remove '#include "' and the final '"'
+
+        std::string includePath = ogLine.substr(totalHeaderLength, ogLine.size() - totalHeaderLength - 1);
+        if (includePath.find('/') == std::string::npos)
+        {
+            includePath = (std::filesystem::path(currentPath).parent_path() / includePath).string();
+        }
+        std::string content = "";
+        if (File::Exists(includePath))
+        {
+            std::vector<std::string> text = File::ReadLines(includePath);
+            for (int i = 0, count = text.size(); i < count; i++)
+            {
+                std::string& line = text[i];
+                if (line.starts_with("#include"))
+                {
+                    content += ProcessIncludeHierarchy(includePath, line);
+                }
+                else
+                {
+                    content += line;
+                }
+                content += "\n";
+            }
+        }
+        else
+        {
+            std::cerr << "Shader named " << this->name << " couldn't include file with path " << path << "\n";
+        }
+        return std::move(content);
     }
 
     //Shader::Shader(Shader&& other) noexcept :

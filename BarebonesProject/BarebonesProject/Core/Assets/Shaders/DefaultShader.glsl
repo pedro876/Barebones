@@ -1,12 +1,7 @@
 #version 330 core
 
-#GlobalProperties
-uniform mat4 _Model;
-
-layout (std140) uniform Matrices
-{
-    mat4 _ViewProj;
-};
+#include "Core/Assets/ShaderLibrary/Common.glsl"
+#include "Core/Assets/ShaderLibrary/Lighting.glsl"
 
 #MaterialProperties
 uniform sampler2D _BaseMap;
