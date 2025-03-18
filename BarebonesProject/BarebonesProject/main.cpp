@@ -112,6 +112,7 @@ int main()
 		//Update systems
 		transformSystem->Update();
 		cameraSystem->Update(deltaTime);
+		lightingSystem->Update(gl, deltaTime);
 		renderSystem->Update(gl, deltaTime);
 
 		gl.EndFrame();

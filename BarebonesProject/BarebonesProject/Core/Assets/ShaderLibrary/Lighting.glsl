@@ -1,5 +1,10 @@
 
-uniform vec3 _AmbientLight = vec3(0.1);
+//uniform vec3 _AmbientLight = vec3(0.1);
+
+layout (std140) uniform Lights
+{
+	vec3 _AmbientLight;
+};
 
 struct Light
 {

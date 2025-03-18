@@ -10,10 +10,16 @@ namespace Barebones
 	{
 	public:
 		static inline Entity mainLight{ 0 };
+		static inline glm::vec3 ambientLight{ 0.1, 0.1, 0.1 };
 		
-		void Update(float dt)
+		LightingSystem()
 		{
 
+		}
+
+		void Update(GL& gl, float dt)
+		{
+			gl.SetAmbientLight(ambientLight);
 		}
 
 		void EntityDestroyed(Entity entity) override

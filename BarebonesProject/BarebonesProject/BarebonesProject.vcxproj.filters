@@ -132,6 +132,7 @@
     <ClInclude Include="Core\DB\Shader\PropertyBlock.h" />
     <ClInclude Include="Core\Systems\LightingSystem.h" />
     <ClInclude Include="Core\Components\Light.h" />
+    <ClInclude Include="Core\GL\UniformBufferObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Assets\Models\Cube.fbx" />

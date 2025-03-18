@@ -21,6 +21,7 @@
 #include "../Components/Transform.h"
 #include "../Components/MeshRenderer.h"
 #include "../Components/Camera.h"
+#include "UniformBufferObject.h"
 
 namespace Barebones
 {
@@ -35,11 +36,13 @@ namespace Barebones
 		void EndFrame();
 
 		void SetupCameraProperties(const glm::mat4& viewProjMat);
+		void SetAmbientLight(const glm::vec3& ambientLight);
 		void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
 
 	private:
 		GLFWwindow* window;
-		unsigned int UBO;
+		UniformBufferObject uboMatrices;
+		UniformBufferObject uboLights;
 	};
 }
 

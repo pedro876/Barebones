@@ -33,12 +33,15 @@ namespace Barebones
 		}
 
 		//UNIFORM BUFFER OBJECT
-		glGenBuffers(1, &UBO);
-		glBindBuffer(GL_UNIFORM_BUFFER, UBO);
-		glBufferData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		uboMatrices.Initialize("Matrices", 0, 1 * sizeof(glm::mat4));
+		uboLights.Initialize("Lights", 1, 1 * sizeof(glm::vec4));
+		// 
+		//glGenBuffers(1, &UBO);
+		//glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+		//glBufferData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+		//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		glBindBufferRange(GL_UNIFORM_BUFFER, 0, UBO, 0, 1 * sizeof(glm::mat4));
+		//glBindBufferRange(GL_UNIFORM_BUFFER, 0, UBO, 0, 1 * sizeof(glm::mat4));
 	}
 
 	GL::~GL()
@@ -66,9 +69,19 @@ namespace Barebones
 
 	void GL::SetupCameraProperties(const glm::mat4& viewProjMat)
 	{
-		glBindBuffer(GL_UNIFORM_BUFFER, UBO);
+		uboMatrices.Bind();
+		uboMatrices.SetData(0, sizeof(glm::mat4), glm::value_ptr(viewProjMat));
+		uboMatrices.Unbind();
+		/*glBindBuffer(GL_UNIFORM_BUFFER, UBO);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(viewProjMat));
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
+	}
+
+	void GL::SetAmbientLight(const glm::vec3& ambientLight)
+	{
+		uboLights.Bind();
+		uboLights.SetData(0, sizeof(glm::vec3), glm::value_ptr(ambientLight));
+		uboLights.Unbind();
 	}
 
 	void GL::DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer)
@@ -84,8 +97,10 @@ namespace Barebones
 		if (!shader->setUBOs)
 		{
 			shader->setUBOs = true;
-			unsigned int ubo_matrices = glGetUniformBlockIndex(shader->ID, "Matrices");
-			glUniformBlockBinding(shader->ID, ubo_matrices, 0);
+			/*unsigned int ubo_matrices = glGetUniformBlockIndex(shader->ID, "Matrices");
+			glUniformBlockBinding(shader->ID, ubo_matrices, 0);*/
+			uboMatrices.SetShaderUBO(shader->ID);
+			uboLights.SetShaderUBO(shader->ID);
 		}
 		
 
