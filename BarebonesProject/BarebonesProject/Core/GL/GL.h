@@ -21,6 +21,7 @@
 #include "../Components/Transform.h"
 #include "../Components/MeshRenderer.h"
 #include "../Components/Camera.h"
+#include "../Components/Light.h"
 #include "UniformBufferObject.h"
 
 namespace Barebones
@@ -28,6 +29,8 @@ namespace Barebones
 	class GL
 	{
 	public:
+		const unsigned int MAX_LIGHT_COUNT = 64;
+
 		GL();
 		~GL();
 
@@ -37,6 +40,8 @@ namespace Barebones
 
 		void SetupCameraProperties(const glm::mat4& viewProjMat);
 		void SetAmbientLight(const glm::vec3& ambientLight);
+		void SetAdditionalLightCount(unsigned int lightCount);
+		void SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light);
 		void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
 
 	private:

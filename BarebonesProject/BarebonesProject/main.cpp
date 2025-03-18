@@ -17,6 +17,16 @@ Entity CreateCube(Mesh* cubeMesh, Material* material)
 	return entity;
 }
 
+void CreateLight(glm::vec3 position, float intensity, float range)
+{
+	Entity lightEntity = Coordinator::CreateEntity();
+	Light& light = Coordinator::AddComponent(lightEntity, Light{});
+	Transform& lightTransform = Coordinator::AddComponent(lightEntity, Transform{});
+	light.intensity = intensity;
+	light.range = range;
+	lightTransform.SetLocalPosition(position);
+}
+
 int main()
 {
 	GL gl{};
@@ -73,6 +83,9 @@ int main()
 	Transform& cameraTransform = Coordinator::GetComponent<Transform>(cameraEntity);
 	cameraTransform.SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
 	cameraTransform.SetLocalRotation(glm::vec3(0.0f, 180.0f, 0.0f));
+
+	CreateLight(glm::vec3(0.0, 2.0, 1.0), 2.0, 4.0);
+	CreateLight(glm::vec3(-4.0, 2.0, -4.0), 1.0, 3.0);
 
 	//Coordinator::DestroyEntity(1);
 

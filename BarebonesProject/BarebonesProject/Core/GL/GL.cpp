@@ -34,7 +34,12 @@ namespace Barebones
 
 		//UNIFORM BUFFER OBJECT
 		uboMatrices.Initialize("Matrices", 0, 1 * sizeof(glm::mat4));
-		uboLights.Initialize("Lights", 1, 1 * sizeof(glm::vec4));
+		uboLights.Initialize("Lights", 1, 
+			sizeof(glm::vec4) + 
+			sizeof(int) * 4 + 
+			sizeof(glm::vec4) * MAX_LIGHT_COUNT + 
+			sizeof(glm::vec4) * MAX_LIGHT_COUNT
+		);
 		// 
 		//glGenBuffers(1, &UBO);
 		//glBindBuffer(GL_UNIFORM_BUFFER, UBO);
@@ -80,7 +85,30 @@ namespace Barebones
 	void GL::SetAmbientLight(const glm::vec3& ambientLight)
 	{
 		uboLights.Bind();
-		uboLights.SetData(0, sizeof(glm::vec3), glm::value_ptr(ambientLight));
+		uboLights.SetData(0, sizeof(glm::vec4), glm::value_ptr(ambientLight));
+		uboLights.Unbind();
+	}
+
+	void GL::SetAdditionalLightCount(unsigned int lightCount)
+	{
+		uboLights.Bind();
+		uboLights.SetData(sizeof(glm::vec4), sizeof(int), &lightCount);
+		uboLights.Unbind();
+	}
+
+	void GL::SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light)
+	{
+		const unsigned long long positionsOffset = sizeof(glm::vec4) + sizeof(int) * 4;
+		const unsigned long long propertiesOffset = positionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		uboLights.Bind();
+
+		unsigned long long lightOffset = index * sizeof(glm::vec4);
+
+		glm::vec4 positionRange = glm::vec4(transform.GetDirtyWorldPosition(), 1.0f / (light.range * light.range));
+		glm::vec4 properties = glm::vec4(light.intensity, 0.0f, 0.0f, 0.0f);
+		uboLights.SetData(positionsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(positionRange));
+		uboLights.SetData(propertiesOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(properties));
+
 		uboLights.Unbind();
 	}
 

@@ -21,6 +21,8 @@ namespace Barebones
 		glm::vec3 GetLocalScale() const { return localScale; }
 		glm::mat4 GetLocalToWorldMatrix() const { return localToWorld; }
 
+		glm::vec3 GetDirtyWorldPosition() const { return glm::vec3(localToWorld[3]); }
+
 		// SETTERS
 		void SetLocalPosition(glm::vec3 localPosition) { this->localPosition = localPosition; dirty = true; }
 		void SetLocalRotation(glm::vec3 localRotation) { this->localRotation = glm::quat{ glm::radians(localRotation) }; dirty = true; }
