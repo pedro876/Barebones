@@ -16,6 +16,7 @@ namespace Barebones
 		LightType type{ LightType::Point };
 		float range{ 5.0 };
 		float intensity{ 2.0 };
+		glm::vec3 color{ 1.0, 1.0, 1.0 };
 	};
 }
 

@@ -7,14 +7,14 @@ layout (std140) uniform Lights
 	vec4 _AmbientLight;															// 16				// 0
 	uint _LightCount;															// 4				// 16
 	vec4 _LightPositions[MAX_LIGHT_COUNT];	//xyz = positionWS, w = invSqrRange	// 16				// 32
-	vec4 _LightProperties[MAX_LIGHT_COUNT]; //x = intensity						// 16				// 1056
+	vec4 _LightProperties[MAX_LIGHT_COUNT]; //xyz = color						// 16				// 1056
 };
 
 struct Light
 {
 	vec3 positionWS;
 	float invSqrRange;
-	float intensity;
+	vec3 color;
 };
 
 Light GetLight(uint index)
@@ -22,7 +22,7 @@ Light GetLight(uint index)
 	Light light;
 	light.positionWS = _LightPositions[index].xyz;
 	light.invSqrRange = _LightPositions[index].w;
-	light.intensity = _LightProperties[index].x;
+	light.color = _LightProperties[index].xyz;
 	return light;
 }
 
@@ -50,9 +50,8 @@ vec3 GetLighting(vec3 positionWS, vec3 normalWS)
 
 		float atten = DistanceAttenuation(light, distSqr, positionWS);
 		atten *= AngleAttenuation(light, lightDir, normalWS);
-		atten *= light.intensity;
 
-		totalLight += vec3(atten);
+		totalLight += light.color * atten;
 	}
 
 	return totalLight;

@@ -105,7 +105,7 @@ namespace Barebones
 		unsigned long long lightOffset = index * sizeof(glm::vec4);
 
 		glm::vec4 positionRange = glm::vec4(transform.GetDirtyWorldPosition(), 1.0f / (light.range * light.range));
-		glm::vec4 properties = glm::vec4(light.intensity, 0.0f, 0.0f, 0.0f);
+		glm::vec4 properties = glm::vec4(light.color * light.intensity, 0.0f);
 		uboLights.SetData(positionsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(positionRange));
 		uboLights.SetData(propertiesOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(properties));
 

@@ -128,6 +128,7 @@ namespace Barebones
 				std::vector<std::string> tokens = File::SplitLine(lightsCSV[i], ';');
 				light.range = std::stof(tokens[1]);
 				light.intensity = std::stof(tokens[2]);
+				light.color = glm::vec3(std::stof(tokens[3]), std::stof(tokens[4]), std::stof(tokens[5]));
 			}
 		}
 

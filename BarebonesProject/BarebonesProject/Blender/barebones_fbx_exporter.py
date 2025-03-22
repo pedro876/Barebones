@@ -57,14 +57,17 @@ class BarebonesFBXExporter(bpy.types.Operator):
         anyWrite = False
         with open(filepath, mode='w', newline='') as file:
             writer = csv.writer(file, delimiter=';')
-            writer.writerow(["Name", "Range", "Intensity"])
+            writer.writerow(["Name", "Range", "Intensity", "Color.r", "Color.g", "Color.b"])
             for obj in bpy.data.objects:
                 if obj.type == 'LIGHT':
                     light = obj.data
                     print(f"Writing properties for {obj.name}")
                     range = format_float(light.cutoff_distance)
                     intensity = format_float(light.energy *2.0 / 1000.0)
-                    writer.writerow([obj.name, range, intensity])
+                    colorR = format_float(light.color.r)
+                    colorG = format_float(light.color.g)
+                    colorB = format_float(light.color.b)
+                    writer.writerow([obj.name, range, intensity, colorR, colorG, colorB])
                     anyWrite = True
         if not anyWrite:
             if os.path.exists(filepath):
