@@ -29,8 +29,7 @@ void CreateLight(glm::vec3 position, float intensity, float range)
 
 int main()
 {
-	/*GL gl{};*/
-	GL::Init();
+	StartEngine();
 
 	Coordinator::RegisterComponent<Transform>();
 	Coordinator::RegisterComponent<MeshRenderer>();
@@ -41,7 +40,6 @@ int main()
 	std::shared_ptr<CameraSystem> cameraSystem = Coordinator::RegisterSystem<CameraSystem>();
 	std::shared_ptr<TransformSystem> transformSystem = Coordinator::RegisterSystem<TransformSystem>();
 	std::shared_ptr<LightingSystem> lightingSystem = Coordinator::RegisterSystem<LightingSystem>();
-
 
 	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Shader Lit", "Core/Assets/Shaders/Lit.glsl"));
 	auto testRoom = DB<Model>::Register(std::make_shared<Model>("Game/Assets/Models/TestRoom.fbx")).lock();
@@ -114,7 +112,6 @@ int main()
 		//std::cout << tCube2pos.x << " " << tCube2pos.y << " " << tCube2pos.z << std::endl;
 	}
 
-	GL::End();
-
+	StopEngine();
 	return 0;
 }

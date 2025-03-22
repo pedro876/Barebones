@@ -138,6 +138,7 @@ xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\BarebonesEngine.cpp" />
     <ClCompile Include="Core\DB\Model\Model.cpp" />
     <ClCompile Include="Core\DB\Shader\Shader.cpp" />
     <ClCompile Include="Core\File\File.cpp" />

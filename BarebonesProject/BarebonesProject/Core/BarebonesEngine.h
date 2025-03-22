@@ -11,3 +11,9 @@
 #include "Systems/TransformSystem.h"
 #include "Systems/LightingSystem.h"
 #include "DB/Model/Model.h"
+
+namespace Barebones
+{
+    void StartEngine();
+    void StopEngine();
+}

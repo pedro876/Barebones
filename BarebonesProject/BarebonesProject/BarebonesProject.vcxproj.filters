@@ -73,6 +73,7 @@
     <ClCompile Include="Core\Systems\CameraSystem.cpp" />
     <ClCompile Include="Core\DB\Model\Model.cpp" />
     <ClCompile Include="Core\DB\Shader\Shader.cpp" />
+    <ClCompile Include="Core\BarebonesEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\_External\stb_image.h">
