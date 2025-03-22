@@ -63,7 +63,7 @@ class BarebonesFBXExporter(bpy.types.Operator):
                     light = obj.data
                     print(f"Writing properties for {obj.name}")
                     range = format_float(light.cutoff_distance)
-                    intensity = format_float(light.energy *2.0 / 1000.0)
+                    intensity = format_float(light.energy * 0.1 if light.type == 'SUN' else light.energy *2.0 / 1000.0)
                     colorR = format_float(light.color.r)
                     colorG = format_float(light.color.g)
                     colorB = format_float(light.color.b)

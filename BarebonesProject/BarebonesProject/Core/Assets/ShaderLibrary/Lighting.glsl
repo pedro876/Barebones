@@ -5,11 +5,20 @@
 layout (std140) uniform Lights
 {																						// base alignment	// aligned offset
 	vec4 _AmbientLight;																	// 16				// 0
-	uint _LightCount;																	// 4				// 16
-	vec4 _LightPositions[MAX_LIGHT_COUNT];	//xyz = positionWS, w = invSqrRange			// 16				// 32
-	vec4 _LightColors[MAX_LIGHT_COUNT];		//xyz = color								// 16				// 1056
-	vec4 _LightDirections[MAX_LIGHT_COUNT];	//xyz = direction							// 16				// 2080
-	vec4 _LightProperties[MAX_LIGHT_COUNT];	//x = outerCos, y = invOuterMinusInnerCos	// 16				// 3104
+	vec4 _DirectionalLightColor;														// 16				// 16
+	vec4 _DirectionalLightDir;															// 16				// 32
+	uint _LightCount;																	// 4				// 48
+	vec4 _LightPositions[MAX_LIGHT_COUNT];	//xyz = positionWS, w = invSqrRange			// 16				// 64
+	vec4 _LightColors[MAX_LIGHT_COUNT];		//xyz = color								// 16				// 1088
+	vec4 _LightDirections[MAX_LIGHT_COUNT];	//xyz = direction							// 16				// 2112
+	vec4 _LightProperties[MAX_LIGHT_COUNT];	//x = outerCos, y = invOuterMinusInnerCos	// 16				// 3136
+};
+
+struct DirectionalLight
+{
+	bool exists;
+	vec3 directionWS;
+	vec3 color;
 };
 
 struct Light
@@ -22,6 +31,15 @@ struct Light
 	float invOuterMinusInnerCos;
 };
 
+DirectionalLight GetDirectionalLight()
+{
+	DirectionalLight light;
+	light.exists = _DirectionalLightColor.w > 0.5;
+	light.directionWS = _DirectionalLightDir.xyz;
+	light.color = _DirectionalLightColor.xyz;
+	return light;
+}
+
 Light GetLight(uint index)
 {
 	Light light;
@@ -32,6 +50,12 @@ Light GetLight(uint index)
 	light.outerCos = _LightProperties[index].x;
 	light.invOuterMinusInnerCos = _LightProperties[index].y;
 	return light;
+}
+
+float AngleAttenuation(vec3 lightDir, vec3 normalWS)
+{
+	float atten = saturate(dot(lightDir, normalWS));
+	return atten;
 }
 
 float DistanceAttenuation(Light light, float distanceSqr, vec3 positionWS)
@@ -47,15 +71,15 @@ float SpotAttenuation(Light light, vec3 lightDir)
 	return atten;
 }
 
-float AngleAttenuation(Light light, vec3 lightDir, vec3 normalWS)
-{
-	float atten = saturate(dot(lightDir, normalWS));
-	return atten;
-}
-
 vec3 GetLighting(vec3 positionWS, vec3 normalWS)
 {
 	vec3 totalLight = _AmbientLight.xyz;
+
+	DirectionalLight sun = GetDirectionalLight();
+	if(sun.exists)
+	{
+		totalLight += sun.color * AngleAttenuation(-sun.directionWS, normalWS);
+	}
 
 	for(uint i = 0u; i < _LightCount; i++)
 	{
@@ -66,7 +90,7 @@ vec3 GetLighting(vec3 positionWS, vec3 normalWS)
 		lightDir = normalize(lightDir);
 
 		float atten = DistanceAttenuation(light, distSqr, positionWS);
-		atten *= AngleAttenuation(light, lightDir, normalWS);
+		atten *= AngleAttenuation(lightDir, normalWS);
 		atten *= SpotAttenuation(light, lightDir);
 
 		totalLight += light.color * atten;

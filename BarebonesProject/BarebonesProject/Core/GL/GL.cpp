@@ -36,6 +36,8 @@ namespace Barebones
 		uboMatrices.Initialize("Matrices", 0, 1 * sizeof(glm::mat4));
 		uboLights.Initialize("Lights", 1, 
 			sizeof(glm::vec4) + 
+			sizeof(glm::vec4) + 
+			sizeof(glm::vec4) + 
 			sizeof(int) * 4 + 
 			sizeof(glm::vec4) * MAX_LIGHT_COUNT + 
 			sizeof(glm::vec4) * MAX_LIGHT_COUNT +
@@ -87,23 +89,32 @@ namespace Barebones
 	void GL::SetAmbientLight(const glm::vec3& ambientLight)
 	{
 		uboLights.Bind();
-		uboLights.SetData(0, sizeof(glm::vec4), glm::value_ptr(ambientLight));
+		uboLights.SetData(ambientLightOffset, sizeof(glm::vec4), glm::value_ptr(ambientLight));
+		uboLights.Unbind();
+	}
+
+	void GL::SetDirectionalLight(const Transform* transform, const Light* light)
+	{
+		//color.w determines if a directional light exists or not for the shader
+		bool exists = light != nullptr && light->intensity > 0.0f;
+		glm::vec4 color = exists ? glm::vec4(light->color * light->intensity, 1.0) : glm::vec4(0.0);
+		glm::vec4 dir = exists ? glm::vec4(-transform->GetDirtyUp(), 0.0) : glm::vec4(1.0);
+
+		uboLights.Bind();
+		uboLights.SetData(directionalLightColorOffset, sizeof(glm::vec4), glm::value_ptr(color));
+		uboLights.SetData(directionalLightDirOffset, sizeof(glm::vec4), glm::value_ptr(dir));
 		uboLights.Unbind();
 	}
 
 	void GL::SetAdditionalLightCount(unsigned int lightCount)
 	{
 		uboLights.Bind();
-		uboLights.SetData(sizeof(glm::vec4), sizeof(int), &lightCount);
+		uboLights.SetData(lightCountOffset, sizeof(int), &lightCount);
 		uboLights.Unbind();
 	}
 
 	void GL::SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light)
 	{
-		const unsigned long long positionsOffset = sizeof(glm::vec4) + sizeof(int) * 4;
-		const unsigned long long colorsOffset = positionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
-		const unsigned long long directionsOffset = colorsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
-		const unsigned long long propertiesOffset = directionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
 		uboLights.Bind();
 
 		unsigned long long lightOffset = index * sizeof(glm::vec4);

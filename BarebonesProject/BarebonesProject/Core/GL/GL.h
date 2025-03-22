@@ -30,6 +30,7 @@ namespace Barebones
 	{
 	public:
 		const unsigned int MAX_LIGHT_COUNT = 64;
+		
 
 		GL();
 		~GL();
@@ -40,11 +41,20 @@ namespace Barebones
 
 		void SetupCameraProperties(const glm::mat4& viewProjMat);
 		void SetAmbientLight(const glm::vec3& ambientLight);
+		void SetDirectionalLight(const Transform* transform, const Light* light);
 		void SetAdditionalLightCount(unsigned int lightCount);
 		void SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light);
 		void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
 
 	private:
+		const unsigned long long ambientLightOffset = 0;
+		const unsigned long long directionalLightColorOffset = ambientLightOffset + sizeof(glm::vec4);
+		const unsigned long long directionalLightDirOffset = directionalLightColorOffset + sizeof(glm::vec4);
+		const unsigned long long lightCountOffset = directionalLightDirOffset + sizeof(glm::vec4);
+		const unsigned long long positionsOffset = lightCountOffset + sizeof(int) * 4;
+		const unsigned long long colorsOffset = positionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		const unsigned long long directionsOffset = colorsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		const unsigned long long propertiesOffset = directionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
 		GLFWwindow* window;
 		UniformBufferObject uboMatrices;
 		UniformBufferObject uboLights;
