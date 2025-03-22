@@ -38,6 +38,8 @@ namespace Barebones
 			sizeof(glm::vec4) + 
 			sizeof(int) * 4 + 
 			sizeof(glm::vec4) * MAX_LIGHT_COUNT + 
+			sizeof(glm::vec4) * MAX_LIGHT_COUNT +
+			sizeof(glm::vec4) * MAX_LIGHT_COUNT +
 			sizeof(glm::vec4) * MAX_LIGHT_COUNT
 		);
 		// 
@@ -99,14 +101,22 @@ namespace Barebones
 	void GL::SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light)
 	{
 		const unsigned long long positionsOffset = sizeof(glm::vec4) + sizeof(int) * 4;
-		const unsigned long long propertiesOffset = positionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		const unsigned long long colorsOffset = positionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		const unsigned long long directionsOffset = colorsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		const unsigned long long propertiesOffset = directionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
 		uboLights.Bind();
 
 		unsigned long long lightOffset = index * sizeof(glm::vec4);
 
 		glm::vec4 positionRange = glm::vec4(transform.GetDirtyWorldPosition(), 1.0f / (light.range * light.range));
-		glm::vec4 properties = glm::vec4(light.color * light.intensity, 0.0f);
+		glm::vec4 color = glm::vec4(light.color * light.intensity, 0.0f);
+		float outerCos = cos(glm::radians(light.outerConeAngle) * 0.5f);
+		float innerCos = cos(glm::radians(light.innerConeAngle) * 0.5f);
+		glm::vec4 properties = glm::vec4(outerCos, 1.0f / glm::max(0.001f, innerCos - outerCos), outerCos, innerCos);
+		glm::vec4 direction = glm::vec4(-transform.GetDirtyUp(), 0.0f);
 		uboLights.SetData(positionsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(positionRange));
+		uboLights.SetData(colorsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(color));
+		uboLights.SetData(directionsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(direction));
 		uboLights.SetData(propertiesOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(properties));
 
 		uboLights.Unbind();

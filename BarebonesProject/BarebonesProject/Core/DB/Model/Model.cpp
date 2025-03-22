@@ -137,6 +137,9 @@ namespace Barebones
 		if (mLight->mType == aiLightSourceType::aiLightSource_SPOT) light.type = LightType::Spot;
 		if (mLight->mType == aiLightSourceType::aiLightSource_AREA) light.type = LightType::Area;
 
+		light.outerConeAngle = glm::degrees(mLight->mAngleOuterCone);
+		light.innerConeAngle = glm::degrees(mLight->mAngleInnerCone);
+
 		Coordinator::AddComponent<Light>(entity, light);
 	}
 

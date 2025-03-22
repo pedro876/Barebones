@@ -21,6 +21,9 @@ namespace Barebones
 		glm::vec3 GetLocalScale() const { return localScale; }
 		glm::mat4 GetLocalToWorldMatrix() const { return localToWorld; }
 
+		glm::vec3 GetDirtyRight() const { return glm::vec3(localToWorld[0]); };
+		glm::vec3 GetDirtyUp() const { return glm::vec3(localToWorld[1]); };
+		glm::vec3 GetDirtyForward() const { return glm::vec3(localToWorld[2]); };
 		glm::vec3 GetDirtyWorldPosition() const { return glm::vec3(localToWorld[3]); }
 
 		// SETTERS
