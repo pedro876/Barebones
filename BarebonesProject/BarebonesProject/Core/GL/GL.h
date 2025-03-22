@@ -30,41 +30,40 @@ namespace Barebones
 	{
 	public:
 		friend class LightingSystem;
-		
 
-		GL();
-		~GL();
+		static void Init();
+		static void End();
 
-		bool WindowShouldClose();
-		void BeginFrame();
-		void EndFrame();
+		static bool WindowShouldClose();
+		static void BeginFrame();
+		static void EndFrame();
 
-		void SetupCameraProperties(const glm::mat4& viewProjMat);
-		
-		void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
+		static void SetupCameraProperties(const glm::mat4& viewProjMat);
+		static void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
 
 	private:
-		GLFWwindow* window;
-		UniformBufferObject uboMatrices;
-		UniformBufferObject uboLights;
-
-		const unsigned int MAX_LIGHT_COUNT = 64;
-		const unsigned long long UBO_OFFSET_AMBIENT_LIGHT = 0;
-		const unsigned long long UBO_OFFSET_DIRECTIONAL_LIGHT_COLOR = UBO_OFFSET_AMBIENT_LIGHT + sizeof(glm::vec4);
-		const unsigned long long UBO_OFFSET_DIRECTIONAL_LIGHT_DIR = UBO_OFFSET_DIRECTIONAL_LIGHT_COLOR + sizeof(glm::vec4);
-		const unsigned long long UBO_OFFSET_LIGHT_COUNT = UBO_OFFSET_DIRECTIONAL_LIGHT_DIR + sizeof(glm::vec4);
-		const unsigned long long UBO_OFFSET_POSITIONS = UBO_OFFSET_LIGHT_COUNT + sizeof(int) * 4;
-		const unsigned long long UBO_OFFSET_COLORS = UBO_OFFSET_POSITIONS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
-		const unsigned long long UBO_OFFSET_DIRECTIONS = UBO_OFFSET_COLORS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
-		const unsigned long long UBO_OFFSET_PROPERTIES = UBO_OFFSET_DIRECTIONS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
-		void BeginLightSetup();
-		void SetAmbientLight(const glm::vec3& ambientLight);
-		void SetDirectionalLight(const Transform* transform, const Light* light);
-		void SetAdditionalLightCount(unsigned int lightCount);
-		void SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light);
-		void EndLightSetup();
+		static inline GLFWwindow* window;
+		static inline UniformBufferObject uboMatrices;
+		static inline UniformBufferObject uboLights;
+		
+		static const unsigned int MAX_LIGHT_COUNT = 64;
+		static const unsigned long long UBO_OFFSET_AMBIENT_LIGHT = 0;
+		static const unsigned long long UBO_OFFSET_DIRECTIONAL_LIGHT_COLOR = UBO_OFFSET_AMBIENT_LIGHT + sizeof(glm::vec4);
+		static const unsigned long long UBO_OFFSET_DIRECTIONAL_LIGHT_DIR = UBO_OFFSET_DIRECTIONAL_LIGHT_COLOR + sizeof(glm::vec4);
+		static const unsigned long long UBO_OFFSET_LIGHT_COUNT = UBO_OFFSET_DIRECTIONAL_LIGHT_DIR + sizeof(glm::vec4);
+		static const unsigned long long UBO_OFFSET_POSITIONS = UBO_OFFSET_LIGHT_COUNT + sizeof(int) * 4;
+		static const unsigned long long UBO_OFFSET_COLORS = UBO_OFFSET_POSITIONS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		static const unsigned long long UBO_OFFSET_DIRECTIONS = UBO_OFFSET_COLORS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		static const unsigned long long UBO_OFFSET_PROPERTIES = UBO_OFFSET_DIRECTIONS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		static void BeginLightSetup();
+		static void SetAmbientLight(const glm::vec3& ambientLight);
+		static void SetDirectionalLight(const Transform* transform, const Light* light);
+		static void SetAdditionalLightCount(unsigned int lightCount);
+		static void SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light);
+		static void EndLightSetup();
 		
 		
 	};
+	
 }
 

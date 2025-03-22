@@ -8,8 +8,13 @@ namespace Barebones
 	class System
 	{
 	public:
+		friend class SystemManager;
+	protected:
 		std::set<Entity> mEntities;
+	private:
 		virtual void EntityDestroyed(Entity entity) = 0;
+		virtual Signature CreateSignature() = 0;
+		Signature signature = 0;
 	};
 
 	class SystemManager
@@ -23,15 +28,9 @@ namespace Barebones
 
 			auto system = std::make_shared<T>();
 			mSystems.insert({ typeName, system });
-			return system;
-		}
+			system->signature = system->CreateSignature();
 
-		template<typename T>
-		void SetSignature(Signature signature)
-		{
-			const char* typeName = typeid(T).name();
-			assert(mSystems.find(typeName) != mSystems.end() && "System used before registered.");
-			mSignatures.insert({ typeName, signature });
+			return system;
 		}
 
 		void EntityDestroyed(Entity entity)
@@ -52,7 +51,7 @@ namespace Barebones
 			{
 				auto const& type = pair.first;
 				auto const& system = pair.second;
-				auto const& systemSignature = mSignatures[type];
+				auto const& systemSignature = system->signature;
 
 				if ((entitySignature & systemSignature) == systemSignature)
 				{
@@ -66,7 +65,6 @@ namespace Barebones
 		}
 
 	private:
-		std::unordered_map<const char*, Signature> mSignatures{};
 		std::unordered_map<const char*, std::shared_ptr<System>> mSystems{};
 	};
 }

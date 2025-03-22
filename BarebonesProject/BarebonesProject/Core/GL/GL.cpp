@@ -2,7 +2,7 @@
 
 namespace Barebones
 {
-	GL::GL()
+	void GL::Init()
 	{
 		glfwInit();
 
@@ -53,7 +53,7 @@ namespace Barebones
 		//glBindBufferRange(GL_UNIFORM_BUFFER, 0, UBO, 0, 1 * sizeof(glm::mat4));
 	}
 
-	GL::~GL()
+	void GL::End()
 	{
 		glfwTerminate();
 	}

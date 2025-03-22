@@ -14,8 +14,9 @@ namespace Barebones
 	public:
 		
 		void Init();
-		void Update(GL& gl, float dt);
+		void Update(float dt);
 		void EntityDestroyed(Entity entity) override;
+		Signature CreateSignature() override;
 	};
 }
 

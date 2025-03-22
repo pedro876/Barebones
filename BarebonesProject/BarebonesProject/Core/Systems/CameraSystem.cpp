@@ -2,6 +2,14 @@
 
 namespace Barebones
 {
+	Signature CameraSystem::CreateSignature()
+	{
+		Signature s;
+		s.set(Coordinator::GetComponentType<Transform>());
+		s.set(Coordinator::GetComponentType<Camera>());
+		return s;
+	}
+
 	void CameraSystem::Update(float dt)
 	{
 		unsigned int maxPriority = 0;

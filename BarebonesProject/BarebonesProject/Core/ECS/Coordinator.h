@@ -78,12 +78,6 @@ namespace Barebones
 		{
 			return mSystemManager->RegisterSystem<T>();
 		}
-
-		template<typename T>
-		static void SetSystemSignature(Signature signature)
-		{
-			mSystemManager->SetSignature<T>(signature);
-		}
 	private:
 		static inline std::unique_ptr<ComponentManager> mComponentManager = std::make_unique<ComponentManager>();
 		static inline std::unique_ptr<EntityManager> mEntityManager = std::make_unique<EntityManager>();

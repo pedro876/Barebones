@@ -9,6 +9,13 @@ namespace Barebones
 	class TransformSystem : public System
 	{
 	public:
+		Signature CreateSignature() override
+		{
+			Signature s;
+			s.set(Coordinator::GetComponentType<Transform>());
+			return s;
+		}
+
 		void Update()
 		{
 			for (auto& entity : mEntities)

@@ -6,6 +6,7 @@
 
 namespace Barebones
 {
+
 	class LightingSystem : public System
 	{
 	public:
@@ -13,15 +14,23 @@ namespace Barebones
 		static inline Entity mainLight{ 0 };
 		static inline glm::vec3 ambientLight{ 0.1, 0.1, 0.1 };
 		
+		Signature CreateSignature() override
+		{
+			Signature s;
+			s.set(Coordinator::GetComponentType<Transform>());
+			s.set(Coordinator::GetComponentType<Light>());
+			return s;
+		}
+
 		LightingSystem()
 		{
 
 		}
 
-		void Update(GL& gl, float dt)
+		void Update(float dt)
 		{
-			gl.BeginLightSetup();
-			gl.SetAmbientLight(ambientLight);
+			GL::BeginLightSetup();
+			GL::SetAmbientLight(ambientLight);
 			int visibleLightIndex = 0;
 			Entity maxSunIntensityEntity = 0;
 			Transform* sunTransform = nullptr;
@@ -29,7 +38,7 @@ namespace Barebones
 			float maxSunIntensity = 0.0f;
 			for (auto& entity : mEntities)
 			{
-				if (visibleLightIndex == gl.MAX_LIGHT_COUNT)
+				if (visibleLightIndex == GL::MAX_LIGHT_COUNT)
 				{
 					break;
 				}
@@ -48,18 +57,20 @@ namespace Barebones
 				}
 				else
 				{
-					gl.SetAdditionalLight(visibleLightIndex++, transform, light);
+					GL::SetAdditionalLight(visibleLightIndex++, transform, light);
 				}
 			}
 			mainLight = maxSunIntensityEntity;
-			gl.SetDirectionalLight(sunTransform, sunLight);
-			gl.SetAdditionalLightCount(visibleLightIndex);
-			gl.EndLightSetup();
+			GL::SetDirectionalLight(sunTransform, sunLight);
+			GL::SetAdditionalLightCount(visibleLightIndex);
+			GL::EndLightSetup();
 		}
 
 		void EntityDestroyed(Entity entity) override
 		{
 
 		}
+
+		
 	};
 }
