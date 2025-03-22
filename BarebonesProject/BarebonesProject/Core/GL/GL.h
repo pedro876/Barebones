@@ -29,7 +29,7 @@ namespace Barebones
 	class GL
 	{
 	public:
-		const unsigned int MAX_LIGHT_COUNT = 64;
+		friend class LightingSystem;
 		
 
 		GL();
@@ -40,24 +40,31 @@ namespace Barebones
 		void EndFrame();
 
 		void SetupCameraProperties(const glm::mat4& viewProjMat);
+		
+		void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
+
+	private:
+		GLFWwindow* window;
+		UniformBufferObject uboMatrices;
+		UniformBufferObject uboLights;
+
+		const unsigned int MAX_LIGHT_COUNT = 64;
+		const unsigned long long UBO_OFFSET_AMBIENT_LIGHT = 0;
+		const unsigned long long UBO_OFFSET_DIRECTIONAL_LIGHT_COLOR = UBO_OFFSET_AMBIENT_LIGHT + sizeof(glm::vec4);
+		const unsigned long long UBO_OFFSET_DIRECTIONAL_LIGHT_DIR = UBO_OFFSET_DIRECTIONAL_LIGHT_COLOR + sizeof(glm::vec4);
+		const unsigned long long UBO_OFFSET_LIGHT_COUNT = UBO_OFFSET_DIRECTIONAL_LIGHT_DIR + sizeof(glm::vec4);
+		const unsigned long long UBO_OFFSET_POSITIONS = UBO_OFFSET_LIGHT_COUNT + sizeof(int) * 4;
+		const unsigned long long UBO_OFFSET_COLORS = UBO_OFFSET_POSITIONS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		const unsigned long long UBO_OFFSET_DIRECTIONS = UBO_OFFSET_COLORS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		const unsigned long long UBO_OFFSET_PROPERTIES = UBO_OFFSET_DIRECTIONS + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
+		void BeginLightSetup();
 		void SetAmbientLight(const glm::vec3& ambientLight);
 		void SetDirectionalLight(const Transform* transform, const Light* light);
 		void SetAdditionalLightCount(unsigned int lightCount);
 		void SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light);
-		void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
-
-	private:
-		const unsigned long long ambientLightOffset = 0;
-		const unsigned long long directionalLightColorOffset = ambientLightOffset + sizeof(glm::vec4);
-		const unsigned long long directionalLightDirOffset = directionalLightColorOffset + sizeof(glm::vec4);
-		const unsigned long long lightCountOffset = directionalLightDirOffset + sizeof(glm::vec4);
-		const unsigned long long positionsOffset = lightCountOffset + sizeof(int) * 4;
-		const unsigned long long colorsOffset = positionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
-		const unsigned long long directionsOffset = colorsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
-		const unsigned long long propertiesOffset = directionsOffset + sizeof(glm::vec4) * MAX_LIGHT_COUNT;
-		GLFWwindow* window;
-		UniformBufferObject uboMatrices;
-		UniformBufferObject uboLights;
+		void EndLightSetup();
+		
+		
 	};
 }
 

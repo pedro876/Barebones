@@ -86,11 +86,14 @@ namespace Barebones
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
 	}
 
-	void GL::SetAmbientLight(const glm::vec3& ambientLight)
+	void GL::BeginLightSetup()
 	{
 		uboLights.Bind();
-		uboLights.SetData(ambientLightOffset, sizeof(glm::vec4), glm::value_ptr(ambientLight));
-		uboLights.Unbind();
+	}
+
+	void GL::SetAmbientLight(const glm::vec3& ambientLight)
+	{
+		uboLights.SetData(UBO_OFFSET_AMBIENT_LIGHT, sizeof(glm::vec4), glm::value_ptr(ambientLight));
 	}
 
 	void GL::SetDirectionalLight(const Transform* transform, const Light* light)
@@ -100,23 +103,17 @@ namespace Barebones
 		glm::vec4 color = exists ? glm::vec4(light->color * light->intensity, 1.0) : glm::vec4(0.0);
 		glm::vec4 dir = exists ? glm::vec4(-transform->GetDirtyUp(), 0.0) : glm::vec4(1.0);
 
-		uboLights.Bind();
-		uboLights.SetData(directionalLightColorOffset, sizeof(glm::vec4), glm::value_ptr(color));
-		uboLights.SetData(directionalLightDirOffset, sizeof(glm::vec4), glm::value_ptr(dir));
-		uboLights.Unbind();
+		uboLights.SetData(UBO_OFFSET_DIRECTIONAL_LIGHT_COLOR, sizeof(glm::vec4), glm::value_ptr(color));
+		uboLights.SetData(UBO_OFFSET_DIRECTIONAL_LIGHT_DIR, sizeof(glm::vec4), glm::value_ptr(dir));
 	}
 
 	void GL::SetAdditionalLightCount(unsigned int lightCount)
 	{
-		uboLights.Bind();
-		uboLights.SetData(lightCountOffset, sizeof(int), &lightCount);
-		uboLights.Unbind();
+		uboLights.SetData(UBO_OFFSET_LIGHT_COUNT, sizeof(int), &lightCount);
 	}
 
 	void GL::SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light)
 	{
-		uboLights.Bind();
-
 		unsigned long long lightOffset = index * sizeof(glm::vec4);
 
 		glm::vec4 positionRange = glm::vec4(transform.GetDirtyWorldPosition(), 1.0f / (light.range * light.range));
@@ -125,11 +122,14 @@ namespace Barebones
 		float innerCos = cos(glm::radians(light.innerConeAngle) * 0.5f);
 		glm::vec4 properties = glm::vec4(outerCos, 1.0f / glm::max(0.001f, innerCos - outerCos), 0.0f, 0.0f);
 		glm::vec4 direction = glm::vec4(-transform.GetDirtyUp(), 0.0f);
-		uboLights.SetData(positionsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(positionRange));
-		uboLights.SetData(colorsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(color));
-		uboLights.SetData(directionsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(direction));
-		uboLights.SetData(propertiesOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(properties));
+		uboLights.SetData(UBO_OFFSET_POSITIONS + lightOffset, sizeof(glm::vec4), glm::value_ptr(positionRange));
+		uboLights.SetData(UBO_OFFSET_COLORS + lightOffset, sizeof(glm::vec4), glm::value_ptr(color));
+		uboLights.SetData(UBO_OFFSET_DIRECTIONS + lightOffset, sizeof(glm::vec4), glm::value_ptr(direction));
+		uboLights.SetData(UBO_OFFSET_PROPERTIES + lightOffset, sizeof(glm::vec4), glm::value_ptr(properties));
+	}
 
+	void GL::EndLightSetup()
+	{
 		uboLights.Unbind();
 	}
 

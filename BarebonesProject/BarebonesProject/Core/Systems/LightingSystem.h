@@ -20,6 +20,7 @@ namespace Barebones
 
 		void Update(GL& gl, float dt)
 		{
+			gl.BeginLightSetup();
 			gl.SetAmbientLight(ambientLight);
 			int visibleLightIndex = 0;
 			Entity maxSunIntensityEntity = 0;
@@ -53,6 +54,7 @@ namespace Barebones
 			mainLight = maxSunIntensityEntity;
 			gl.SetDirectionalLight(sunTransform, sunLight);
 			gl.SetAdditionalLightCount(visibleLightIndex);
+			gl.EndLightSetup();
 		}
 
 		void EntityDestroyed(Entity entity) override
