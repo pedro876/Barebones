@@ -31,14 +31,14 @@ float DistanceAttenuation(Light light, float distanceSqr, vec3 positionWS)
 	return Square(saturate(1.0 - Square(distanceSqr * light.invSqrRange)));
 }
 
+float AngleAttenuation(Light light, vec3 lightDir, vec3 normalWS)
+{
+	return saturate(dot(lightDir, normalWS));
+}
+
 vec3 GetLighting(vec3 positionWS, vec3 normalWS)
 {
 	vec3 totalLight = _AmbientLight.xyz;
-
-	//Light light;
-	//light.positionWS = vec3(0.0, 2.0, 1.0);
-	//light.intensity = 2.0;
-	//light.invSqrRange = 1.0 / Square(4.0);
 
 	for(uint i = 0u; i < _LightCount; i++)
 	{
@@ -49,7 +49,7 @@ vec3 GetLighting(vec3 positionWS, vec3 normalWS)
 		lightDir = normalize(lightDir);
 
 		float atten = DistanceAttenuation(light, distSqr, positionWS);
-		atten *= saturate(dot(lightDir, normalWS));
+		atten *= AngleAttenuation(light, lightDir, normalWS);
 		atten *= light.intensity;
 
 		totalLight += vec3(atten);

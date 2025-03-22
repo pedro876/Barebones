@@ -84,8 +84,8 @@ int main()
 	cameraTransform.SetLocalPosition(glm::vec3(0.0f, 0.0f, 3.0f));
 	cameraTransform.SetLocalRotation(glm::vec3(0.0f, 180.0f, 0.0f));
 
-	CreateLight(glm::vec3(0.0, 2.0, 1.0), 2.0, 4.0);
-	CreateLight(glm::vec3(-4.0, 2.0, -4.0), 1.0, 3.0);
+	/*CreateLight(glm::vec3(0.0, 2.0, 1.0), 2.0, 4.0);
+	CreateLight(glm::vec3(-4.0, 2.0, -4.0), 1.0, 3.0);*/
 
 	//Coordinator::DestroyEntity(1);
 

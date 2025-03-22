@@ -30,6 +30,7 @@ class BarebonesFBXExporter(bpy.types.Operator):
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
         directory = os.path.dirname(filepath)
+        self.export_lights(filepath)
         self.export_materials(directory)
         
         """bpy.ops.export_scene.fbx(
@@ -47,10 +48,32 @@ class BarebonesFBXExporter(bpy.types.Operator):
         
         self.report({'INFO'}, f"Exported FBX to: {filepath}")
         print(f"Exported FBX to: {filepath}")
-        
+    
+    def export_lights(self, filepath):
+        def format_float(value):
+            return f"{value:.5f}"
+        #filepath = os.path.join(directory, f"TestRoom.lights")ç
+        filepath = os.path.splitext(filepath)[0]+'.lights'
+        anyWrite = False
+        with open(filepath, mode='w', newline='') as file:
+            writer = csv.writer(file, delimiter=';')
+            writer.writerow(["Name", "Range", "Intensity"])
+            for obj in bpy.data.objects:
+                if obj.type == 'LIGHT':
+                    light = obj.data
+                    print(f"Writing properties for {obj.name}")
+                    range = format_float(light.cutoff_distance)
+                    intensity = format_float(light.energy *2.0 / 1000.0)
+                    writer.writerow([obj.name, range, intensity])
+                    anyWrite = True
+        if not anyWrite:
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                
+    
     def export_materials(self, directory):
         def format_float(value):
-                return f"{value:.5f}"
+            return f"{value:.5f}"
         
         print(f"Will export materials to {directory}")
         for mat in bpy.data.materials:
@@ -58,7 +81,6 @@ class BarebonesFBXExporter(bpy.types.Operator):
             
             filepath = os.path.join(directory, f"{mat.name}.mat")
             anyWrite = False
-            #if custom_props:
             print(f"Writing custom properties for {mat.name}")
             with open(filepath, mode='w', newline='') as file:
                 writer = csv.writer(file, delimiter=';')

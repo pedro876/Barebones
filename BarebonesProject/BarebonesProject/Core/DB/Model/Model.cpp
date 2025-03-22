@@ -35,27 +35,36 @@ namespace Barebones
 
 		for (unsigned int i = 0, count = scene->mNumMaterials; i < count; i++)
 		{
-			aiMaterial* material = scene->mMaterials[i];
-			ProcessMaterial(i, material);
+			aiMaterial* mMaterial = scene->mMaterials[i];
+			ProcessMaterial(i, mMaterial);
 		}
 
 		for (unsigned int i = 0, count = scene->mNumMeshes; i < count; i++)
 		{
-			aiMesh* mesh = scene->mMeshes[i];
-			ProcessMesh(i, mesh);
+			aiMesh* mMesh = scene->mMeshes[i];
+			ProcessMesh(i, mMesh);
+		}
+
+		std::filesystem::path lightsPath = path;
+		lightsPath.replace_extension(".lights");
+
+		std::vector<std::string> lightsCSV;
+		if (File::Exists(lightsPath))
+		{
+			lightsCSV = File::ReadLines(lightsPath);
 		}
 		
-		ProcessNode(scene->mRootNode, scene, root);
+		ProcessNode(scene->mRootNode, scene, root, lightsCSV);
 	}
 
-	void Model::ProcessNode(aiNode* node, const aiScene* scene, Entity parent)
+	void Model::ProcessNode(aiNode* mNode, const aiScene* mScene, Entity parent, const std::vector<std::string>& lightsCSV)
 	{
 		//std::cout << "node name: " << node->mName.C_Str() << "\n";
 		aiVector3D position, rotation, scaling;
-		node->mTransformation.Decompose(scaling, rotation, position);
+		mNode->mTransformation.Decompose(scaling, rotation, position);
 
 		Entity entity = parent;
-		for (unsigned int i = 0, count = node->mNumMeshes; i < count; i++)
+		for (unsigned int i = 0, count = mNode->mNumMeshes; i < count; i++)
 		{
 			entity = Coordinator::CreateEntity();
 			Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
@@ -65,32 +74,76 @@ namespace Barebones
 			TransformSystem::AddChild(parent, entity);
 
 			MeshRenderer& meshRenderer = Coordinator::AddComponent<MeshRenderer>(entity, MeshRenderer());
-			unsigned int meshIndex = node->mMeshes[i];
-			aiMesh* mesh = scene->mMeshes[meshIndex];
+			unsigned int meshIndex = mNode->mMeshes[i];
+			aiMesh* mesh = mScene->mMeshes[meshIndex];
 			meshRenderer.mesh = &meshes[meshIndex];
 			meshRenderer.material = &materials[mesh->mMaterialIndex];
 		}
 
-		for (unsigned int i = 0, count = scene->mNumCameras; i < count; i++)
+		for (unsigned int i = 0, count = mScene->mNumCameras; i < count; i++)
 		{
-			aiCamera* mCamera = scene->mCameras[i];
-			if (node->mName == mCamera->mName)
+			aiCamera* mCamera = mScene->mCameras[i];
+			if (mNode->mName == mCamera->mName)
 			{
-				ProcessCamera(parent, node);
+				ProcessCamera(parent, mNode, mCamera);
+			}
+		}
+
+		for (unsigned int i = 0, count = mScene->mNumLights; i < count; i++)
+		{
+			aiLight* mLight = mScene->mLights[i];
+			if (mNode->mName == mLight->mName)
+			{
+				ProcessLight(parent, mNode, mLight, lightsCSV);
 			}
 		}
 		
-		for (unsigned int i = 0, count = node->mNumChildren; i < count; i++)
+		for (unsigned int i = 0, count = mNode->mNumChildren; i < count; i++)
 		{
-			ProcessNode(node->mChildren[i], scene, entity);
+			ProcessNode(mNode->mChildren[i], mScene, entity, lightsCSV);
 		}
 	}
 
-	void Model::ProcessCamera(Entity parent, aiNode* node)
+	void Model::ProcessLight(Entity parent, aiNode* mNode, aiLight* mLight, const std::vector<std::string>& lightsCSV)
 	{
-		aiVector3D position, rotation, scaling;
-		node->mTransformation.Decompose(scaling, rotation, position);
 		Entity entity = Coordinator::CreateEntity();
+		aiVector3D position, rotation, scaling;
+		mNode->mTransformation.Decompose(scaling, rotation, position);
+		glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
+		quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
+		Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
+		transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
+		transform.SetLocalRotation(quat);
+		transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
+		TransformSystem::AddChild(parent, entity);
+
+		//We need to find the csv data here
+		bool foundLightData = false;
+		Light light;
+		for (int i = 1, count = lightsCSV.size(); i < count && !foundLightData; i++)
+		{
+			if (lightsCSV[i].starts_with(mNode->mName.C_Str()))
+			{
+				foundLightData = true;
+				std::vector<std::string> tokens = File::SplitLine(lightsCSV[i], ';');
+				light.range = std::stof(tokens[1]);
+				light.intensity = std::stof(tokens[2]);
+			}
+		}
+
+		if (mLight->mType == aiLightSourceType::aiLightSource_POINT) light.type = LightType::Point;
+		if (mLight->mType == aiLightSourceType::aiLightSource_DIRECTIONAL) light.type = LightType::Directional;
+		if (mLight->mType == aiLightSourceType::aiLightSource_SPOT) light.type = LightType::Spot;
+		if (mLight->mType == aiLightSourceType::aiLightSource_AREA) light.type = LightType::Area;
+
+		Coordinator::AddComponent<Light>(entity, light);
+	}
+
+	void Model::ProcessCamera(Entity parent, aiNode* mNode, aiCamera* mCamera)
+	{
+		Entity entity = Coordinator::CreateEntity();
+		aiVector3D position, rotation, scaling;
+		mNode->mTransformation.Decompose(scaling, rotation, position);
 		glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
 		quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
 		Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
@@ -106,17 +159,17 @@ namespace Barebones
 		camera.priority = 1;
 	}
 
-	void Model::ProcessMaterial(unsigned int index, aiMaterial* material)
+	void Model::ProcessMaterial(unsigned int index, aiMaterial* mMaterial)
 	{
 		materials[index].shader = DB<Shader>::Get("Shader Lit");
-		materials[index].name = material->GetName().C_Str();
+		materials[index].name = mMaterial->GetName().C_Str();
 
-		std::cout << "Processing material " << material->GetName().C_Str() << std::endl;
+		std::cout << "Processing material " << mMaterial->GetName().C_Str() << std::endl;
 
-		for (unsigned int t = 0, textureCount = material->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
+		for (unsigned int t = 0, textureCount = mMaterial->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
 		{
 			aiString ogPath;
-			if (material->GetTexture(aiTextureType_DIFFUSE, t, &ogPath) == AI_SUCCESS)
+			if (mMaterial->GetTexture(aiTextureType_DIFFUSE, t, &ogPath) == AI_SUCCESS)
 			{
 				std::string relativePath = File::MakeRelativeToFileBeRelativeToCWD(path, ogPath.C_Str()).string();
 				std::cout << "Texture path (" << ogPath.C_Str() << ") was modified to (" << relativePath << ")\n";
@@ -143,7 +196,7 @@ namespace Barebones
 		}
 
 		std::filesystem::path materialPath = directory;
-		materialPath = materialPath / material->GetName().C_Str() += ".mat";
+		materialPath = materialPath / mMaterial->GetName().C_Str() += ".mat";
 		materialPath = materialPath.lexically_normal();
 
 		if (File::Exists(materialPath))
@@ -153,33 +206,6 @@ namespace Barebones
 			for (std::string& line : lines)
 			{
 				m.properties.AddSerializedPropertyCSV(line);
-				/*std::vector<std::string> tokens = File::SplitLine(line, ';');
-				std::string& type = tokens[0];
-				std::string& name = tokens[1];
-				int vectorSize = tokens.size() - 2;
-
-				if (type == "String") m.properties.strings.emplace_back(Property<std::string>(name, tokens[2]));
-				else if (type == "Float") m.properties.floats.emplace_back(Property<float>(name, std::stof(tokens[2])));
-				else if (type == "Integer") m.properties.ints.emplace_back(Property<int>(name, std::stoi(tokens[2])));
-				else if (type == "Boolean") m.properties.bools.emplace_back(Property<bool>(name, tokens[2] == "True"));
-				else if (type == "FloatArray")
-				{
-					if (vectorSize == 2) m.properties.vec2s.emplace_back(name, glm::vec2(std::stof(tokens[2]), std::stof(tokens[3])));
-					if (vectorSize == 3) m.properties.vec3s.emplace_back(name, glm::vec3(std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4])));
-					if (vectorSize == 4) m.properties.vec4s.emplace_back(name, glm::vec4(std::stof(tokens[2]), std::stof(tokens[3]), std::stof(tokens[4]), std::stof(tokens[5])));
-				}
-				else if (type == "IntegerArray")
-				{
-					if (vectorSize == 2) m.properties.ivec2s.emplace_back(name, glm::ivec2(std::stoi(tokens[2]), std::stoi(tokens[3])));
-					if (vectorSize == 3) m.properties.ivec3s.emplace_back(name, glm::ivec3(std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4])));
-					if (vectorSize == 4) m.properties.ivec4s.emplace_back(name, glm::ivec4(std::stoi(tokens[2]), std::stoi(tokens[3]), std::stoi(tokens[4]), std::stoi(tokens[5])));
-				}
-				else if (type == "BooleanArray")
-				{
-					if (vectorSize == 2) m.properties.bvec2s.emplace_back(name, glm::bvec2(tokens[2] == "True", tokens[3] == "True"));
-					if (vectorSize == 3) m.properties.bvec3s.emplace_back(name, glm::bvec3(tokens[2] == "True", tokens[3] == "True", tokens[4] == "True"));
-					if (vectorSize == 4) m.properties.bvec4s.emplace_back(name, glm::bvec4(tokens[2] == "True", tokens[3] == "True", tokens[4] == "True", tokens[5] == "True"));
-				}*/
 
 				std::cout << line << "\n";
 			}

@@ -13,6 +13,7 @@
 #include "../../Components/Transform.h"
 #include "../../Components/MeshRenderer.h"
 #include "../../Components/Camera.h"
+#include "../../Components/Light.h"
 #include "../../Systems/TransformSystem.h"
 #include "Mesh.h"
 #include "Material.h"
@@ -36,9 +37,10 @@ namespace Barebones
 		unsigned int meshCount = 0;
 		unsigned int materialCount = 0;
 
-		void ProcessNode(aiNode* node, const aiScene* scene, Entity parent);
-		void ProcessCamera(Entity parent, aiNode* node);
-		void ProcessMaterial(unsigned int index, aiMaterial* material);
+		void ProcessNode(aiNode* mNode, const aiScene* mScene, Entity parent, const std::vector<std::string>& lightsCSV);
+		void ProcessLight(Entity parent, aiNode* mNode, aiLight* mLight, const std::vector<std::string>& lightsCSV);
+		void ProcessCamera(Entity parent, aiNode* mNode, aiCamera* mCamera);
+		void ProcessMaterial(unsigned int index, aiMaterial* mMaterial);
 		void ProcessMesh(unsigned int index, aiMesh* mesh);
 	};
 }

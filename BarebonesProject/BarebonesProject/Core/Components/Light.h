@@ -1,8 +1,21 @@
 #pragma once
 
-struct Light
+namespace Barebones
 {
-public:
-	float range{ 5.0 };
-	float intensity{ 2.0 };
-};
+	enum class LightType
+	{
+		Directional,
+		Point,
+		Spot,
+		Area,
+	};
+
+	struct Light
+	{
+	public:
+		LightType type{ LightType::Point };
+		float range{ 5.0 };
+		float intensity{ 2.0 };
+	};
+}
+
