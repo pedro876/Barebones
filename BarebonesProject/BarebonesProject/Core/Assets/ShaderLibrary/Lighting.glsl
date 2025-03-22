@@ -19,7 +19,6 @@ struct Light
 	float invSqrRange;
 	vec3 color;
 	float outerCos;
-	float innerCos;
 	float invOuterMinusInnerCos;
 };
 
@@ -30,8 +29,7 @@ Light GetLight(uint index)
 	light.invSqrRange = _LightPositions[index].w;
 	light.color = _LightColors[index].xyz;
 	light.directionWS = _LightDirections[index].xyz;
-	light.outerCos = _LightProperties[index].z;
-	light.innerCos = _LightProperties[index].w;
+	light.outerCos = _LightProperties[index].x;
 	light.invOuterMinusInnerCos = _LightProperties[index].y;
 	return light;
 }

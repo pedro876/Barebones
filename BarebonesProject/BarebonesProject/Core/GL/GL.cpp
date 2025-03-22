@@ -112,7 +112,7 @@ namespace Barebones
 		glm::vec4 color = glm::vec4(light.color * light.intensity, 0.0f);
 		float outerCos = cos(glm::radians(light.outerConeAngle) * 0.5f);
 		float innerCos = cos(glm::radians(light.innerConeAngle) * 0.5f);
-		glm::vec4 properties = glm::vec4(outerCos, 1.0f / glm::max(0.001f, innerCos - outerCos), outerCos, innerCos);
+		glm::vec4 properties = glm::vec4(outerCos, 1.0f / glm::max(0.001f, innerCos - outerCos), 0.0f, 0.0f);
 		glm::vec4 direction = glm::vec4(-transform.GetDirtyUp(), 0.0f);
 		uboLights.SetData(positionsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(positionRange));
 		uboLights.SetData(colorsOffset + lightOffset, sizeof(glm::vec4), glm::value_ptr(color));
