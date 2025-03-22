@@ -33,7 +33,7 @@ class BarebonesFBXExporter(bpy.types.Operator):
         self.export_lights(filepath)
         self.export_materials(directory)
         
-        """bpy.ops.export_scene.fbx(
+        bpy.ops.export_scene.fbx(
             path_mode = 'RELATIVE',
             filepath=filepath,
             check_existing=False,
@@ -44,7 +44,7 @@ class BarebonesFBXExporter(bpy.types.Operator):
             axis_forward='-Z',
             axis_up='Y',
             bake_space_transform=True
-        )"""
+        )
         
         self.report({'INFO'}, f"Exported FBX to: {filepath}")
         print(f"Exported FBX to: {filepath}")
