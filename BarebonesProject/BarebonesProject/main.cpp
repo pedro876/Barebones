@@ -112,6 +112,7 @@ int main()
 		lightingSystem->Update(deltaTime);
 		renderSystem->Update(deltaTime);
 
+		inputSystem->EndFrame();
 		GL::EndFrame();
 
 		double newTime = glfwGetTime();

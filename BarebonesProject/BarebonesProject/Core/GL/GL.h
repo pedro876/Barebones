@@ -31,6 +31,7 @@ namespace Barebones
 	public:
 		friend class LightingSystem;
 		friend class Input;
+		friend class InputSystem;
 
 		static void Init();
 		static void End();

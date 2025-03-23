@@ -127,7 +127,7 @@ namespace Barebones
 
 
 		shader->Use();
-		glm::mat4 modelMat = transform.GetLocalToWorldMatrix();
+		glm::mat4 modelMat = transform.GetDirtyLocalToWorldMatrix();
 
 		renderer.material->SetPassCall();
 

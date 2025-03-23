@@ -4,6 +4,8 @@
 #include "../Components/Transform.h"
 #include "../Components/Camera.h"
 #include "../GL/GL.h"
+#include "InputSystem.h"
+#include "TransformSystem.h"
 
 namespace Barebones
 {
@@ -15,5 +17,14 @@ namespace Barebones
 		void Update(float dt);
 		void EntityDestroyed(Entity entity) override;
 		Signature CreateSignature() override;
+
+	private:
+		Input* inputForward = InputSystem::GetInput(Key::W);
+		Input* inputLeft = InputSystem::GetInput(Key::A);
+		Input* inputBack = InputSystem::GetInput(Key::S);
+		Input* inputRight = InputSystem::GetInput(Key::D);
+		Input* inputShift = InputSystem::GetInput(Key::Shift);
+
+		void UpdateFlyCamera(float dt, Transform* transform, Camera* camera);
 	};
 }
