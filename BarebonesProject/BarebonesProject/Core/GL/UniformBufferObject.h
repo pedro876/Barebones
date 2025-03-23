@@ -15,6 +15,11 @@ namespace Barebones
 
 		UniformBufferObject() : ID(0), name("Unitialized"), binding(0), size(0) {}
 
+		UniformBufferObject(const UniformBufferObject&) = delete;
+		UniformBufferObject& operator=(const UniformBufferObject&) = delete;
+		UniformBufferObject(UniformBufferObject&&) = delete;
+		UniformBufferObject& operator=(UniformBufferObject&&) = delete;
+
 		void Initialize(std::string name, unsigned int binding, unsigned long long size)
 		{
 			this->name = name;
