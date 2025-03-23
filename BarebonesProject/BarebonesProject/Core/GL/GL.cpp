@@ -19,7 +19,7 @@ namespace Barebones
 #endif
 
 		// CREATE WINDOW:
-		window = glfwCreateWindow(1280, 720, "LearnOpenGL", NULL, NULL);
+		window = glfwCreateWindow(screenWidth, screenHeight, "LearnOpenGL", NULL, NULL);
 		if (window == NULL)
 		{
 			throw std::runtime_error("Failed to create GLFW window");
@@ -32,6 +32,8 @@ namespace Barebones
 			throw std::runtime_error("Failed to initialize GLAD");
 		}
 
+		glfwSetFramebufferSizeCallback(window, GL::OnWindowResize);
+		
 		//UNIFORM BUFFER OBJECT
 		uboMatrices.Initialize("Matrices", 0, 1 * sizeof(glm::mat4));
 		uboLights.Initialize("Lights", 1, 
@@ -63,6 +65,24 @@ namespace Barebones
 		return glfwWindowShouldClose(window);
 	}
 
+	void GL::OnWindowResize(GLFWwindow* window, int width, int height)
+	{
+		glViewport(0, 0, width, height);
+		screenWidth = width;
+		screenHeight = height;
+	}
+
+	float GL::GetAspectRatio()
+	{
+		float x = screenWidth;
+		float y = screenHeight;
+		return x / y;
+	}
+
+	unsigned int GL::GetScreenWidth() { return screenWidth; }
+	unsigned int GL::GetScreenHeight() { return screenHeight; }
+
+
 	void GL::BeginFrame()
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -86,6 +106,46 @@ namespace Barebones
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
 	}
 
+	void GL::DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer)
+	{
+		//TODO: set model matrix
+		auto shader = renderer.material->shader.lock();
+		if (!shader)
+		{
+			std::cout << "Null Shader\n";
+			return;
+		}
+
+		if (!shader->setUBOs)
+		{
+			shader->setUBOs = true;
+			/*unsigned int ubo_matrices = glGetUniformBlockIndex(shader->ID, "Matrices");
+			glUniformBlockBinding(shader->ID, ubo_matrices, 0);*/
+			uboMatrices.SetShaderUBO(shader->ID);
+			uboLights.SetShaderUBO(shader->ID);
+		}
+
+
+		shader->Use();
+		glm::mat4 modelMat = transform.GetLocalToWorldMatrix();
+
+		renderer.material->SetPassCall();
+
+
+		//if (auto baseMap = renderer.material->baseMap.lock())
+		//{
+		//	shader->SetInt("_BaseMap", 0);
+		//	baseMap->Use(0);
+		//}
+
+
+
+		//shader->SetMat4("_ViewProj", viewProjMat);
+		shader->SetMat4("_Model", modelMat);
+		renderer.mesh->Draw();
+	}
+
+	// LIGHTING
 	void GL::BeginLightSetup()
 	{
 		uboLights.Bind();
@@ -133,43 +193,6 @@ namespace Barebones
 		uboLights.Unbind();
 	}
 
-	void GL::DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer)
-	{
-		//TODO: set model matrix
-		auto shader = renderer.material->shader.lock();
-		if (!shader)
-		{
-			std::cout << "Null Shader\n";
-			return;
-		}
-
-		if (!shader->setUBOs)
-		{
-			shader->setUBOs = true;
-			/*unsigned int ubo_matrices = glGetUniformBlockIndex(shader->ID, "Matrices");
-			glUniformBlockBinding(shader->ID, ubo_matrices, 0);*/
-			uboMatrices.SetShaderUBO(shader->ID);
-			uboLights.SetShaderUBO(shader->ID);
-		}
-		
-
-		shader->Use();
-		glm::mat4 modelMat = transform.GetLocalToWorldMatrix();
-
-		renderer.material->SetPassCall();
-
-
-		//if (auto baseMap = renderer.material->baseMap.lock())
-		//{
-		//	shader->SetInt("_BaseMap", 0);
-		//	baseMap->Use(0);
-		//}
-
-		
-
-		//shader->SetMat4("_ViewProj", viewProjMat);
-		shader->SetMat4("_Model", modelMat);
-		renderer.mesh->Draw();
-	}
+	
 }
 

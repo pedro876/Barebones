@@ -37,6 +37,9 @@ namespace Barebones
 		static bool WindowShouldClose();
 		static void BeginFrame();
 		static void EndFrame();
+		static float GetAspectRatio();
+		static unsigned int GetScreenWidth();
+		static unsigned int GetScreenHeight();
 
 		static void SetupCameraProperties(const glm::mat4& viewProjMat);
 		static void DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer);
@@ -45,6 +48,10 @@ namespace Barebones
 		static inline GLFWwindow* window;
 		static inline UniformBufferObject uboMatrices;
 		static inline UniformBufferObject uboLights;
+		static inline unsigned int screenWidth = 1280;
+		static inline unsigned int screenHeight = 720;
+		
+		static void OnWindowResize(GLFWwindow* window, int width, int height);
 		
 		static const unsigned int MAX_LIGHT_COUNT = 64;
 		static const unsigned long long UBO_OFFSET_AMBIENT_LIGHT = 0;
@@ -61,7 +68,6 @@ namespace Barebones
 		static void SetAdditionalLightCount(unsigned int lightCount);
 		static void SetAdditionalLight(unsigned int index, const Transform& transform, const Light& light);
 		static void EndLightSetup();
-		
 		
 	};
 	
