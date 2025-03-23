@@ -40,6 +40,7 @@ int main()
 	std::shared_ptr<CameraSystem> cameraSystem = Coordinator::RegisterSystem<CameraSystem>();
 	std::shared_ptr<TransformSystem> transformSystem = Coordinator::RegisterSystem<TransformSystem>();
 	std::shared_ptr<LightingSystem> lightingSystem = Coordinator::RegisterSystem<LightingSystem>();
+	std::shared_ptr<InputSystem> inputSystem = Coordinator::RegisterSystem<InputSystem>();
 
 	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Shader Lit", "Core/Assets/Shaders/Lit.glsl"));
 	auto testRoom = DB<Model>::Register(std::make_shared<Model>("Game/Assets/Models/TestRoom.fbx")).lock();
@@ -75,10 +76,19 @@ int main()
 	double time = glfwGetTime();
 	float deltaTime = 0.0f;
 
+	Input* input_escape = InputSystem::GetInput(Key::Escape);
+
 	while (!GL::WindowShouldClose())
 	{
 		GL::BeginFrame();
 		
+		inputSystem->Update(deltaTime);
+
+		if (input_escape->isPressed)
+		{
+			std::cout << "Escape pressed" << std::endl;
+		}
+
 		//Update cubes
 		/*glm::quat cube1Rot = tCube1.GetLocalRotation();
 		cube1Rot *= glm::quat(glm::radians(glm::vec3(30.0f * deltaTime, 0.0f, 0.0f)));

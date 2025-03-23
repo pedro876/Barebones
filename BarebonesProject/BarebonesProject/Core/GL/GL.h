@@ -30,6 +30,7 @@ namespace Barebones
 	{
 	public:
 		friend class LightingSystem;
+		friend class Input;
 
 		static void Init();
 		static void End();

@@ -171,8 +171,11 @@ xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
     <ClInclude Include="Core\DB\Model\Mesh.h" />
     <ClInclude Include="Core\Components\MeshRenderer.h" />
     <ClInclude Include="Core\DB\Asset.h" />
+    <ClInclude Include="Core\GL\Input.h" />
+    <ClInclude Include="Core\GL\KeyCode.h" />
     <ClInclude Include="Core\GL\UniformBufferObject.h" />
     <ClInclude Include="Core\Systems\CameraSystem.h" />
+    <ClInclude Include="Core\Systems\InputSystem.h" />
     <ClInclude Include="Core\Systems\LightingSystem.h" />
     <ClInclude Include="Core\Systems\RenderSystem.h" />
     <ClInclude Include="Core\Systems\TransformSystem.h" />

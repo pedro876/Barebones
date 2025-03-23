@@ -145,6 +145,7 @@ namespace Barebones
 		renderer.mesh->Draw();
 	}
 
+
 	// LIGHTING
 	void GL::BeginLightSetup()
 	{

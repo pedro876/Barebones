@@ -134,6 +134,9 @@
     <ClInclude Include="Core\Systems\LightingSystem.h" />
     <ClInclude Include="Core\Components\Light.h" />
     <ClInclude Include="Core\GL\UniformBufferObject.h" />
+    <ClInclude Include="Core\Systems\InputSystem.h" />
+    <ClInclude Include="Core\GL\KeyCode.h" />
+    <ClInclude Include="Core\GL\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Assets\Models\Cube.fbx" />
