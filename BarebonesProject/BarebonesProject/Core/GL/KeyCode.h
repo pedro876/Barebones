@@ -14,4 +14,9 @@ namespace Barebones
 		S = GLFW_KEY_S,
 		D = GLFW_KEY_D,
 	};
+
+	enum class MouseButton
+	{
+		LeftClick = GLFW_MOUSE_BUTTON_LEFT
+	};
 }

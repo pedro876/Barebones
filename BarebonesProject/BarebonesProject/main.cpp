@@ -76,18 +76,13 @@ int main()
 	double time = glfwGetTime();
 	float deltaTime = 0.0f;
 
-	Input* input_escape = InputSystem::GetInput(Key::Escape);
+	
 
 	while (!GL::WindowShouldClose())
 	{
 		GL::BeginFrame();
 		
 		inputSystem->Update(deltaTime);
-
-		if (input_escape->isPressed)
-		{
-			std::cout << "Escape pressed" << std::endl;
-		}
 
 		//Update cubes
 		/*glm::quat cube1Rot = tCube1.GetLocalRotation();

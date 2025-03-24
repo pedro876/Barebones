@@ -88,8 +88,8 @@ namespace Barebones
 				degreesY = -89.0f - pitch;
 
 			glm::quat rotation = transform->GetLocalRotation();
-			rotation = glm::angleAxis(glm::radians(degreesX), glm::vec3(0.0f, 1.0f, 0.0f)) * rotation;
 			rotation = glm::angleAxis(glm::radians(degreesY), right) * rotation;
+			rotation = glm::angleAxis(glm::radians(degreesX), glm::vec3(0.0f, 1.0f, 0.0f)) * rotation;
 
 			transform->SetLocalRotation(rotation);
 		}

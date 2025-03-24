@@ -5,6 +5,12 @@
 
 namespace Barebones
 {
+	enum class InputDevice
+	{
+		Keyboard,
+		Mouse,
+	};
+
 	class Input
 	{
 	public:
@@ -23,18 +29,34 @@ namespace Barebones
 		Input()
 		{
 			key = Key::Undefined;
-			keycode = (int)key;
+			index = (int)key;
 		}
 
 		void SetKey(Key key)
 		{
 			this->key = key;
-			keycode = (int)key;
+			index = (int)key;
+			device = InputDevice::Keyboard;
+		}
+
+		void SetMouseButton(MouseButton mouseButton)
+		{
+			this->mouseButton = mouseButton;
+			index = (int)mouseButton;
+			device = InputDevice::Mouse;
 		}
 
 		void ProcessInput()
 		{
-			int state = glfwGetKey(GL::window, keycode);
+			int state;
+			switch (device)
+			{
+			default:
+			case InputDevice::Keyboard: state = glfwGetKey(GL::window, index); break;
+			case InputDevice::Mouse: state = glfwGetMouseButton(GL::window, index); break;
+			}
+
+
 			wasPressedThisFrame = false;
 			wasReleasedThisFrame = false;
 			if (state == GLFW_PRESS)
@@ -49,7 +71,9 @@ namespace Barebones
 			}
 		}
 
+		InputDevice device;
 		Key key;
-		int keycode;
+		MouseButton mouseButton;
+		int index;
 	};
 }

@@ -32,6 +32,20 @@ namespace Barebones
 			{
 				inputs[i].ProcessInput();
 			}
+
+			int cursorInputMode = glfwGetInputMode(GL::window, GLFW_CURSOR);
+
+			if (input_escape->wasPressedThisFrame && cursorInputMode != GLFW_CURSOR_NORMAL)
+			{
+				glfwSetInputMode(GL::window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				changedCursorInputMode = true;
+			}
+
+			if (input_leftClick->wasPressedThisFrame && cursorInputMode != GLFW_CURSOR_DISABLED)
+			{
+				glfwSetInputMode(GL::window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				changedCursorInputMode = true;
+			}
 		}
 
 		void EndFrame()
@@ -43,13 +57,27 @@ namespace Barebones
 		{
 			for (int i = 0; i < inputCount; i++)
 			{
-				if (inputs[i].key == key)
+				if (inputs[i].device == InputDevice::Keyboard && inputs[i].key == key)
 				{
 					return &inputs[i];
 				}
 			}
 
 			inputs[inputCount].SetKey(key);
+			return &inputs[inputCount++];
+		}
+
+		static Input* GetInput(MouseButton mouseButton)
+		{
+			for (int i = 0; i < inputCount; i++)
+			{
+				if (inputs[i].device == InputDevice::Mouse && inputs[i].mouseButton == mouseButton)
+				{
+					return &inputs[i];
+				}
+			}
+
+			inputs[inputCount].SetMouseButton(mouseButton);
 			return &inputs[inputCount++];
 		}
 
@@ -66,6 +94,10 @@ namespace Barebones
 		static inline bool everDetectedMouse;
 		static inline glm::vec2 mouseAxis;
 		static inline const float sensitivity = 0.1f;
+		static inline Input* input_escape = InputSystem::GetInput(Key::Escape);
+		static inline Input* input_leftClick = InputSystem::GetInput(MouseButton::LeftClick);
+		static inline bool changedCursorInputMode = false;
+		
 
 		static void OnMouse(GLFWwindow* window, double xpos, double ypos)
 		{
@@ -76,8 +108,18 @@ namespace Barebones
 				lastMouseY = ypos;
 			}
 
-			mouseAxis = glm::vec2(xpos - lastMouseX, ypos - lastMouseY);
-			mouseAxis *= sensitivity;
+			if (changedCursorInputMode)
+			{
+				mouseAxis = glm::vec2(0.0f, 0.0f);
+				changedCursorInputMode = false;
+			}
+			else
+			{
+				mouseAxis = glm::vec2(xpos - lastMouseX, ypos - lastMouseY);
+				mouseAxis *= sensitivity;
+			}
+
+			
 
 			lastMouseX = xpos;
 			lastMouseY = ypos;
