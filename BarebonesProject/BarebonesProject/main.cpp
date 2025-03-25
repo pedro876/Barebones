@@ -4,29 +4,6 @@
 
 using namespace Barebones;
 
-Entity CreateCube(Mesh* cubeMesh, Material* material)
-{
-	Entity entity = Coordinator::CreateEntity();
-
-	Coordinator::AddComponent(entity, Transform{});
-	Coordinator::AddComponent(entity, MeshRenderer{});
-
-	MeshRenderer& meshRenderer = Coordinator::GetComponent<MeshRenderer>(entity);
-	meshRenderer.mesh = cubeMesh;
-	meshRenderer.material = material;
-	return entity;
-}
-
-void CreateLight(glm::vec3 position, float intensity, float range)
-{
-	Entity lightEntity = Coordinator::CreateEntity();
-	Light& light = Coordinator::AddComponent(lightEntity, Light{});
-	Transform& lightTransform = Coordinator::AddComponent(lightEntity, Transform{});
-	light.intensity = intensity;
-	light.range = range;
-	lightTransform.SetLocalPosition(position);
-}
-
 int main()
 {
 	StartEngine();

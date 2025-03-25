@@ -108,41 +108,33 @@ namespace Barebones
 
 	void GL::DrawMeshRenderer(Transform& transform, const MeshRenderer& renderer)
 	{
-		//TODO: set model matrix
-		auto shader = renderer.material->shader.lock();
-		if (!shader)
+		for (int i = 0; i < renderer.meshCount; i++)
 		{
-			std::cout << "Null Shader\n";
-			return;
+			auto shader = renderer.materials[i]->shader.lock();
+			if (!shader)
+			{
+				std::cout << "Null Shader\n";
+				return;
+			}
+
+			if (!shader->setUBOs)
+			{
+				shader->setUBOs = true;
+				uboMatrices.SetShaderUBO(shader->ID);
+				uboLights.SetShaderUBO(shader->ID);
+			}
+
+
+			shader->Use();
+			glm::mat4 modelMat = transform.GetDirtyLocalToWorldMatrix();
+
+			renderer.materials[i]->SetPassCall();
+
+			shader->SetMat4("_Model", modelMat);
+			renderer.meshes[i]->Draw();
 		}
 
-		if (!shader->setUBOs)
-		{
-			shader->setUBOs = true;
-			/*unsigned int ubo_matrices = glGetUniformBlockIndex(shader->ID, "Matrices");
-			glUniformBlockBinding(shader->ID, ubo_matrices, 0);*/
-			uboMatrices.SetShaderUBO(shader->ID);
-			uboLights.SetShaderUBO(shader->ID);
-		}
-
-
-		shader->Use();
-		glm::mat4 modelMat = transform.GetDirtyLocalToWorldMatrix();
-
-		renderer.material->SetPassCall();
-
-
-		//if (auto baseMap = renderer.material->baseMap.lock())
-		//{
-		//	shader->SetInt("_BaseMap", 0);
-		//	baseMap->Use(0);
-		//}
-
-
-
-		//shader->SetMat4("_ViewProj", viewProjMat);
-		shader->SetMat4("_Model", modelMat);
-		renderer.mesh->Draw();
+		
 	}
 
 

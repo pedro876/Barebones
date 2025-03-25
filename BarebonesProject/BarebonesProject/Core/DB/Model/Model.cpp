@@ -63,29 +63,30 @@ namespace Barebones
 		aiVector3D position, rotation, scaling;
 		mNode->mTransformation.Decompose(scaling, rotation, position);
 
-		Entity entity = parent;
-		for (unsigned int i = 0, count = mNode->mNumMeshes; i < count; i++)
-		{
-			entity = Coordinator::CreateEntity();
-			Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
-			transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
-			transform.SetLocalRotation(glm::degrees(glm::vec3(rotation.x, rotation.y, rotation.z)));
-			transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
-			TransformSystem::AddChild(parent, entity);
+		Entity entity = Coordinator::CreateEntity();
 
-			MeshRenderer& meshRenderer = Coordinator::AddComponent<MeshRenderer>(entity, MeshRenderer());
-			unsigned int meshIndex = mNode->mMeshes[i];
-			aiMesh* mesh = mScene->mMeshes[meshIndex];
-			meshRenderer.mesh = &meshes[meshIndex];
-			meshRenderer.material = &materials[mesh->mMaterialIndex];
+		if (mNode->mNumMeshes)
+		{
+			MeshRenderer& meshRenderer = Coordinator::AddComponent<MeshRenderer>(entity, MeshRenderer(mNode->mNumMeshes));
+
+			for (unsigned int i = 0, count = mNode->mNumMeshes; i < count; i++)
+			{
+				unsigned int meshIndex = mNode->mMeshes[i];
+				aiMesh* mesh = mScene->mMeshes[meshIndex];
+				meshRenderer.meshes[i] = &meshes[meshIndex];
+				meshRenderer.materials[i] = &materials[mesh->mMaterialIndex];
+			}
 		}
 
+		bool isCamera = false;
 		for (unsigned int i = 0, count = mScene->mNumCameras; i < count; i++)
 		{
 			aiCamera* mCamera = mScene->mCameras[i];
 			if (mNode->mName == mCamera->mName)
 			{
-				ProcessCamera(parent, mNode, mCamera);
+				isCamera = true;
+				ProcessCamera(entity, mNode, mCamera);
+				break;
 			}
 		}
 
@@ -94,9 +95,18 @@ namespace Barebones
 			aiLight* mLight = mScene->mLights[i];
 			if (mNode->mName == mLight->mName)
 			{
-				ProcessLight(parent, mNode, mLight, lightsCSV);
+				ProcessLight(entity, mNode, mLight, lightsCSV);
+				break;
 			}
 		}
+
+		Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
+		transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
+		glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
+		if(isCamera) quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
+		transform.SetLocalRotation(quat);
+		transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
+		TransformSystem::AddChild(parent, entity);
 		
 		for (unsigned int i = 0, count = mNode->mNumChildren; i < count; i++)
 		{
@@ -104,19 +114,8 @@ namespace Barebones
 		}
 	}
 
-	void Model::ProcessLight(Entity parent, aiNode* mNode, aiLight* mLight, const std::vector<std::string>& lightsCSV)
+	void Model::ProcessLight(Entity entity, aiNode* mNode, aiLight* mLight, const std::vector<std::string>& lightsCSV)
 	{
-		Entity entity = Coordinator::CreateEntity();
-		aiVector3D position, rotation, scaling;
-		mNode->mTransformation.Decompose(scaling, rotation, position);
-		glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
-		quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
-		Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
-		transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
-		transform.SetLocalRotation(quat);
-		transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
-		TransformSystem::AddChild(parent, entity);
-
 		//We need to find the csv data here
 		bool foundLightData = false;
 		Light light;
@@ -143,23 +142,9 @@ namespace Barebones
 		Coordinator::AddComponent<Light>(entity, light);
 	}
 
-	void Model::ProcessCamera(Entity parent, aiNode* mNode, aiCamera* mCamera)
+	void Model::ProcessCamera(Entity entity, aiNode* mNode, aiCamera* mCamera)
 	{
-		Entity entity = Coordinator::CreateEntity();
-		aiVector3D position, rotation, scaling;
-		mNode->mTransformation.Decompose(scaling, rotation, position);
-		glm::quat quat(glm::vec3(rotation.x, rotation.y, rotation.z));
-		quat *= glm::quat(glm::radians(glm::vec3(0.0f, -90.0f, 0.0f)));
-		Transform& transform = Coordinator::AddComponent<Transform>(entity, Transform());
-		transform.SetLocalPosition(glm::vec3(position.x, position.y, position.z));
-		transform.SetLocalRotation(quat);
-		transform.SetLocalScale(glm::vec3(scaling.x, scaling.y, scaling.z));
-		TransformSystem::AddChild(parent, entity);
-
 		Camera& camera = Coordinator::AddComponent<Camera>(entity, Camera());
-		//camera.far = mCamera->mClipPlaneFar;
-		//camera.near = mCamera->mClipPlaneNear;
-		//camera.fieldOfView = mCamera->mHorizontalFOV;
 		camera.priority = 1;
 	}
 
