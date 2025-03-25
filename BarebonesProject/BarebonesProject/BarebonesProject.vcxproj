@@ -140,10 +140,16 @@ xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
   <ItemGroup>
     <ClCompile Include="Core\BarebonesEngine.cpp" />
     <ClCompile Include="Core\DB\Model\Model.cpp" />
+    <ClCompile Include="Core\DB\Shader\PropertyBlock.cpp" />
     <ClCompile Include="Core\DB\Shader\Shader.cpp" />
+    <ClCompile Include="Core\DB\Texture\Texture.cpp" />
     <ClCompile Include="Core\File\File.cpp" />
     <ClCompile Include="Core\GL\GL.cpp" />
+    <ClCompile Include="Core\GL\Input.cpp" />
+    <ClCompile Include="Core\GL\UniformBufferObject.cpp" />
     <ClCompile Include="Core\Systems\CameraSystem.cpp" />
+    <ClCompile Include="Core\Systems\InputSystem.cpp" />
+    <ClCompile Include="Core\Systems\LightingSystem.cpp" />
     <ClCompile Include="Core\_External\glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\DB\Model\Material.cpp" />
@@ -179,7 +185,6 @@ xcopy /E /I /H /Y "$(ProjectDir)Game/Assets" "$(OutDir)Game/Assets"</Command>
     <ClInclude Include="Core\Systems\LightingSystem.h" />
     <ClInclude Include="Core\Systems\RenderSystem.h" />
     <ClInclude Include="Core\Systems\TransformSystem.h" />
-    <ClInclude Include="Serialization.h" />
     <ClInclude Include="Core\DB\Shader\Shader.h" />
     <ClInclude Include="Core\_External\stb_image.h" />
     <ClInclude Include="Core\Components\Transform.h" />

@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <memory>
 
-// OPEN GLAND THIRD PARTY INCLUDES:
+// OPEN GLAD THIRD PARTY INCLUDES:
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "../_External/stb_image.h"

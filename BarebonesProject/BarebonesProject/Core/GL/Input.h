@@ -26,50 +26,10 @@ namespace Barebones
 		bool wasReleasedThisFrame = false;
 
 	private:
-		Input()
-		{
-			key = Key::Undefined;
-			index = (int)key;
-		}
-
-		void SetKey(Key key)
-		{
-			this->key = key;
-			index = (int)key;
-			device = InputDevice::Keyboard;
-		}
-
-		void SetMouseButton(MouseButton mouseButton)
-		{
-			this->mouseButton = mouseButton;
-			index = (int)mouseButton;
-			device = InputDevice::Mouse;
-		}
-
-		void ProcessInput()
-		{
-			int state;
-			switch (device)
-			{
-			default:
-			case InputDevice::Keyboard: state = glfwGetKey(GL::window, index); break;
-			case InputDevice::Mouse: state = glfwGetMouseButton(GL::window, index); break;
-			}
-
-
-			wasPressedThisFrame = false;
-			wasReleasedThisFrame = false;
-			if (state == GLFW_PRESS)
-			{
-				if (!isPressed) wasPressedThisFrame = true;
-				isPressed = true;
-			}
-			else
-			{
-				if (isPressed) wasReleasedThisFrame = true;
-				isPressed = false;
-			}
-		}
+		Input();
+		void SetKey(Key key);
+		void SetMouseButton(MouseButton mouseButton);
+		void ProcessInput();
 
 		InputDevice device;
 		Key key;

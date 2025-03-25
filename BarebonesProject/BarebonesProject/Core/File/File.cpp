@@ -3,6 +3,18 @@
 
 namespace Barebones
 {
+	bool File::Exists(fs::path path) { return fs::exists(path); }
+	fs::path File::GetCurrentWorkingDirectory() { return cwd; }
+	fs::path File::AbsoluteToRelativePath(fs::path absolutePath) { return fs::relative(absolutePath); }
+
+	fs::path File::MakeRelativeToFileBeRelativeToCWD(fs::path filePath, fs::path relativePath)
+	{
+		fs::path absoluteBasePath = fs::canonical(filePath);
+		fs::path absoluteTargetPath = absoluteBasePath.parent_path() / relativePath;
+		fs::path relativeToCWD = fs::relative(absoluteTargetPath, cwd);
+		return relativeToCWD;
+	}
+
 	std::string File::Read(fs::path path)
 	{
 		std::string content;

@@ -74,6 +74,12 @@
     <ClCompile Include="Core\DB\Model\Model.cpp" />
     <ClCompile Include="Core\DB\Shader\Shader.cpp" />
     <ClCompile Include="Core\BarebonesEngine.cpp" />
+    <ClCompile Include="Core\DB\Texture\Texture.cpp" />
+    <ClCompile Include="Core\DB\Shader\PropertyBlock.cpp" />
+    <ClCompile Include="Core\GL\Input.cpp" />
+    <ClCompile Include="Core\GL\UniformBufferObject.cpp" />
+    <ClCompile Include="Core\Systems\InputSystem.cpp" />
+    <ClCompile Include="Core\Systems\LightingSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\_External\stb_image.h">
@@ -90,9 +96,6 @@
     </ClInclude>
     <ClInclude Include="Core\File\File.h">
       <Filter>Engine\File</Filter>
-    </ClInclude>
-    <ClInclude Include="Serialization.h">
-      <Filter>Engine\Serialization</Filter>
     </ClInclude>
     <ClInclude Include="Core\DB\Model\Material.h">
       <Filter>Engine\DB\Material</Filter>
