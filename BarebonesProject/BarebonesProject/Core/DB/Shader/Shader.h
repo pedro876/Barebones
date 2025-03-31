@@ -11,6 +11,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "../Asset.h"
 #include "PropertyBlock.h"
+#include <unordered_map>
 
 namespace Barebones
 {
@@ -53,8 +54,22 @@ namespace Barebones
         void SetPropertyBlock(const PropertyBlock& block) const;
     private:
         bool setUBOs = false;
+        std::unordered_map<std::string, int> textureUnits;
+
+        enum State
+        {
+            GLOBAL,
+            MATERIAL_PROPERTIES,
+            ATTRIBUTES,
+            VARYINGS,
+            OUTPUTS,
+            VERTEX,
+            FRAGMENT,
+        };
+
         void CompileShader(const char* vShaderCode, const char* fShaderCode);
-        std::string ProcessIncludeHierarchy(const std::string& currentPath, const std::string& ogLine);
+        void CheckShaderLine(State& state, const std::string& line, 
+            const std::string& currentPath, std::string& vShaderCodeStr, std::string& fShaderCodeStr);
         void CheckCompileErrors(unsigned int shader, std::string type);
     };
 }

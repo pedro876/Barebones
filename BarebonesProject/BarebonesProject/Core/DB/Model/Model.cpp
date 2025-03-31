@@ -155,34 +155,8 @@ namespace Barebones
 
 		std::cout << "Processing material " << mMaterial->GetName().C_Str() << std::endl;
 
-		for (unsigned int t = 0, textureCount = mMaterial->GetTextureCount(aiTextureType_DIFFUSE); t < textureCount; t++)
-		{
-			aiString ogPath;
-			if (mMaterial->GetTexture(aiTextureType_DIFFUSE, t, &ogPath) == AI_SUCCESS)
-			{
-				std::string relativePath = File::MakeRelativeToFileBeRelativeToCWD(path, ogPath.C_Str()).string();
-				std::cout << "Texture path (" << ogPath.C_Str() << ") was modified to (" << relativePath << ")\n";
-				bool wasLoaded = false;
-				if (!DB<Texture>::Has(relativePath))
-				{
-					DB<Texture>::Register(std::make_shared<Texture>(relativePath));
-					wasLoaded = true;
-				}
-				auto texturePtr = DB<Texture>::Get(relativePath);
-				if (auto texture = texturePtr.lock())
-				{
-					if (wasLoaded) texture->Load();
-					//materials[index].baseMap = texturePtr;
-
-					/*Material::Property<std::weak_ptr<Texture>> textureProperty("_BaseMap", texturePtr);
-					textureProperty.name = "_BaseMap";
-					textureProperty.value = texturePtr;*/
-					materials[index].properties.textures.emplace_back(
-						Property<std::weak_ptr<Texture>>("_BaseMap", texturePtr)
-					);
-				}
-			}
-		}
+		ProcessTexture(index, mMaterial, aiTextureType_DIFFUSE, "_BaseMap");
+		ProcessTexture(index, mMaterial, aiTextureType_EMISSIVE, "_EmissiveMap");
 
 		std::filesystem::path materialPath = directory;
 		materialPath = materialPath / mMaterial->GetName().C_Str() += ".mat";
@@ -210,6 +184,35 @@ namespace Barebones
 				" with idx " << property.mIndex << " and type " << property.mType << "\n";
 		}
 		std::cout << "***************\n";*/
+	}
+
+	void Model::ProcessTexture(unsigned int matIndex, aiMaterial* mMaterial, aiTextureType textureType, std::string propertyName)
+	{
+		for (unsigned int t = 0, textureCount = mMaterial->GetTextureCount(textureType); t < textureCount; t++)
+		{
+			aiString ogPath;
+			if (mMaterial->GetTexture(textureType, t, &ogPath) == AI_SUCCESS)
+			{
+				std::string relativePath = File::MakeRelativeToFileBeRelativeToCWD(path, ogPath.C_Str()).string();
+				std::cout << "Texture path (" << ogPath.C_Str() << ") was modified to (" << relativePath << ")\n";
+				bool hasBeenLoadedNow = false;
+				if (!DB<Texture>::Has(relativePath))
+				{
+					DB<Texture>::Register(std::make_shared<Texture>(relativePath));
+					hasBeenLoadedNow = true;
+				}
+				auto texturePtr = DB<Texture>::Get(relativePath);
+				if (auto texture = texturePtr.lock())
+				{
+					if (hasBeenLoadedNow) texture->Load();
+					std::string name = propertyName;
+					if (t > 0) name += t;
+					materials[matIndex].properties.textures.emplace_back(
+						Property<std::weak_ptr<Texture>>(name, texturePtr)
+					);
+				}
+			}
+		}
 	}
 
 	void Model::ProcessMesh(unsigned int index, aiMesh* mesh)

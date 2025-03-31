@@ -1,4 +1,4 @@
-//uniform vec3 _AmbientLight = vec3(0.1);
+#Fragment
 
 #define MAX_LIGHT_COUNT 64
 

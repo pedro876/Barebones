@@ -118,6 +118,7 @@ class BarebonesFBXExporter(bpy.types.Operator):
                         if node.type == 'TEX_IMAGE':  # Check if the node is a texture
                             image = node.image
                             if image:
+                                self.report({'INFO'}, f"Texture detected at {mat.name}: {node.name}")
                                 texture_path = image.filepath
                                 writer.writerow(["Texture2D", node.name, texture_path])
                                 anyWrite = True

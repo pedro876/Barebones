@@ -38,7 +38,7 @@ namespace Barebones
 
 	void Texture::Use(int textureUnit)
 	{
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(GL_TEXTURE_2D, ID);
 	}
 }

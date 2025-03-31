@@ -5,7 +5,13 @@
 
 #MaterialProperties
 uniform sampler2D _BaseMap;
+uniform sampler2D _EmissiveMap;
 uniform vec3 _BaseColor = vec3(1,1,1);
+
+#Attributes
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec2 aTexCoord;
 
 #Varyings
 vec3 vertexColor;
@@ -13,11 +19,10 @@ vec2 texCoord;
 vec3 positionWS;
 vec3 normalWS;
 
-#Vertex
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoord;
+#Outputs
+out vec4 FragColor;
 
+#Vertex
 void main()
 {
 	vertexColor = aNormal * 0.5 + 0.5;
@@ -28,14 +33,13 @@ void main()
 }
 
 #Fragment
-
-out vec4 FragColor;
-
 void main()
 {
     vec4 base = texture(_BaseMap, texCoord);
+    vec4 emissive = texture(_EmissiveMap, texCoord);
     base.rgb *= _BaseColor;
 	base.rgb *= GetLighting(positionWS, normalWS);
+    base.rgb += emissive.rgb;
     vec3 outColor = base.rgb;
     //vec3 outColor = normalWS * 0.5 + 0.5;
     FragColor = vec4(outColor, 1.0);

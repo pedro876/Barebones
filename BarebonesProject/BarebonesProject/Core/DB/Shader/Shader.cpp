@@ -14,98 +14,20 @@ namespace Barebones
         CompileShader(vShaderCode, fShaderCode);
     }
 
-    
-
     Shader::Shader(const std::string& name, const std::string& path) :
         Asset(name)
     {
-        enum State
-        {
-            NONE,
-            GLOBAL_PROPERTIES,
-            MATERIAL_PROPERTIES,
-            VARYINGS,
-            VERTEX,
-            FRAGMENT,
-        };
 
         std::vector<std::string> lines = File::ReadLines(path);
 
         std::string vShaderCodeStr;
         std::string fShaderCodeStr;
-        State state = NONE;
+        State state = GLOBAL;
 
         for (int i = 0, count = lines.size(); i < count; i++)
         {
             std::string& line = lines[i];
-            if (line.starts_with('#'))
-            {
-                if (line == "#GlobalProperties") state = GLOBAL_PROPERTIES;
-                else if (line == "#MaterialProperties") state = MATERIAL_PROPERTIES;
-                else if (line == "#Varyings") state = VARYINGS;
-                else if (line == "#Vertex") state = VERTEX;
-                else if (line == "#Fragment") state = FRAGMENT;
-                else if (line.starts_with("#include"))
-                {
-                    std::string includeText = ProcessIncludeHierarchy(path, line);
-                    vShaderCodeStr += includeText;
-                    fShaderCodeStr += includeText;
-                }
-                else
-                {
-                    vShaderCodeStr += line;
-                    vShaderCodeStr += "\n";
-                    fShaderCodeStr += line;
-                    fShaderCodeStr += "\n";
-                }
-            }
-            else
-            {
-                ;
-                switch (state)
-                {
-                case NONE:
-                    vShaderCodeStr += line;
-                    fShaderCodeStr += line;
-                    vShaderCodeStr += "\n";
-                    fShaderCodeStr += "\n";
-                    break;
-                case GLOBAL_PROPERTIES:
-                    vShaderCodeStr += line;
-                    fShaderCodeStr += line;
-                    vShaderCodeStr += "\n";
-                    fShaderCodeStr += "\n";
-                    break;
-                case MATERIAL_PROPERTIES:
-                {
-                    defaultProperties.AddSerializedPropertyGLSL(line);
-                    vShaderCodeStr += line;
-                    fShaderCodeStr += line;
-                    vShaderCodeStr += "\n";
-                    fShaderCodeStr += "\n";
-                }
-                    break;
-                case VERTEX:
-                    vShaderCodeStr += line;
-                    vShaderCodeStr += "\n";
-                    break;
-                case FRAGMENT:
-                    fShaderCodeStr += line;
-                    fShaderCodeStr += "\n";
-                    break;
-                case VARYINGS:
-                    if (line.size())
-                    {
-                        vShaderCodeStr += "out ";
-                        vShaderCodeStr += line;
-                        vShaderCodeStr += "\n";
-                        fShaderCodeStr += "in ";
-                        fShaderCodeStr += line;
-                        fShaderCodeStr += "\n";
-                    }
-                    break;
-                }
-            }
+            CheckShaderLine(state, line, path, vShaderCodeStr, fShaderCodeStr);
         }
 
         std::cout << vShaderCodeStr << "\n\n\n";
@@ -114,71 +36,134 @@ namespace Barebones
         const char* vShaderCode = vShaderCodeStr.c_str();
         const char* fShaderCode = fShaderCodeStr.c_str();
         CompileShader(vShaderCode, fShaderCode);
-    }
 
-    std::string Shader::ProcessIncludeHierarchy(const std::string& currentPath, const std::string& ogLine)
-    {
-        const int includeHeaderLength = 8;
-        const int totalHeaderLength = includeHeaderLength + 2;
-        // Remove '#include "' and the final '"'
+        //Assign texture units
+        Use();
+        GLint numUniforms = 0;
+        glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &numUniforms);
+        int textureUnit = 0;
+        for (GLint i = 0; i < numUniforms; ++i)
+        {
+            char name[256];  // Buffer to store the name
+            GLsizei length;  // Actual length of the name
+            GLint size;      // Size of the uniform (for arrays)
+            GLenum type;     // Type of the uniform
 
-        std::string includePath = ogLine.substr(totalHeaderLength, ogLine.size() - totalHeaderLength - 1);
-        if (includePath.find('/') == std::string::npos)
-        {
-            includePath = (std::filesystem::path(currentPath).parent_path() / includePath).string();
-        }
-        std::string content = "";
-        if (File::Exists(includePath))
-        {
-            std::vector<std::string> text = File::ReadLines(includePath);
-            for (int i = 0, count = text.size(); i < count; i++)
+            glGetActiveUniform(ID, i, sizeof(name), &length, &size, &type, name);
+
+            // Check if it's a texture sampler
+            if (type == GL_SAMPLER_2D || type == GL_SAMPLER_3D || type == GL_SAMPLER_CUBE ||
+                type == GL_SAMPLER_2D_SHADOW || type == GL_SAMPLER_2D_ARRAY ||
+                type == GL_INT_SAMPLER_2D || type == GL_UNSIGNED_INT_SAMPLER_2D)
             {
-                std::string& line = text[i];
-                if (line.starts_with("#include"))
-                {
-                    content += ProcessIncludeHierarchy(includePath, line);
-                }
-                else
-                {
-                    content += line;
-                }
-                content += "\n";
+                std::string strName = name;
+                SetInt(strName, textureUnit);
+                textureUnits[strName] = textureUnit++;
             }
         }
-        else
-        {
-            std::cerr << "Shader named " << this->name << " couldn't include file with path " << path << "\n";
-        }
-        return std::move(content);
     }
-
-    //Shader::Shader(Shader&& other) noexcept :
-    //    Asset(other.name),
-    //    ID(other.ID)
-    //{
-    //    other.ID = 0;
-    //}
-
-    //Shader& Shader::operator=(Shader&& other) noexcept
-    //{
-    //    if (this != &other)
-    //    {
-    //        name = other.name;
-    //        ID = other.ID;
-    //        other.ID = 0;
-    //    }
-
-    //    return *this;
-    //}
 
     Shader::~Shader()
     {
         glDeleteProgram(ID);
     }
+    
 
     void Shader::Use()
     {
         glUseProgram(ID);
+    }
+
+
+    void Shader::CheckShaderLine(State& state, const std::string& line, 
+        const std::string& currentPath, std::string& vShaderCodeStr, std::string& fShaderCodeStr)
+    {
+        if (line.starts_with('#'))
+        {
+            if (line == "#Global") state = GLOBAL;
+            else if (line == "#MaterialProperties") state = MATERIAL_PROPERTIES;
+            else if (line == "#Attributes") state = ATTRIBUTES;
+            else if (line == "#Varyings") state = VARYINGS;
+            else if (line == "#Outputs") state = OUTPUTS;
+            else if (line == "#Vertex") state = VERTEX;
+            else if (line == "#Fragment") state = FRAGMENT;
+            else if (line.starts_with("#include"))
+            {
+                const int includeHeaderLength = 8;
+                const int totalHeaderLength = includeHeaderLength + 2;
+                // Remove '#include "' and the final '"'
+
+                std::string includePath = line.substr(totalHeaderLength, line.size() - totalHeaderLength - 1);
+                if (includePath.find('/') == std::string::npos)
+                {
+                    includePath = (std::filesystem::path(currentPath).parent_path() / includePath).string();
+                }
+                if (File::Exists(includePath))
+                {
+                    State prevState = state;
+                    std::vector<std::string> text = File::ReadLines(includePath);
+                    for (int i = 0, count = text.size(); i < count; i++)
+                    {
+                        std::string& otherLine = text[i];
+                        CheckShaderLine(state, otherLine, includePath, vShaderCodeStr, fShaderCodeStr);
+                    }
+                    state = prevState;
+                }
+                else
+                {
+                    std::cerr << "Shader named " << this->name << " couldn't include file with path " << path << "\n";
+                }
+            }
+            else
+            {
+                vShaderCodeStr += line;
+                vShaderCodeStr += "\n";
+                fShaderCodeStr += line;
+                fShaderCodeStr += "\n";
+            }
+        }
+        else
+        {
+            switch (state)
+            {
+            case GLOBAL:
+                vShaderCodeStr += line;
+                fShaderCodeStr += line;
+                vShaderCodeStr += "\n";
+                fShaderCodeStr += "\n";
+                break;
+            case MATERIAL_PROPERTIES:
+            {
+                defaultProperties.AddSerializedPropertyGLSL(line);
+                vShaderCodeStr += line;
+                fShaderCodeStr += line;
+                vShaderCodeStr += "\n";
+                fShaderCodeStr += "\n";
+            }
+            break;
+            case ATTRIBUTES:
+            case VERTEX:
+                vShaderCodeStr += line;
+                vShaderCodeStr += "\n";
+                break;
+            case VARYINGS:
+                if (line.size())
+                {
+                    vShaderCodeStr += "out ";
+                    vShaderCodeStr += line;
+                    vShaderCodeStr += "\n";
+                    fShaderCodeStr += "in ";
+                    fShaderCodeStr += line;
+                    fShaderCodeStr += "\n";
+                }
+                break;
+            case OUTPUTS:
+            case FRAGMENT:
+                fShaderCodeStr += line;
+                fShaderCodeStr += "\n";
+                break;
+            }
+        }
     }
 
     void Shader::SetBool(const std::string& name, bool value) const { glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); }
@@ -217,11 +202,25 @@ namespace Barebones
         for (auto& p : block.bvec4s) SetBVec4(p.name, p.value);
         for (auto& p : block.textures)
         {
-            SetInt(p.name, 0);
+            //We need support for multiple textures
+            //During compilation, maybe I can map sampler names to 
+            //texture units
+
             if (auto texture = p.value.lock())
             {
-                texture->Use(0);
+                auto it = textureUnits.find(p.name);
+                if (it != textureUnits.end())
+                {
+                    int unit = it->second;
+                    texture->Use(unit);
+                }
+                else
+                {
+                    std::cerr << "Shader " << name << " does not have a texture named " << p.name << "\n";
+                }
             }
+
+            
         }
     }
 

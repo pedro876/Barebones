@@ -41,6 +41,7 @@ namespace Barebones
 		void ProcessLight(Entity parent, aiNode* mNode, aiLight* mLight, const std::vector<std::string>& lightsCSV);
 		void ProcessCamera(Entity parent, aiNode* mNode, aiCamera* mCamera);
 		void ProcessMaterial(unsigned int index, aiMaterial* mMaterial);
+		void ProcessTexture(unsigned int index, aiMaterial* mMaterial, aiTextureType textureType, std::string propertyName);
 		void ProcessMesh(unsigned int index, aiMesh* mesh);
 	};
 }
