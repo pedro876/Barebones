@@ -4,8 +4,8 @@
 #include "Core/Assets/ShaderLibrary/Lighting.glsl"
 
 #MaterialProperties
-uniform sampler2D _BaseMap;
-uniform sampler2D _EmissiveMap;
+uniform sampler2D _BaseMap = texture(white);
+uniform sampler2D _EmissiveMap = texture(black);
 uniform vec3 _BaseColor = vec3(1,1,1);
 
 #Attributes

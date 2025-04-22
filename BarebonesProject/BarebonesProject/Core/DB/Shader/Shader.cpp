@@ -75,7 +75,7 @@ namespace Barebones
     }
 
 
-    void Shader::CheckShaderLine(State& state, const std::string& line, 
+    void Shader::CheckShaderLine(State& state, std::string& line, 
         const std::string& currentPath, std::string& vShaderCodeStr, std::string& fShaderCodeStr)
     {
         if (line.starts_with('#'))
@@ -202,10 +202,6 @@ namespace Barebones
         for (auto& p : block.bvec4s) SetBVec4(p.name, p.value);
         for (auto& p : block.textures)
         {
-            //We need support for multiple textures
-            //During compilation, maybe I can map sampler names to 
-            //texture units
-
             if (auto texture = p.value.lock())
             {
                 auto it = textureUnits.find(p.name);
@@ -219,8 +215,6 @@ namespace Barebones
                     std::cerr << "Shader " << name << " does not have a texture named " << p.name << "\n";
                 }
             }
-
-            
         }
     }
 

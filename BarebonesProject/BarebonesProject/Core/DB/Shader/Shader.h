@@ -68,7 +68,7 @@ namespace Barebones
         };
 
         void CompileShader(const char* vShaderCode, const char* fShaderCode);
-        void CheckShaderLine(State& state, const std::string& line, 
+        void CheckShaderLine(State& state, std::string& line, 
             const std::string& currentPath, std::string& vShaderCodeStr, std::string& fShaderCodeStr);
         void CheckCompileErrors(unsigned int shader, std::string type);
     };

@@ -1,15 +1,18 @@
 #include "PropertyBlock.h"
 
+#include "../DB.h"
+#include "../Texture/Texture.h"
+
 namespace Barebones
 {
 	// PUBLIC
 
-	void PropertyBlock::AddSerializedPropertyCSV(std::string line)
+	void PropertyBlock::AddSerializedPropertyCSV(std::string& line)
 	{
 		ProcessTokens(line, ';');
 	}
 
-	void PropertyBlock::AddSerializedPropertyGLSL(std::string line)
+	void PropertyBlock::AddSerializedPropertyGLSL(std::string& line)
 	{
 		std::vector<std::string> parts = File::SplitLine(line, '=');
 		if (parts.size() <= 1) return;
@@ -19,16 +22,19 @@ namespace Barebones
 		std::string right = File::TrimLine(parts[1]);
 		size_t leftParentheses = right.find_first_of('(');
 		std::string type = right.substr(0, leftParentheses);
-
-		if (type == "float") type = "Float";
+		if (type == "texture")
+		{
+			line = File::TrimLine(parts[0]) + ';';
+			type = "Texture";
+		}
+		else if (type == "float") type = "Float";
 		else if (type == "int") type = "Integer";
 		else if (type == "bool") type = "Boolean";
 		else if (type.starts_with("vec")) type = "FloatArray";
 		else if (type.starts_with("ivec")) type = "IntegerArray";
 		else if (type.starts_with("bvec")) type = "BooleanArray";
 
-		line = std::format("{},{},{}", type, name, right.substr(leftParentheses + 1, right.size() - leftParentheses - 3));
-		ProcessTokens(line, ',');
+		ProcessTokens(std::format("{},{},{}", type, name, right.substr(leftParentheses + 1, right.size() - leftParentheses - 3)), ',');
 	}
 
 	// PRIVATE
@@ -41,6 +47,13 @@ namespace Barebones
 		int vectorSize = tokens.size() - 2;
 
 		if (type == "String") strings.emplace_back(Property<std::string>(name, tokens[2]));
+		else if (type == "Texture")
+		{
+			if (tokens[2] == "white") textures.emplace_back(name, DB<Texture>::Get("DefaultTextureWhite"));
+			else if (tokens[2] == "black") textures.emplace_back(name, DB<Texture>::Get("DefaultTextureBlack"));
+			else if (tokens[2] == "grey") textures.emplace_back(name, DB<Texture>::Get("DefaultTextureGrey"));
+			else if (tokens[2] == "normal") textures.emplace_back(name, DB<Texture>::Get("DefaultTextureNormal"));
+		}
 		else if (type == "Float") floats.emplace_back(Property<float>(name, std::stof(tokens[2])));
 		else if (type == "Integer") ints.emplace_back(Property<int>(name, std::stoi(tokens[2])));
 		else if (type == "Boolean") bools.emplace_back(Property<bool>(name, tokens[2] == "True"));

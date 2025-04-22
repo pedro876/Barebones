@@ -19,6 +19,11 @@ int main()
 	std::shared_ptr<LightingSystem> lightingSystem = Coordinator::RegisterSystem<LightingSystem>();
 	std::shared_ptr<InputSystem> inputSystem = Coordinator::RegisterSystem<InputSystem>();
 
+	DB<Texture>::Register(std::make_shared<Texture>("DefaultTextureWhite")).lock()->Load();
+	DB<Texture>::Register(std::make_shared<Texture>("DefaultTextureBlack")).lock()->Load();
+	DB<Texture>::Register(std::make_shared<Texture>("DefaultTextureGrey")).lock()->Load();
+	DB<Texture>::Register(std::make_shared<Texture>("DefaultTextureNormal")).lock()->Load();
+
 	auto shaderProgram = DB<Shader>::Register(std::make_shared<Shader>("Shader Lit", "Core/Assets/Shaders/Lit.glsl"));
 	auto testRoom = DB<Model>::Register(std::make_shared<Model>("Game/Assets/Models/TestRoom.fbx")).lock();
 	testRoom->LoadModel();

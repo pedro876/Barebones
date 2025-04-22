@@ -36,8 +36,8 @@ namespace Barebones
 		std::vector<Property<glm::bvec4>> bvec4s;
 		std::vector<Property<std::weak_ptr<Texture>>> textures;
 
-		void AddSerializedPropertyCSV(std::string line);
-		void AddSerializedPropertyGLSL(std::string line);
+		void AddSerializedPropertyCSV(std::string& line);
+		void AddSerializedPropertyGLSL(std::string& line);
 
 	private:
 		void ProcessTokens(std::string line, char delimiter);
